@@ -3,9 +3,9 @@ import javafx.scene.paint.*;
 
 public class Frame {
 	
-	//will be useful for when we need to save a file
 	private int width;
 	private int height;
+	
 	
 	//every frame has a canvas to draw on
 	private Canvas canvas;
@@ -16,19 +16,21 @@ public class Frame {
 	
 	Frame(int width, int height){
 		
-		this.width = width;
-		this.height = height;
+		this.setWidth(width);
+		this.setHeight(height);
 		
 		this.canvas = new Canvas(width, height);
 		this.gc = this.canvas.getGraphicsContext2D();
-
+		
+		setBackground(Color.WHITE);
+		
 		//setting width and color of line to be drawn
 		gc.setLineWidth(1);
 		gc.setStroke(Color.BLACK);
 		
-		//this will probably have it's own event handler at some point
-		//it's probably fine for a prototype though
 		
+		//this will have it's own event handler at some point
+		//it's probably fine for a prototype though
 		//events for when to draw
 		canvas.setOnMousePressed(e->{
 	            
@@ -47,8 +49,29 @@ public class Frame {
 		
 	}
 	
+	public void setBackground(Color c) {
+		gc.setFill(c);
+		gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+	}
+	
 	public Canvas getCanvas() {
 		return canvas;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 	
 }
