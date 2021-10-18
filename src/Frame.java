@@ -6,7 +6,6 @@ public class Frame {
 	private int width;
 	private int height;
 	
-	
 	//every frame has a canvas to draw on
 	private Canvas canvas;
 	
@@ -22,7 +21,6 @@ public class Frame {
 		this.canvas = new Canvas(width, height);
 		this.gc = this.canvas.getGraphicsContext2D();
 		
-		setBackground(Color.WHITE);
 		
 		//setting width and color of line to be drawn
 		gc.setLineWidth(1);
@@ -49,10 +47,6 @@ public class Frame {
 		
 	}
 	
-	public void setBackground(Color c) {
-		gc.setFill(c);
-		gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
-	}
 	
 	public Canvas getCanvas() {
 		return canvas;
@@ -73,6 +67,9 @@ public class Frame {
 	public void setHeight(int height) {
 		this.height = height;
 	}
+	
+	
+	
 	
 }
 	

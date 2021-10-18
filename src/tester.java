@@ -14,6 +14,7 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -34,6 +35,7 @@ public class tester extends Application {
 	ToolBar toolbar;
 	Stage myStage;
 	HBox frameCountDisplay;
+	Pane flipbookPane;
 	
 	//making buttons
 	Button saveButton = new Button("Save");
@@ -52,6 +54,9 @@ public class tester extends Application {
     	pane = new BorderPane();
     	pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
     	
+    	flipbookPane = new Pane();
+    	flipbookPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+    	
     	frameCountDisplay = new HBox();
     	frameCountDisplay.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
     	
@@ -64,13 +69,16 @@ public class tester extends Application {
         //add buttons to tool bar, add frame label to HBox
     	toolbar.getItems().addAll(saveButton, openButton);
     	frameCountDisplay.getChildren().add(currentFrame);
+    	
         
     	//////////////////////////////////////////
     	flipbook = new Flipbook(640, 480, "test");
+    	flipbookPane.getChildren().add(flipbook.getGroup());
+    	flipbookPane.setMaxSize(640, 480);
     	
     	// setting position of nodes
    	    pane.setTop(toolbar);
-        pane.setCenter(flipbook.getGroup());
+        pane.setCenter(flipbookPane);
         pane.setBottom(frameCountDisplay);
     	
         

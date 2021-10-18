@@ -32,6 +32,12 @@ public class Flipbook {
 	private String bookName;
 	private int canvasWidth;
 	private int canvasHeight;
+	private double maxOnionOpacity = 0.7;
+	private double minOnionOpacity = 0.3;
+	
+	//min: 1
+	private int numPrevFramesToShow = 2;
+	private boolean onionSkinningEnabled = true;
 	
 	//TODO: make frame change functionality
 	private int curFrame = 0;
@@ -58,10 +64,11 @@ public class Flipbook {
 	// isVisible isn't being used yet, but it's there if we want it
 	private void clearScreen() {
 		
-		group.getChildren().remove(0, group.getChildren().size());
+//		group.getChildren().remove(0, group.getChildren().size());
 	
 		for(FrameData f: frames) {
 			f.isVisible = false;
+			f.frame.getCanvas().setOpacity(1);
 		}
 		
 		
@@ -72,9 +79,59 @@ public class Flipbook {
 		
 		if(frameNumber < frames.size()) {
 			clearScreen();
-			group.getChildren().add(frames.get(frameNumber).frame.getCanvas());
+//			group.getChildren().add(frames.get(frameNumber).frame.getCanvas());
+			
+			if(onionSkinningEnabled) {
+				double opacityDelta = 1.0/(numPrevFramesToShow);
+				double opacityRange = maxOnionOpacity - minOnionOpacity;
+				
+				opacityDelta *= opacityRange;
+			
+				for(int i = 0; i <= numPrevFramesToShow && (frameNumber - i >= 0); i++) {
+		
+					
+					    frames.get(frameNumber - i).isVisible = true;
+					    
+					    if(i != 0) {
+					    	
+					    	frames.get(frameNumber - i).frame.getCanvas().setOpacity(maxOnionOpacity - (opacityDelta*(i-1)));
+					    	
+					    }
+					    
+				}
+						
+			}
+			
+			else {
+				
+				frames.get(frameNumber).isVisible = true;
+			
+			}
+			
+			update();
+			
 		}
+		
 	}
+	
+	
+	public void update() {
+		
+		group.getChildren().remove(0, group.getChildren().size());
+		
+		
+		for(FrameData f: frames) {
+			if(f.isVisible)
+				group.getChildren().add(f.frame.getCanvas());
+		}
+		
+		
+		
+		
+	}
+	
+	
+	
 	
 	
 	//makes a blank frame, and then adds it to the group to be displayed
@@ -84,10 +141,13 @@ public class Flipbook {
 		FrameData frameData = new FrameData(canvasWidth, canvasHeight, true);
 		frames.add(frameData);
 		
-		clearScreen();
+		
+		
+		
+		update();
 		
 		//add the created frame's canvas to the group to be displayed
-		group.getChildren().add(frameData.frame.getCanvas());
+//		group.getChildren().add(frameData.frame.getCanvas());
 	}
 	
 	//checks if there is a frame to move forward to, and does it if so
@@ -156,8 +216,8 @@ public class Flipbook {
 		toSave += canvasWidth + "\n";
 		toSave += canvasHeight + "\n";
 		
-		//this value is kind of redunant; it's not needed
-		//but it may be nice to have in the future
+		//this value is kind of redundant; it's not needed
+		//but it may be nice to have in the future?
 		toSave += convertedImages.size() + "\n";
 		
 		//add base64 encoded strings onto result
@@ -202,6 +262,7 @@ public class Flipbook {
 		
 		//always close file streams
 		sc.close();
+		
 		
 	}
 	
