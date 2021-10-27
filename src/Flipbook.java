@@ -1,5 +1,7 @@
-import java.awt.image.RenderedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 import javax.imageio.ImageIO;
@@ -8,42 +10,70 @@ import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 
+
+
+//TODO: Rework Save File Structure into JSON??
+
+
 public class Flipbook {
 	
-	//TODO: include frame state 
-	//FrameData is made to keep the frame and any data pertaining to a specific frame in one place
+	//small class to contain the base64 img and frame visibility
+	//also includes the frame generation function
 	private class FrameData{
-		Frame frame;
+		String imgString;
 		boolean isVisible;
-	
-		FrameData(int canvasWidth, int canvasHeight, boolean isVisible){
-			this.frame = new Frame(canvasWidth, canvasHeight);
-			this.isVisible = isVisible;
+		double opacity;
+		
+		
+		FrameData(String img, boolean visible, double opacity){
+			this.imgString = img;
+			this.isVisible = visible;
+			this.opacity = opacity;
 		}
+		
+		public Frame generateFrame() {
+			Frame f = new Frame(canvasWidth, canvasHeight);
+			f.getGraphicsContext().drawImage(new Image(imgString), 0, 0);
+			f.setOpacity(this.opacity);
+			
+			return f;
+		}
+		
+	
+		
 		
 	}
 	
 	
 	
-	
-	// a place to store the frames and relevant data
+	// a place to store the frames
 	private ArrayList<FrameData> frames;
 	
+	
+	
+	//basic variables
 	private String bookName;
 	private int canvasWidth;
 	private int canvasHeight;
-	private double maxOnionOpacity = 0.7;
-	private double minOnionOpacity = 0.3;
+	private double maxOnionOpacity = 0.6;
+	private double minOnionOpacity = 0.1;
+	
+	//frame rate in fps
+	private int frameRate = 20;
+	
+	//in milliseconds
+	private long frameTime = Math.round((1.0/frameRate) * 1000);
 	
 	//min: 1
 	private int numPrevFramesToShow = 2;
-	private boolean onionSkinningEnabled = true;
 	
-	//TODO: make frame change functionality
+	//Doesn't work yet on build 2a (this is 2a)
+	private boolean onionSkinningEnabled = false;
+	
+	//current frame
 	private int curFrame = 0;
 	
 	//this object holds the frame canvases and allows them to be displayed
-	//the way this is structured may help make onion skinning easier later on
 	private Group group;
 	
 	Flipbook(int canvasWidth, int canvasHeight, String bookName){
@@ -61,15 +91,13 @@ public class Flipbook {
 	
 	
 	//clears group of all frames, which effectively clears screen
-	// isVisible isn't being used yet, but it's there if we want it
 	private void clearScreen() {
-		
-//		group.getChildren().remove(0, group.getChildren().size());
 	
 		for(FrameData f: frames) {
-			f.isVisible = false;
-			f.frame.getCanvas().setOpacity(1);
+			f.isVisible = false; 
+			f.opacity = 1;
 		}
+		
 		
 		
 	}
@@ -79,7 +107,6 @@ public class Flipbook {
 		
 		if(frameNumber < frames.size()) {
 			clearScreen();
-//			group.getChildren().add(frames.get(frameNumber).frame.getCanvas());
 			
 			if(onionSkinningEnabled) {
 				double opacityDelta = 1.0/(numPrevFramesToShow);
@@ -94,8 +121,8 @@ public class Flipbook {
 					    
 					    if(i != 0) {
 					    	
-					    	frames.get(frameNumber - i).frame.getCanvas().setOpacity(maxOnionOpacity - (opacityDelta*(i-1)));
-					    	
+					    	frames.get(frameNumber - i).opacity = (maxOnionOpacity - (opacityDelta*(i-1)));
+					    	System.out.println((maxOnionOpacity - (opacityDelta*(i-1))));
 					    }
 					    
 				}
@@ -105,8 +132,10 @@ public class Flipbook {
 			else {
 				
 				frames.get(frameNumber).isVisible = true;
-			
+				
 			}
+			
+			
 			
 			update();
 			
@@ -117,47 +146,62 @@ public class Flipbook {
 	
 	public void update() {
 		
-		group.getChildren().remove(0, group.getChildren().size());
-		
+		group.getChildren().clear();
 		
 		for(FrameData f: frames) {
-			if(f.isVisible)
-				group.getChildren().add(f.frame.getCanvas());
+			if(f.isVisible) {
+				Frame frame = f.generateFrame();
+				group.getChildren().add(frame);
+				
+			}
 		}
-		
-		
-		
 		
 	}
 	
 	
-	
-	
-	
-	//makes a blank frame, and then adds it to the group to be displayed
+	//makes a blank frame and adds it where the function is called
 	public void addFrame() {
 	
-		//makes a frame data object, which makes it's own frame
-		FrameData frameData = new FrameData(canvasWidth, canvasHeight, true);
-		frames.add(frameData);
+		Frame frame = new Frame(canvasWidth, canvasHeight);
+		FrameData frameData = new FrameData(generateImgURL(frame), false, 1);
+		
+		if(frames.size() < 1) {
+			frames.add(frameData);
+			setFrame(curFrame);
+			forward();
+		}
+		
+		else {
+			
+			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);
+			String img = generateImgURL(f);
+			frames.get(curFrame).imgString = img;
+			
+			frames.add(curFrame+1, frameData);
+			setFrame(curFrame);
+			forward();
+		}
+			
 		
 		
-		
-		
-		update();
-		
-		//add the created frame's canvas to the group to be displayed
-//		group.getChildren().add(frameData.frame.getCanvas());
 	}
 	
 	//checks if there is a frame to move forward to, and does it if so
 	public void forward() {
 		
+		
 		if(curFrame + 1 < frames.size()) {
+			
+			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);	
+			String img = generateImgURL(f);
+			frames.get(curFrame).imgString = img;
 			
 			curFrame++;
 			setFrame(curFrame);
+			
 		}
+		
+		
 		
 	}
 	
@@ -165,6 +209,14 @@ public class Flipbook {
 	public void backward() {
 		
 		if(curFrame - 1 >= 0 ) {
+		
+		
+			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);
+			
+			String img = generateImgURL(f);
+			
+			frames.get(curFrame).imgString = img;
+			
 			
 			curFrame--;
 			setFrame(curFrame);
@@ -186,25 +238,9 @@ public class Flipbook {
 		
 		ArrayList<String> convertedImages = new ArrayList<String>();
 		
-		for(FrameData f: frames) {
+		for(FrameData f: frames) {		
 			
-			 WritableImage writableImage = new WritableImage(canvasWidth, canvasHeight);
-			 
-			 //snapshot takes an 'image' of the canvas so that we can save it for later
-             f.frame.getCanvas().snapshot(null, writableImage);
-             RenderedImage renderedImage = SwingFXUtils.fromFXImage(writableImage, null);
-             
-             //setting up base 64 conversion
-             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-             try {
-                 ImageIO.write(renderedImage, "png", baos);
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-             
-             //making into a URL, add it to the array
-             String imageString = "data:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
-             convertedImages.add(imageString);
+			convertedImages.add(f.imgString);
              
 		}
 		
@@ -231,7 +267,7 @@ public class Flipbook {
 	
 	
 	//takes string, parses info out and stores resulting frames in the frames arraylist
-	public void openFile(String file) {
+	public void openFile(File file) {
 		
 		//we need to clear the screen before we load a file, we also need to clear the frames arraylist
 		clearScreen();
@@ -240,32 +276,79 @@ public class Flipbook {
 		
 		
 		//parsing values into their respective variables
-		Scanner sc = new Scanner(file);
+		try {
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 		
-		bookName = sc.nextLine();
-		canvasWidth = Integer.parseInt(sc.nextLine());
-		canvasHeight = Integer.parseInt(sc.nextLine());
+		bookName = reader.readLine();
+		canvasWidth = Integer.parseInt(reader.readLine());
+		canvasHeight = Integer.parseInt(reader.readLine());
 		
 		//this sc.nextLine() is ignoring the line that says how many frames there are
-		sc.nextLine();
+		reader.readLine();
+	
+		while(reader.ready()) {
+			String imageStr = reader.readLine();
+			FrameData frame = new FrameData(imageStr, false, 1);
+			
+			frames.add(frame);
+			
 		
-		while(sc.hasNextLine()) {
-			String imageStr = sc.nextLine();
-			FrameData data = new FrameData( canvasWidth, canvasHeight, true);
-			
-			//as it turns out, JavaFX Image accepts URLs as an argument to make an image
-			//this makes our job really easy
-			data.frame.getCanvas().getGraphicsContext2D().drawImage(new Image(imageStr), 0, 0);
-			
-			frames.add(data);
 		}
 		
 		//always close file streams
-		sc.close();
+		reader.close();
+		
+		}
+		
+		catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+		
 		
 		
 	}
 	
+	
+	public String generateImgURL(Frame f) {
+		
+		
+		
+		 //snapshot takes an 'image' of the canvas so that we can save it for later
+		WritableImage writableImage = f.snapshot(null, null);
+        
+        //setting up base 64 conversion
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", baos);
+            
+            
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+        //making into a URL, add it to the arraylist
+        String imageString = "data:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
+        
+        return imageString;
+		
+		
+	}
+	
+	
+	public int getNumFrames() {
+		return frames.size();
+	}
+	
+	public long getFrameTime() {
+		return frameTime;
+	}
+	
+	public int getCurFrameNum() {
+		return curFrame;
+	}
+
 	
 	//basic getters
 
@@ -277,9 +360,6 @@ public class Flipbook {
 		return curFrame;
 	}
 
-	
-	
-	
 }
 
 

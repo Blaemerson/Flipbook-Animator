@@ -1,9 +1,9 @@
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,6 +18,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.util.Duration;
 import javafx.stage.*;
 
 
@@ -38,12 +39,16 @@ public class tester extends Application {
 	Pane flipbookPane;
 	
 	//making buttons
+	Button newButton = new Button("New");
 	Button saveButton = new Button("Save");
 	Button openButton = new Button("Open");
 	
-	final String appTitle = "Flipbook Proto 1";
+	//program name
+	final String appTitle = "Flipbook Proto 2a";
 	
-	
+	//control variables
+	boolean openFlipbook = false;
+	boolean isAnimating = false;
 	
     @Override
     public void start(Stage stage) {
@@ -60,6 +65,8 @@ public class tester extends Application {
     	frameCountDisplay = new HBox();
     	frameCountDisplay.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
     	
+    	
+    	//toolbar up top to store buttons
     	toolbar = new ToolBar();
     	
     	myStage = stage;
@@ -67,27 +74,22 @@ public class tester extends Application {
         Scene scene = new Scene(pane, 1024, 768);
     	
         //add buttons to tool bar, add frame label to HBox
-    	toolbar.getItems().addAll(saveButton, openButton);
+    	toolbar.getItems().addAll(newButton, openButton, saveButton);
     	frameCountDisplay.getChildren().add(currentFrame);
     	
         
-    	//////////////////////////////////////////
+    	//creating flipbook (which makes no sense because newFile hasn't been called
+    	//but it's a prototype, who really cares?
     	flipbook = new Flipbook(640, 480, "test");
     	flipbookPane.getChildren().add(flipbook.getGroup());
     	flipbookPane.setMaxSize(640, 480);
     	
     	// setting position of nodes
    	    pane.setTop(toolbar);
-        pane.setCenter(flipbookPane);
         pane.setBottom(frameCountDisplay);
     	
-        
-        //add a frame by default and select it
-   	 	flipbook.addFrame();
-        flipbook.setFrame(0);
-        currentFrame.setText(frameMessage + flipbook.getFrameNumber());
-        
-        
+       
+               
         //and the stage is the top level container; it's the actual window
         stage.setScene(scene);
         stage.show();
@@ -103,43 +105,58 @@ public class tester extends Application {
         //run save function when button activated
    	 	saveButton.setOnAction((e)->{
    	 		
-        	this.save();
+        	save();
         	
         });
    	 	
       	//run open function when button activated
    	 	openButton.setOnAction((e)->{
    	
-         	this.open();
+         	open();
          	
          });
+   	 	
+   	 	//run newFile function when button activated
+   	 	newButton.setOnAction((e) ->{
+   	 		
+   	 		newFile();
+   	 		
+   	 	});
    	 	
    	 	
    	 	//TODO: Tool Keybinds should go here eventually
    	 	pane.setOnKeyPressed(e ->{
    	 		
    	 		//go forward a frame when ] is pressed
-        	if(e.getCode() == KeyCode.CLOSE_BRACKET) {
+        	if(e.getCode() == KeyCode.CLOSE_BRACKET && openFlipbook) {
         		flipbook.forward();
-        		currentFrame.setText(frameMessage + flipbook.getFrameNumber());
+        		setFrameCount(flipbook.getFrameNumber());
         	}
         	
         	//go back a frame when [ is pressed
-        	else if(e.getCode() == KeyCode.OPEN_BRACKET) {
+        	else if(e.getCode() == KeyCode.OPEN_BRACKET && openFlipbook) {
         		flipbook.backward();
-        		currentFrame.setText(frameMessage + flipbook.getFrameNumber());
+        		setFrameCount(flipbook.getFrameNumber());
         	}
         	
         	//create frame when \ is pressed, go forward to it
-        	else if(e.getCode() == KeyCode.BACK_SLASH) {
+        	else if(e.getCode() == KeyCode.BACK_SLASH && openFlipbook) {
+        		
         		flipbook.addFrame();
-        		flipbook.forward();
-        		currentFrame.setText(frameMessage + flipbook.getFrameNumber());
+        		setFrameCount(flipbook.getFrameNumber());
         	}
         	
-        	
-        });
-   	
+        	//animate frames P is pressed, speed determined by flipbook variable frameRate
+        	else if(e.getCode() == KeyCode.P && openFlipbook && !isAnimating) {
+        			
+        				animate();
+        				setFrameCount(flipbook.getFrameNumber());
+        			
+        		}
+        	}
+   	 	);
+      
+    
    	 
    	 	/*
    	 	 
@@ -152,8 +169,8 @@ public class tester extends Application {
    	 	
     }
 
-   
     
+    //top level save function, grabs string from flipbook save function
     public void save() {
     	
     	 //creates string of variable states and encoded frames
@@ -190,54 +207,61 @@ public class tester extends Application {
  
     }
     
+    
     //takes previously stored data in .flip file and parses it back into a string
-public void open() {
-    	
-    	//result string to send back to the Flipbook
-		String fileForOpen = "";
-    	
+    public void open() {
+    	    	
     	//opens a window to allow you to pick a .flip file
     	 FileChooser openfile = new FileChooser();
          openfile.setTitle("Open");
          openfile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
          
          File file = openfile.showOpenDialog(myStage);
+               
+         flipbook.openFile(file);
          
-         
-         //read every line, add a newline between each line so we know
-         //where each bit of data begins and ends
-         if (file != null) {
-             try {
-            	 
-            	 BufferedReader in = new BufferedReader(new FileReader(file));
-            	 
-            	 while(in.ready()) {
-            		 
-            		 fileForOpen += in.readLine() + "\n";
-            	 }
-            	 
-            	 //always close file streams
-            	 in.close();
-            	 
-            	 //have flipbook parse string back into the saved state
-            	 //then set the visible frame equal to the first frame
-            	 flipbook.openFile(fileForOpen);
-            	 flipbook.setFrame(0);
-            	 currentFrame.setText(frameMessage + flipbook.getFrameNumber());
-            	 
-             } 
-             
-             catch (IOException ex) {
-            	 
-                 System.out.println("Error opening file, or reading data.");
-             }
-             
-         }
+         pane.setCenter(flipbookPane);
+    	 flipbook.setFrame(0);
+    	 setFrameCount(flipbook.getFrameNumber());
+    	 openFlipbook = true;
          
     }
 
+    //makes the first frame and allows other keyboard events to occur
+	public void newFile() {
+		
+		pane.setCenter(flipbookPane);
+		flipbook.addFrame();
+		setFrameCount(flipbook.getFrameNumber());
+		
+		openFlipbook = true;
+		
+	}
+	
+	
+	//uses frameRate in flipbook to call the forward function at timed intervals
+	public void animate() {
+	
+		isAnimating = true;
+	
+		KeyFrame keyFrame = new KeyFrame(Duration.millis(flipbook.getFrameTime()), 
+	            event -> {flipbook.forward(); setFrameCount(flipbook.getFrameNumber()); System.out.println("Frame #: " + flipbook.getFrameNumber() );});
+	        Timeline timeline = new Timeline(keyFrame);
+	    
+		timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());
+		
+		timeline.play();
+		
+		timeline.setOnFinished(e -> {isAnimating = false;});
+	}
 
 
+	//sets frame count in the bottom container
+	public void setFrameCount(int frameNumber) {
+		currentFrame.setText(frameMessage + flipbook.getFrameNumber());
+	}
+	
+	
 	public static void main(String[] args) {
 		
 		launch();
