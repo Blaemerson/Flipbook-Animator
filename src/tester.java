@@ -46,16 +46,17 @@ public class tester extends Application {
 	//program name
 	final String appTitle = "Flipbook Proto 2a";
 	
-	//control variables
+	//prevents actions from occuring when there are potential conflicts
 	boolean openFlipbook = false;
 	boolean isAnimating = false;
 	
     @Override
     public void start(Stage stage) {
     	
+    	//window title
     	stage.setTitle(appTitle);
     	
-    	//container instantiation
+    	//container instantiation setting backgrounds
     	pane = new BorderPane();
     	pane.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
     	
@@ -69,7 +70,9 @@ public class tester extends Application {
     	//toolbar up top to store buttons
     	toolbar = new ToolBar();
     	
+    	//setting equal so the stage can be referenced in other functions
     	myStage = stage;
+    	
     	//the scene is what holds the pane, which holds all the other nodes
         Scene scene = new Scene(pane, 1024, 768);
     	
@@ -80,9 +83,8 @@ public class tester extends Application {
         
     	//creating flipbook (which makes no sense because newFile hasn't been called
     	//but it's a prototype, who really cares?
-    	flipbook = new Flipbook(640, 480, "test");
-    	flipbookPane.getChildren().add(flipbook.getGroup());
-    	flipbookPane.setMaxSize(640, 480);
+    	
+    	
     	
     	// setting position of nodes
    	    pane.setTop(toolbar);
@@ -181,13 +183,13 @@ public class tester extends Application {
     	 //and destination
     	 FileChooser savefile = new FileChooser();
          savefile.setTitle("Save File");
-         savefile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
+         savefile.getExtensionFilters().add(new ExtensionFilter("FAP file", "*.fap"));
          
          //create a file in the destination they picked
          File file = savefile.showSaveDialog(myStage);
          
          
-         //write data to .flip file
+         //write data to .fap file
          if (file != null) {
         	 
              try {
@@ -211,10 +213,10 @@ public class tester extends Application {
     //takes previously stored data in .flip file and parses it back into a string
     public void open() {
     	    	
-    	//opens a window to allow you to pick a .flip file
+    	//opens a window to allow you to pick a .fap file
     	 FileChooser openfile = new FileChooser();
          openfile.setTitle("Open");
-         openfile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
+         openfile.getExtensionFilters().add(new ExtensionFilter("FAP file", "*.fap"));
          
          File file = openfile.showOpenDialog(myStage);
                
@@ -228,7 +230,12 @@ public class tester extends Application {
     }
 
     //makes the first frame and allows other keyboard events to occur
+    //TODO: Add new file menu, allow user to change canvas size at that time
 	public void newFile() {
+		
+		flipbook = new Flipbook(640, 480, "test");
+		flipbookPane.getChildren().add(flipbook.getGroup());
+    	flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 		
 		pane.setCenter(flipbookPane);
 		flipbook.addFrame();
@@ -245,7 +252,13 @@ public class tester extends Application {
 		isAnimating = true;
 	
 		KeyFrame keyFrame = new KeyFrame(Duration.millis(flipbook.getFrameTime()), 
-	            event -> {flipbook.forward(); setFrameCount(flipbook.getFrameNumber()); System.out.println("Frame #: " + flipbook.getFrameNumber() );});
+	            event -> {
+	            	
+	            	flipbook.forward(); setFrameCount(flipbook.getFrameNumber()); 
+	            	System.out.println("Frame #: " + flipbook.getFrameNumber());
+	            	
+	            	});
+		
 	        Timeline timeline = new Timeline(keyFrame);
 	    
 		timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());

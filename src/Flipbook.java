@@ -17,6 +17,7 @@ import javafx.scene.image.WritableImage;
 
 public class Flipbook {
 	
+	
 	//small class to contain the base64 img and frame visibility
 	//also includes the frame generation function
 	private class FrameData{
@@ -55,22 +56,27 @@ public class Flipbook {
 	private String bookName;
 	private int canvasWidth;
 	private int canvasHeight;
+	
+	//opacity variables; they determine what the initial onion frame's opacity fill be
+	//and help calculate the loss of opacity as you see further frames
 	private double maxOnionOpacity = 0.6;
 	private double minOnionOpacity = 0.1;
 	
 	//frame rate in fps
 	private int frameRate = 20;
 	
-	//in milliseconds
+	//frame length in milliseconds
 	private long frameTime = Math.round((1.0/frameRate) * 1000);
 	
-	//min: 1
+	//The minimum amount of frames should be 1. NEVER SET THIS TO 0.
+	//Setting it to 0 will cause a divide by 0 when calculating the opacity delta 
+	//in the setFrame function
 	private int numPrevFramesToShow = 2;
 	
-	//Doesn't work yet on build 2a (this is 2a)
+	//Doesn't work on build 2a (this is 2a)
 	private boolean onionSkinningEnabled = false;
 	
-	//current frame
+	//current frame index
 	private int curFrame = 0;
 	
 	//this object holds the frame canvases and allows them to be displayed
@@ -90,7 +96,7 @@ public class Flipbook {
 	}
 	
 	
-	//clears group of all frames, which effectively clears screen
+	//sets frame visibility to false. When the update function gets called, this will 'clear the screen'
 	private void clearScreen() {
 	
 		for(FrameData f: frames) {
@@ -109,9 +115,14 @@ public class Flipbook {
 			clearScreen();
 			
 			if(onionSkinningEnabled) {
+				//how much we need to split the opacity range by for each frame
 				double opacityDelta = 1.0/(numPrevFramesToShow);
+				
+				//what the spread from first onion frame opacity to last frame opacity is
 				double opacityRange = maxOnionOpacity - minOnionOpacity;
 				
+				
+				//the step between each frame
 				opacityDelta *= opacityRange;
 			
 				for(int i = 0; i <= numPrevFramesToShow && (frameNumber - i >= 0); i++) {
@@ -119,16 +130,20 @@ public class Flipbook {
 					
 					    frames.get(frameNumber - i).isVisible = true;
 					    
+					    //do not change the first frame
 					    if(i != 0) {
 					    	
+					    	//the opacity gets lower the further you go from the current frame
+					    	//the further we go back, the more opacity we subtract
 					    	frames.get(frameNumber - i).opacity = (maxOnionOpacity - (opacityDelta*(i-1)));
-					    	System.out.println((maxOnionOpacity - (opacityDelta*(i-1))));
+					    	
 					    }
-					    
 				}
+				
 						
 			}
 			
+			//if onion skinning is off, we just show the selected frame only
 			else {
 				
 				frames.get(frameNumber).isVisible = true;
@@ -144,6 +159,7 @@ public class Flipbook {
 	}
 	
 	
+	//clear the group, add visible frames to the group
 	public void update() {
 		
 		group.getChildren().clear();
@@ -164,11 +180,11 @@ public class Flipbook {
 	
 		Frame frame = new Frame(canvasWidth, canvasHeight);
 		FrameData frameData = new FrameData(generateImgURL(frame), false, 1);
-		
+	
+		//if we have no frames, add a frame, set the frame on the canvas, and 
 		if(frames.size() < 1) {
 			frames.add(frameData);
 			setFrame(curFrame);
-			forward();
 		}
 		
 		else {
@@ -190,11 +206,12 @@ public class Flipbook {
 	public void forward() {
 		
 		
+		
+		//TODO: Maybe add a changesMade variable so that we don't always have to generate a URL
 		if(curFrame + 1 < frames.size()) {
 			
-			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);	
-			String img = generateImgURL(f);
-			frames.get(curFrame).imgString = img;
+			//we need to save the frame we're on, then we can advance
+			saveFrame();
 			
 			curFrame++;
 			setFrame(curFrame);
@@ -210,16 +227,12 @@ public class Flipbook {
 		
 		if(curFrame - 1 >= 0 ) {
 		
-		
-			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);
-			
-			String img = generateImgURL(f);
-			
-			frames.get(curFrame).imgString = img;
-			
+			//we need to save the frame we're on
+			saveFrame();
 			
 			curFrame--;
 			setFrame(curFrame);
+			
 		}
 				
 	}
@@ -234,6 +247,8 @@ public class Flipbook {
 	 */
 	
 	//TODO: Implement Serializable??
+	//Serializable would create an easy interface to saving
+	//it could be the end game for the save file
 	public String createFileForSave() {
 		
 		ArrayList<String> convertedImages = new ArrayList<String>();
@@ -277,13 +292,17 @@ public class Flipbook {
 		
 		//parsing values into their respective variables
 		try {
+			
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		
 		bookName = reader.readLine();
 		canvasWidth = Integer.parseInt(reader.readLine());
 		canvasHeight = Integer.parseInt(reader.readLine());
 		
+		
 		//this sc.nextLine() is ignoring the line that says how many frames there are
+		//could be useful, but not really necessary
+		//after all frames are added, you can just get frames.size() to see how many frames there are
 		reader.readLine();
 	
 		while(reader.ready()) {
@@ -310,6 +329,7 @@ public class Flipbook {
 	}
 	
 	
+	//gets a frame, generates the img URL
 	public String generateImgURL(Frame f) {
 		
 		
@@ -336,7 +356,18 @@ public class Flipbook {
 		
 	}
 	
+	//saves the current frame back to it's frameData object
+	//makes sure we save changes to the frame when we draw on it, etc
+	public void saveFrame() {
+		
+		Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);	
+		String img = generateImgURL(f);
+		frames.get(curFrame).imgString = img;
+		
+	}
 	
+	
+	//basic getters
 	public int getNumFrames() {
 		return frames.size();
 	}
@@ -349,9 +380,14 @@ public class Flipbook {
 		return curFrame;
 	}
 
+	public int getCanvasWidth() {
+		return canvasWidth;
+	}
 	
-	//basic getters
-
+	public int getCanvasHeight() {
+		return canvasHeight;
+	}
+	
 	public Group getGroup() {
 		return group;
 	}
