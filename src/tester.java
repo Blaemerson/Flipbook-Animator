@@ -7,8 +7,11 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +28,8 @@ import javafx.stage.*;
 
 public class tester extends Application {
 	
-	Flipbook flipbook; 
+	Flipbook flipbook;
+	
 	
 	// frame counter at bottom of application
 	String frameMessage = "Current Frame: ";
@@ -37,6 +41,8 @@ public class tester extends Application {
 	Stage myStage;
 	HBox frameCountDisplay;
 	Pane flipbookPane;
+	Canvas drawLayer;
+	
 	
 	//making buttons
 	Button newButton = new Button("New");
@@ -62,6 +68,7 @@ public class tester extends Application {
     	
     	flipbookPane = new Pane();
     	flipbookPane.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
+    	
     	
     	frameCountDisplay = new HBox();
     	frameCountDisplay.setBackground(new Background(new BackgroundFill(Color.WHITE, CornerRadii.EMPTY, Insets.EMPTY)));
@@ -235,9 +242,22 @@ public class tester extends Application {
 	public void newFile() {
 		
 		flipbook = new Flipbook(640, 480, "test");
-		flipbookPane.getChildren().add(flipbook.getGroup());
+		
     	flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 		
+    	drawLayer = new Canvas(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
+    	
+    	drawLayer.setOnMousePressed(e -> {handleMousePressed(e);});
+    	
+    	drawLayer.setOnMouseDragged(e->{
+            
+          handleMouseDragged(e);
+           
+	   });	
+    	
+    	
+    	flipbookPane.getChildren().addAll(flipbook.getGroup(), drawLayer);
+    	
 		pane.setCenter(flipbookPane);
 		flipbook.addFrame();
 		setFrameCount(flipbook.getFrameNumber());
@@ -282,6 +302,26 @@ public class tester extends Application {
 	//sets frame count in the bottom container
 	public void setFrameCount(int frameNumber) {
 		currentFrame.setText(frameMessage + flipbook.getFrameNumber());
+	}
+	
+	
+	public void handleMousePressed(MouseEvent e) {
+		
+		GraphicsContext gc = flipbook.getGraphicsContext();
+		
+		  gc.beginPath();
+          gc.lineTo(e.getX(), e.getY());
+		
+		
+	}
+	
+	public void handleMouseDragged(MouseEvent e) {
+		
+		GraphicsContext gc = flipbook.getGraphicsContext();
+		
+		gc.lineTo(e.getX(), e.getY());
+        gc.stroke();   
+		
 	}
 	
 	

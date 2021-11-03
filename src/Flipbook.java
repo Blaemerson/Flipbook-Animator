@@ -7,6 +7,7 @@ import java.util.*;
 import javax.imageio.ImageIO;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.*;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -18,27 +19,60 @@ import javafx.scene.paint.Color;
 
 public class Flipbook {
 	
-	
+	//TODO: layers
 	//small class to contain the base64 img and frame visibility
 	//also includes the frame generation function
+
+	 private class LayerData{
+			String imgString;
+			boolean isVisible;
+			Layer layer;
+			
+			LayerData(String img, boolean visible){
+				this.imgString = img;
+				this.isVisible = true;
+				
+				this.layer = new Layer(canvasWidth, canvasHeight);
+				
+			}
+			
+		}
+	
+	
 	private class FrameData{
+		
 		String imgString;
 		boolean isVisible;
 		double opacity;
 		
+		ArrayList<LayerData> layers;
+		
 		
 		FrameData(String img, boolean visible, double opacity){
-			this.imgString = img;
+			
 			this.isVisible = visible;
 			this.opacity = opacity;
+			this.layers = new ArrayList<LayerData>();
+			layers.add(new LayerData(img, visible));
 		}
 		
-		public Frame generateFrame() {
-			Frame f = new Frame(canvasWidth, canvasHeight);
-			f.getGraphicsContext().drawImage(new Image(imgString), 0, 0);
-			f.setOpacity(this.opacity);
+		public Group generateGroup() {
+			Group g = new Group();
 			
-			return f;
+			for(LayerData l: layers) {
+				
+				if(l.isVisible) {
+				
+				l.layer.getGraphicsContext().drawImage(new Image(l.imgString), 0, 0);
+				g.getChildren().add(l.layer);
+				
+				}
+				
+			}
+			
+			g.setOpacity(this.opacity);
+			
+			return g;
 		}
 		
 	
@@ -64,7 +98,7 @@ public class Flipbook {
 	private double minOnionOpacity = 0.1;
 	
 	//frame rate in fps
-	private int frameRate = 20;
+	private int frameRate = 30;
 	
 	//frame length in milliseconds
 	private long frameTime = Math.round((1.0/frameRate) * 1000);
@@ -74,7 +108,7 @@ public class Flipbook {
 	//in the setFrame function
 	private int numPrevFramesToShow = 2;
 	
-	//Doesn't work on build 2a (this is 2a)
+	
 	private boolean onionSkinningEnabled = true;
 	
 	//current frame index
@@ -169,8 +203,7 @@ public class Flipbook {
 		
 		for(FrameData f: frames) {
 			if(f.isVisible) {
-				group.getChildren().add(f.generateFrame());
-				
+				group.getChildren().add(f.generateGroup());
 			}
 		}
 		
@@ -182,8 +215,8 @@ public class Flipbook {
 	//makes a blank frame and adds it where the function is called
 	public void addFrame() {
 	
-		Frame frame = new Frame(canvasWidth, canvasHeight);
-		FrameData frameData = new FrameData(generateImgURL(frame), false, 0);
+		Layer layer = new Layer(canvasWidth, canvasHeight);
+		FrameData frameData = new FrameData(generateImgURL(layer), false, 0);
 		
 		System.out.println(frameData.imgString);
 		
@@ -196,9 +229,12 @@ public class Flipbook {
 		
 		else {
 			
-			Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);
-			String img = generateImgURL(f);
-			frames.get(curFrame).imgString = img;
+			
+		
+			for(LayerData l: frames.get(curFrame).layers) {
+				String img = generateImgURL(l.layer);
+				l.imgString = img;
+			}
 			
 			frames.add(curFrame+1, frameData);
 			setFrame(curFrame);
@@ -219,7 +255,7 @@ public class Flipbook {
 			
 			//we need to save the frame we're on, then we can advance
 			if(!isAnimating) {
-			saveFrame();
+				saveFrame();
 			}
 			
 			curFrame++;
@@ -347,7 +383,7 @@ public class Flipbook {
 	
 	
 	//gets a frame, generates the img URL
-	public String generateImgURL(Frame f) {
+	public String generateImgURL(Node n) {
 		
 		
 		
@@ -355,14 +391,13 @@ public class Flipbook {
 		params.setFill(Color.TRANSPARENT);
 		
 		 //snapshot takes an 'image' of the canvas so that we can save it for later
-		WritableImage writableImage = f.snapshot(params, null);
+		WritableImage writableImage = n.snapshot(params, null);
         
         //setting up base 64 conversion
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
+        	
             ImageIO.write(SwingFXUtils.fromFXImage(writableImage, null), "png", baos);
-            
-            
             
         } catch (IOException e) {
             e.printStackTrace();
@@ -382,9 +417,10 @@ public class Flipbook {
 		
 		long tInit = System.nanoTime();
 		
-		Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);	
-		String img = generateImgURL(f);
-		frames.get(curFrame).imgString = img;
+		for(LayerData l: frames.get(curFrame).layers) {
+			String img = generateImgURL(l.layer);
+			l.imgString = img;
+		}
 		
 		long tFinish = System.nanoTime();
 		
@@ -421,6 +457,15 @@ public class Flipbook {
 	public int getFrameNumber() {
 		return curFrame;
 	}
+	
+	public GraphicsContext getGraphicsContext() {
+		return frames.get(curFrame).layers.get(0).layer.getGraphicsContext();
+	}
+	
+	
+	
+	
+	
 
 }
 
