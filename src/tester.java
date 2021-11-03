@@ -89,7 +89,6 @@ public class tester extends Application {
     	// setting position of nodes
    	    pane.setTop(toolbar);
         pane.setBottom(frameCountDisplay);
-    	
        
                
         //and the stage is the top level container; it's the actual window
@@ -131,7 +130,7 @@ public class tester extends Application {
    	 		
    	 		//go forward a frame when ] is pressed
         	if(e.getCode() == KeyCode.CLOSE_BRACKET && openFlipbook) {
-        		flipbook.forward();
+        		flipbook.forward(false);
         		setFrameCount(flipbook.getFrameNumber());
         	}
         	
@@ -183,7 +182,7 @@ public class tester extends Application {
     	 //and destination
     	 FileChooser savefile = new FileChooser();
          savefile.setTitle("Save File");
-         savefile.getExtensionFilters().add(new ExtensionFilter("FAP file", "*.fap"));
+         savefile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
          
          //create a file in the destination they picked
          File file = savefile.showSaveDialog(myStage);
@@ -213,13 +212,15 @@ public class tester extends Application {
     //takes previously stored data in .flip file and parses it back into a string
     public void open() {
     	    	
-    	//opens a window to allow you to pick a .fap file
+    	//opens a window to allow you to pick a .flip file
     	 FileChooser openfile = new FileChooser();
          openfile.setTitle("Open");
-         openfile.getExtensionFilters().add(new ExtensionFilter("FAP file", "*.fap"));
+         openfile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
          
          File file = openfile.showOpenDialog(myStage);
                
+         newFile();
+         
          flipbook.openFile(file);
          
          pane.setCenter(flipbookPane);
@@ -254,8 +255,17 @@ public class tester extends Application {
 		KeyFrame keyFrame = new KeyFrame(Duration.millis(flipbook.getFrameTime()), 
 	            event -> {
 	            	
-	            	flipbook.forward(); setFrameCount(flipbook.getFrameNumber()); 
+	            	
+	            	
+	            	flipbook.forward(true); 
+	            	
+	            	
+	            	
+	            	
+	            	setFrameCount(flipbook.getFrameNumber()); 
 	            	System.out.println("Frame #: " + flipbook.getFrameNumber());
+	            	
+	            	
 	            	
 	            	});
 		

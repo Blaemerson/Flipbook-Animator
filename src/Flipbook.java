@@ -9,6 +9,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 
 
@@ -74,7 +75,7 @@ public class Flipbook {
 	private int numPrevFramesToShow = 2;
 	
 	//Doesn't work on build 2a (this is 2a)
-	private boolean onionSkinningEnabled = false;
+	private boolean onionSkinningEnabled = true;
 	
 	//current frame index
 	private int curFrame = 0;
@@ -137,6 +138,8 @@ public class Flipbook {
 					    	//the further we go back, the more opacity we subtract
 					    	frames.get(frameNumber - i).opacity = (maxOnionOpacity - (opacityDelta*(i-1)));
 					    	
+					    	
+					    	
 					    }
 				}
 				
@@ -166,11 +169,12 @@ public class Flipbook {
 		
 		for(FrameData f: frames) {
 			if(f.isVisible) {
-				Frame frame = f.generateFrame();
-				group.getChildren().add(frame);
+				group.getChildren().add(f.generateFrame());
 				
 			}
 		}
+		
+		
 		
 	}
 	
@@ -179,7 +183,10 @@ public class Flipbook {
 	public void addFrame() {
 	
 		Frame frame = new Frame(canvasWidth, canvasHeight);
-		FrameData frameData = new FrameData(generateImgURL(frame), false, 1);
+		FrameData frameData = new FrameData(generateImgURL(frame), false, 0);
+		
+		System.out.println(frameData.imgString);
+		
 	
 		//if we have no frames, add a frame, set the frame on the canvas, and 
 		if(frames.size() < 1) {
@@ -195,7 +202,7 @@ public class Flipbook {
 			
 			frames.add(curFrame+1, frameData);
 			setFrame(curFrame);
-			forward();
+			forward(false);
 		}
 			
 		
@@ -203,24 +210,34 @@ public class Flipbook {
 	}
 	
 	//checks if there is a frame to move forward to, and does it if so
-	public void forward() {
+	public void forward(boolean isAnimating) {
 		
-		
+		long tInit = System.nanoTime();
 		
 		//TODO: Maybe add a changesMade variable so that we don't always have to generate a URL
 		if(curFrame + 1 < frames.size()) {
 			
 			//we need to save the frame we're on, then we can advance
+			if(!isAnimating) {
 			saveFrame();
+			}
 			
 			curFrame++;
 			setFrame(curFrame);
 			
 		}
 		
+		long tFinish = System.nanoTime();
 		
+		System.out.println("Time Forward(): " + ((tFinish-tInit) / 1000000));
 		
 	}
+	
+	
+
+	
+	
+	
 	
 	//checks if there is a frame to move back to, and does it if so
 	public void backward() {
@@ -334,8 +351,11 @@ public class Flipbook {
 		
 		
 		
+		SnapshotParameters params = new SnapshotParameters();
+		params.setFill(Color.TRANSPARENT);
+		
 		 //snapshot takes an 'image' of the canvas so that we can save it for later
-		WritableImage writableImage = f.snapshot(null, null);
+		WritableImage writableImage = f.snapshot(params, null);
         
         //setting up base 64 conversion
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -360,9 +380,15 @@ public class Flipbook {
 	//makes sure we save changes to the frame when we draw on it, etc
 	public void saveFrame() {
 		
+		long tInit = System.nanoTime();
+		
 		Frame f = (Frame)group.getChildren().get(group.getChildren().size()-1);	
 		String img = generateImgURL(f);
 		frames.get(curFrame).imgString = img;
+		
+		long tFinish = System.nanoTime();
+		
+		System.out.println("Time saveFrame(): " + ((tFinish-tInit) / 1000000));
 		
 	}
 	
