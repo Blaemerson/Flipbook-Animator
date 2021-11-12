@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+      <MenuBar>
+          <Menu mnemonicParsing="false" text="File">
+                  <MenuItem mnemonicParsing="false" onAction="#onNewFileChosen" text="New" />
+                  <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open" />
+                  <MenuItem mnemonicParsing="false" onAction="#onSaveFileChose" text="Save" />
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+              <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Frame" />
+          </Menu>
+          <Menu mnemonicParsing="false" text="View">
+              <MenuItem mnemonicParsing="false" onAction="#onToggleOnionSkinning" text="Toggle onion skinning" />
+          </Menu>
+      </MenuBar>
+      <SplitPane orientation="VERTICAL">
+          <AnchorPane />
+      </SplitPane>
+      <SplitPane style="-fx-background-color: SANDYBROWN;" VBox.vgrow="ALWAYS">
+         <VBox.margin>
+            <Insets />
+         </VBox.margin></SplitPane>
+      <ButtonBar buttonMinWidth="50.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="50.0" prefWidth="200.0">
+        <buttons>
+            <Button mnemonicParsing="false" onAction="#lastFrame" text="Last" />
+            <Button mnemonicParsing="false" onAction="#nextFrame" text="Next" />
+            <Button mnemonicParsing="false" onAction="#play" text="Play" />
+            <Button mnemonicParsing="false" onAction="#prevFrame" text="Previous" />
+          <Button mnemonicParsing="false" onAction="#firstFrame" text="First" />
+        </buttons>
+      </ButtonBar>
+</VBox>
