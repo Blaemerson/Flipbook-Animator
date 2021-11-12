@@ -2,8 +2,10 @@ package ui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import model.Flipbook;
 
 public class WindowController {
+
     // File
     @FXML
     protected void onNewFileChosen() {
@@ -24,7 +26,6 @@ public class WindowController {
     // View
     @FXML
     protected void onToggleOnionSkinning() {
-        System.out.println("Onion Skinning Toggle");
     }
 
     // Media Controls
