@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
-      <BorderPane layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+      <BorderPane fx:id="pane" layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <MenuBar BorderPane.alignment="CENTER">
                 <Menu mnemonicParsing="false" text="File">
-                    <MenuItem mnemonicParsing="false" text="New" />
+                    <MenuItem mnemonicParsing="false" onAction="#newFile" text="New" />
                         <MenuItem mnemonicParsing="false" text="Open" />
                         <MenuItem mnemonicParsing="false" text="Save" />
                 </Menu>
@@ -23,24 +19,32 @@
                     <MenuItem mnemonicParsing="false" text="Delete Current Frame" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
-                    <MenuItem mnemonicParsing="false" text="Toggle Onion Skinning" />
+                    <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
                 </Menu>
             </MenuBar>
          </top>
          <bottom>
             <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                <Button mnemonicParsing="false" text="Button" />
-                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="130.0" layoutY="14.0" mnemonicParsing="false" text="Button" />
+                <Button mnemonicParsing="false" onAction="#firstFrame" text="First" />
+                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onAction="#prevFrame" text="Prev" />
+                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onAction="#play" text="Play" />
+                  <Button layoutX="10.0" layoutY="14.0" mnemonicParsing="false" onAction="#nextFrame" text="Next" />
+                  <Button layoutX="130.0" layoutY="14.0" mnemonicParsing="false" onAction="#lastFrame" text="Last" />
             </ToolBar>
          </bottom>
          <center>
-            <ScrollPane hbarPolicy="ALWAYS" hmax="10.0" prefHeight="200.0" prefWidth="200.0" style="-fx-opacity: 0;" styleClass="edge-to-edge" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="265.0" style="-fx-background-color: WHITE;">
-                        <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="33.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true" />
-                  </AnchorPane>
+            <ScrollPane fx:id="scrollpane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" hmax="200.0" nodeOrientation="LEFT_TO_RIGHT" styleClass="edge-to-edge" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
+            <content>
+               <Pane fx:id="flipbookPane" opacity="0.0" style="-fx-background-color: WHITE;">
+                  <children>
+                     <Canvas fx:id="canvas" height="200.0" width="200.0" />
+                     <Group fx:id="group" />
+                  </children>
+               </Pane>
+            </content>
+            <BorderPane.margin>
+               <Insets />
+            </BorderPane.margin>
             </ScrollPane>
          </center>
          <left>
