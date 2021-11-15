@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane fx:id="myStage" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
       <BorderPane fx:id="pane" layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
             <MenuBar BorderPane.alignment="CENTER">
@@ -16,7 +16,8 @@
                         <MenuItem mnemonicParsing="false" text="Save" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
-                    <MenuItem mnemonicParsing="false" text="Delete Current Frame" />
+               <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
+                    <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
                 </Menu>
                 <Menu mnemonicParsing="false" text="View">
                     <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
@@ -32,25 +33,30 @@
                   <Button layoutX="130.0" layoutY="14.0" mnemonicParsing="false" onAction="#lastFrame" text="Last" />
             </ToolBar>
          </bottom>
-         <center>
-            <ScrollPane fx:id="scrollpane" fitToHeight="true" fitToWidth="true" hbarPolicy="ALWAYS" hmax="200.0" nodeOrientation="LEFT_TO_RIGHT" styleClass="edge-to-edge" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
-            <content>
-               <Pane fx:id="flipbookPane" opacity="0.0" style="-fx-background-color: WHITE;">
-                  <children>
-                     <Canvas fx:id="canvas" height="200.0" width="200.0" />
-                     <Group fx:id="group" />
-                  </children>
-               </Pane>
-            </content>
-            <BorderPane.margin>
-               <Insets />
-            </BorderPane.margin>
-            </ScrollPane>
-         </center>
          <left>
-            <ToolBar orientation="VERTICAL" prefHeight="333.0" prefWidth="64.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+            <ToolBar maxWidth="-Infinity" orientation="VERTICAL" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                 <Button mnemonicParsing="false" text="Button" />
             </ToolBar>
          </left>
+      <center>
+         <HBox BorderPane.alignment="CENTER">
+            <children>
+               <Pane fx:id="prevFrame" prefHeight="200.0" prefWidth="200.0">
+                  <opaqueInsets>
+                     <Insets />
+                  </opaqueInsets>
+                  <children>
+                     <ImageView fx:id="previmg" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                  </children>
+               </Pane>
+               <Pane fx:id="flipbookPane" minHeight="-Infinity" opacity="0.0" prefWidth="177.0" style="-fx-background-color: WHITE;">
+                  <children>
+                     <Canvas fx:id="canvas" height="200.0" width="200.0" />
+                  </children>
+               </Pane>
+               <Pane fx:id="nextFrame" prefHeight="200.0" prefWidth="200.0" />
+            </children>
+         </HBox>
+      </center>
       </BorderPane>
 </AnchorPane>

@@ -6,13 +6,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -26,8 +26,7 @@ import java.io.IOException;
 
 
 public class WindowController {
-        @FXML
-        private ScrollPane scrollpane;
+        // FXML objects; name corresponds to its FX ID
         @FXML
         private Canvas canvas;
         @FXML
@@ -41,12 +40,17 @@ public class WindowController {
         // frame counter at bottom of application
         String frameMessage = "Current Frame: ";
         Label currentFrame = new Label(frameMessage + "--");
+        @FXML
+        Slider thicknessSlider;
+
+        @FXML
+        Circle thicknesscircle;
 
         //content containers
         ToolBar toolbar;
+
         Stage myStage;
         HBox frameCountDisplay;
-        
 
         //program name
         final String appTitle = "Flipbook Proto 2a";
@@ -71,7 +75,7 @@ public class WindowController {
             //create a file in the destination they picked
             File file = savefile.showSaveDialog(myStage);
 
-            //write data to .fap file
+            //write data to .flip file
             if (file != null) {
 
                 try {
@@ -106,8 +110,6 @@ public class WindowController {
 
             flipbook.openFile(file);
 
-            pane.setCenter(scrollpane);
-            scrollpane.setContent(flipbookPane);
             flipbook.setFrame(0);
             setFrameCount(flipbook.getCurFrameNum());
             openFlipbook = true;
@@ -119,7 +121,7 @@ public class WindowController {
         @FXML
         protected void newFile() {
 
-            flipbook = new Flipbook(400, 340, "test");
+            flipbook = new Flipbook(600, 440, "test");
 
             flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 
@@ -132,9 +134,7 @@ public class WindowController {
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
             flipbookPane.setOpacity(1);
 
-            scrollpane.setContent(flipbookPane);
-            scrollpane.setFitToWidth(true);
-            pane.setCenter(scrollpane);
+            pane.setCenter(flipbookPane);
 
             flipbook.addFrame();
             setFrameCount(flipbook.getCurFrameNum());
@@ -149,7 +149,9 @@ public class WindowController {
 
             isAnimating = true;
 
-            KeyFrame keyFrame = new KeyFrame(Duration.millis(flipbook.getFrameTime()),
+            KeyFrame keyFrame = new KeyFrame(
+                    //Duration.millis(Math.round(1.0/frameRate)*1000),
+                    Duration.millis(flipbook.getFrameTime()),
                     event -> {
                         flipbook.forward(true);
                         setFrameCount(flipbook.getCurFrameNum());
@@ -171,14 +173,11 @@ public class WindowController {
             currentFrame.setText(frameMessage + flipbook.getCurFrameNum());
         }
 
-
         public void handleMousePressed(MouseEvent e) {
-
             GraphicsContext gc = flipbook.getGraphicsContext();
 
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
-
 
         }
 
@@ -188,15 +187,9 @@ public class WindowController {
 
             gc.lineTo(e.getX(), e.getY());
             gc.stroke();
-
         }
 
-
     // File
-    @FXML
-    protected void onNewFileChosen() {
-        System.out.println("New");
-    }
     @FXML
     protected void onOpenFileChosen() {
         System.out.println("Open");
@@ -208,7 +201,27 @@ public class WindowController {
 
     // Edit
     @FXML
-    protected void onDeleteChosen() { System.out.println("Delete Frame"); }
+    protected void onDeleteChosen() {
+            int curFrame = this.flipbook.getCurFrameNum();
+            if (this.flipbook.getNumFrames() == 1) {
+                this.flipbook.addFrame();
+                this.flipbook.deleteFrame(curFrame);
+                this.flipbook.setFrame(0);
+            }
+            else if (curFrame == 0) {
+                this.flipbook.deleteFrame(curFrame);
+                this.flipbook.setFrame(1);
+            }
+            else {
+                this.flipbook.deleteFrame(curFrame);
+                this.flipbook.setFrame(curFrame-1);
+            }
+    }
+    @FXML
+    protected void onInsertFrame() {
+            this.flipbook.addFrame();
+    }
+
     // View
     @FXML
     protected void toggleOnionSkinning() {
@@ -223,6 +236,7 @@ public class WindowController {
     @FXML
     protected void firstFrame() {
             this.flipbook.setFrame(0);
+            this.flipbook.update();
             System.out.println(this.flipbook.getCurFrameNum());
     }
     @FXML
@@ -243,4 +257,5 @@ public class WindowController {
         this.flipbook.forward(false);
         System.out.println(this.flipbook.getCurFrameNum());
     }
+
 }

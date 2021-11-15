@@ -52,6 +52,10 @@ public class Flipbook {
             layers.add(new LayerData(img, visible));
         }
 
+        public ArrayList<LayerData> getLayers() {
+            return this.layers;
+        }
+
         public Group generateGroup() {
             Group g = new Group();
 
@@ -85,18 +89,20 @@ public class Flipbook {
     private int canvasHeight;
 
     //frame rate in fps
-    private final int frameRate = 30;
+    private int frameRate = 10;
     private boolean onionSkinningEnabled = true;
 
     //frame length in milliseconds
     private final long frameTime = Math.round((1.0/frameRate) * 1000);
-
 
     //current frame index
     private int curFrame = 0;
 
     //this object holds the frame canvases and allows them to be displayed
     private final Group group;
+    public void setFrameRate(int fr) {
+        this.frameRate = fr;
+    }
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
 
@@ -114,6 +120,10 @@ public class Flipbook {
     public void toggleOnionSkinning() {
         this.onionSkinningEnabled = !onionSkinningEnabled;
         setFrame(this.curFrame);
+    }
+
+    public void deleteFrame(int frameNum) {
+        this.frames.remove(frameNum);
     }
 
 
@@ -174,6 +184,7 @@ public class Flipbook {
             else {
                 frames.get(frameNumber).isVisible = true;
             }
+            this.curFrame = frameNumber;
 
             update();
 
@@ -376,6 +387,10 @@ public class Flipbook {
 
         System.out.println("Time saveFrame(): " + ((tFinish-tInit) / 1000000));
 
+    }
+
+    public ArrayList<FrameData> getFrames() {
+        return this.frames;
     }
 
 
