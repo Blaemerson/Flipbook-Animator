@@ -2,6 +2,8 @@ package ui;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -12,6 +14,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -24,7 +27,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
         @FXML
@@ -33,21 +35,17 @@ public class WindowController {
         private BorderPane pane;
         @FXML
         private Pane flipbookPane;
+        @FXML
+        private ChoiceBox<String> layerPicker;
+        @FXML
+        private ColorPicker colorPicker;
 
-        private Flipbook flipbook;
+    private Flipbook flipbook;
 
 
         // frame counter at bottom of application
         String frameMessage = "Current Frame: ";
         Label currentFrame = new Label(frameMessage + "--");
-        @FXML
-        Slider thicknessSlider;
-
-        @FXML
-        Circle thicknesscircle;
-
-        //content containers
-        ToolBar toolbar;
 
         Stage myStage;
         HBox frameCountDisplay;
@@ -136,6 +134,8 @@ public class WindowController {
 
             pane.setCenter(flipbookPane);
 
+            layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
+            layerPicker.setValue("Layer 1");
             flipbook.addFrame();
             setFrameCount(flipbook.getCurFrameNum());
 
@@ -174,16 +174,19 @@ public class WindowController {
         }
 
         public void handleMousePressed(MouseEvent e) {
-            GraphicsContext gc = flipbook.getGraphicsContext();
+            GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
 
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
-
         }
 
         public void handleMouseDragged(MouseEvent e) {
-
-            GraphicsContext gc = flipbook.getGraphicsContext();
+            GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
+            if (e.isControlDown()) {
+                gc.setLineWidth(5);
+                gc.setStroke(Color.WHITE);
+            }
+            gc.setStroke(this.colorPicker.getValue());
 
             gc.lineTo(e.getX(), e.getY());
             gc.stroke();
