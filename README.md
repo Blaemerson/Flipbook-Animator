@@ -1,4 +1,4 @@
-# Flipbook-Animator
+# Onionskin Studio
 
 This project is a desktop program for Windows, Linux, and MacOS for creating simple
 hand-drawn animations. The goal of this program is to emulate the feeling of animating using pen and

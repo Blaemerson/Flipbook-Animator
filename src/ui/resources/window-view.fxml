@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+   <children>
+      <BorderPane fx:id="pane" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <MenuBar prefHeight="25.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+              <menus>
+                <Menu mnemonicParsing="false" text="File">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#newFile" text="New (Ctrl + N)" />
+                        <MenuItem mnemonicParsing="false" text="Open (Ctrl + O)" />
+                        <MenuItem mnemonicParsing="false" text="Save (Ctrl + S)" />
+                        <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
+                        <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="View">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
+                  </items>
+                </Menu>
+                  <Menu mnemonicParsing="false" text="Help">
+                     <items>
+                        <MenuItem mnemonicParsing="false" text="About" />
+                     </items>
+                  </Menu>
+              </menus>
+            </MenuBar>
+         </top>
+         <center>
+            <HBox focusTraversable="true" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane prefHeight="743.0" prefWidth="322.0">
+                     <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </Pane>
+                  <Pane fx:id="flipbookPane" opacity="0.0" prefHeight="743.0" prefWidth="279.0" style="-fx-background-color: WHITE;">
+                     <children>
+                        <Canvas fx:id="canvas" height="657.0" width="277.0" />
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="743.0" prefWidth="281.0" />
+               </children>
+            </HBox>
+         </center>
+         <bottom>
+            <AnchorPane prefHeight="155.0" prefWidth="1024.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+               <children>
+                  <Button layoutX="14.0" layoutY="31.0" mnemonicParsing="false" onAction="#firstFrame" text="First" />
+                  <Button layoutX="87.0" layoutY="31.0" mnemonicParsing="false" onAction="#prevFrame" text="Prev" />
+                  <Button layoutX="161.0" layoutY="31.0" mnemonicParsing="false" onAction="#play" text="Play" />
+                  <Button layoutX="236.0" layoutY="31.0" mnemonicParsing="false" onAction="#nextFrame" text="Next" />
+                  <Button layoutX="312.0" layoutY="31.0" mnemonicParsing="false" onAction="#lastFrame" text="Last" />
+                  <VBox fx:id="vbTimeline" layoutX="364.0" layoutY="8.0">
+                     <children>
+                        <ScrollPane fx:id="spTimeline" hbarPolicy="ALWAYS" prefHeight="142.0" prefWidth="654.0" vbarPolicy="NEVER">
+                           <content>
+                              <ImageView fx:id="timelineThumb" fitHeight="140.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
+         </bottom>
+         <left>
+            <AnchorPane prefHeight="657.0" prefWidth="158.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+               <children>
+                  <ColorPicker fx:id="colorPicker" layoutX="17.0" layoutY="172.0" promptText="colorPicker">
+                     <value>
+                        <Color />
+                     </value></ColorPicker>
+                  <Button layoutX="17.0" layoutY="27.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="90.0" layoutY="27.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="17.0" layoutY="61.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="90.0" layoutY="61.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="17.0" layoutY="95.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="90.0" layoutY="95.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="17.0" layoutY="129.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="90.0" layoutY="129.0" mnemonicParsing="false" text="Button" />
+                  <ChoiceBox id="layerPicker" fx:id="layerPicker" layoutX="17.0" layoutY="215.0" prefWidth="131.0" />
+               </children>
+            </AnchorPane>
+         </left></BorderPane>
+   </children>
+</AnchorPane>
