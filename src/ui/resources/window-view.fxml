@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -13,7 +22,7 @@
               <menus>
                 <Menu mnemonicParsing="false" text="File">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="New (Ctrl + N)" />
+                    <MenuItem fx:id="newFile" mnemonicParsing="false" text="New (Ctrl + N)" />
                         <MenuItem mnemonicParsing="false" text="Open (Ctrl + O)" />
                         <MenuItem mnemonicParsing="false" text="Save (Ctrl + S)" />
                         <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
@@ -58,14 +67,24 @@
             </HBox>
          </center>
          <bottom>
-            <AnchorPane prefHeight="86.0" prefWidth="1024.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+            <AnchorPane prefHeight="155.0" prefWidth="1024.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                <children>
                   <Button layoutX="14.0" layoutY="31.0" mnemonicParsing="false" text="First" />
                   <Button layoutX="87.0" layoutY="31.0" mnemonicParsing="false" text="Prev" />
                   <Button layoutX="161.0" layoutY="31.0" mnemonicParsing="false" text="Play" />
                   <Button layoutX="236.0" layoutY="31.0" mnemonicParsing="false" text="Next" />
                   <Button layoutX="312.0" layoutY="31.0" mnemonicParsing="false" text="Last" />
-               </children></AnchorPane>
+                  <VBox fx:id="vbTimeline" layoutX="379.0" layoutY="18.0" prefHeight="122.0" prefWidth="634.0">
+                     <children>
+                        <ScrollPane fx:id="spTimeline" hbarPolicy="ALWAYS" prefHeight="122.0" prefWidth="634.0" vbarPolicy="NEVER">
+                           <content>
+                              <ImageView fx:id="timelineThumb" fitHeight="121.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
          </bottom>
          <left>
             <AnchorPane prefHeight="657.0" prefWidth="158.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
