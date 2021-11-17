@@ -39,6 +39,7 @@ public class Flipbook {
     private class FrameData{
 
         String imgString;
+        LayerData activeLayer;
         boolean isVisible;
         double opacity;
 
@@ -50,11 +51,16 @@ public class Flipbook {
             this.opacity = opacity;
             this.layers = new ArrayList<LayerData>();
             layers.add(new LayerData(img, visible));
+            layers.add(new LayerData(img, visible));
+            layers.add(new LayerData(img, visible));
+            this.activeLayer = layers.get(0);
         }
 
         public ArrayList<LayerData> getLayers() {
             return this.layers;
         }
+
+        public void setActiveLayer(int curLayer) {this.activeLayer = this.layers.get(curLayer); }
 
         public Group generateGroup() {
             Group g = new Group();
@@ -419,7 +425,7 @@ public class Flipbook {
         return group;
     }
 
-    public GraphicsContext getGraphicsContext() {
-        return frames.get(curFrame).layers.get(0).layer.getGraphicsContext();
+    public GraphicsContext getGraphicsContext(int layerNum) {
+        return frames.get(curFrame).layers.get(layerNum).layer.getGraphicsContext();
     }
 }
