@@ -71,6 +71,7 @@
          <bottom>
             <AnchorPane prefHeight="155.0" prefWidth="1024.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                <children>
+<<<<<<< Updated upstream
                   <Button layoutX="14.0" layoutY="31.0" mnemonicParsing="false" onAction="#firstFrame" text="First" />
                   <Button layoutX="87.0" layoutY="31.0" mnemonicParsing="false" onAction="#prevFrame" text="Prev" />
                   <Button layoutX="161.0" layoutY="31.0" mnemonicParsing="false" onAction="#play" text="Play" />
@@ -85,6 +86,49 @@
                         </ScrollPane>
                      </children>
                   </VBox>
+=======
+                  <Button layoutX="88.0" layoutY="29.0" mnemonicParsing="false" text="Prev">
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/2x/baseline_fast_rewind_black_24dp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="162.0" layoutY="29.0" mnemonicParsing="false" text="Play">
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/2x/baseline_play_arrow_black_24dp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="235.0" layoutY="29.0" mnemonicParsing="false" text="Next">
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/2x/baseline_fast_forward_black_24dp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="312.0" layoutY="29.0" mnemonicParsing="false" text="Last">
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/2x/baseline_last_page_black_24dp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></Button>
+                  <Button layoutX="14.0" layoutY="29.0" mnemonicParsing="false" text="First">
+                     <graphic>
+                        <ImageView fitHeight="22.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/2x/baseline_first_page_black_24dp.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+>>>>>>> Stashed changes
                </children></AnchorPane>
          </bottom>
          <left>
