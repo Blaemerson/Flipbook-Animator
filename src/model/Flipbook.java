@@ -123,8 +123,8 @@ public class Flipbook {
 
     }
 
-    public void toggleOnionSkinning() {
-        this.onionSkinningEnabled = !onionSkinningEnabled;
+    public void setOnionSkinning(boolean os) {
+        this.onionSkinningEnabled = os;
         setFrame(this.curFrame);
     }
 
@@ -140,6 +140,10 @@ public class Flipbook {
             f.isVisible = false;
             f.opacity = 1;
         }
+    }
+
+    public FrameData getCurrentFrame() {
+        return this.frames.get(curFrame);
     }
 
     //allows user to pick a frame and display it on the screen
@@ -242,7 +246,6 @@ public class Flipbook {
 
     //checks if there is a frame to move forward to, and does it if so
     public void forward(boolean isAnimating) {
-
         long tInit = System.nanoTime();
 
         //TODO: Maybe add a changesMade variable so that we don't always have to generate a URL
