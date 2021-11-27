@@ -123,8 +123,8 @@ public class Flipbook {
 
     }
 
-    public void toggleOnionSkinning() {
-        this.onionSkinningEnabled = !onionSkinningEnabled;
+    public void setOnionSkinning(boolean os) {
+        this.onionSkinningEnabled = os;
         setFrame(this.curFrame);
     }
 
@@ -242,7 +242,6 @@ public class Flipbook {
 
     //checks if there is a frame to move forward to, and does it if so
     public void forward(boolean isAnimating) {
-
         long tInit = System.nanoTime();
 
         //TODO: Maybe add a changesMade variable so that we don't always have to generate a URL
@@ -387,6 +386,7 @@ public class Flipbook {
 
         for(LayerData l: frames.get(curFrame).layers) {
             l.imgString = generateImgURL(l.layer);
+            System.out.println(l.imgString);
         }
 
         long tFinish = System.nanoTime();

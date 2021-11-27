@@ -1,110 +1,277 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
    <children>
-      <BorderPane fx:id="pane" prefHeight="768.0" prefWidth="1024.0" style="-fx-background-color: SANDYBROWN;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <top>
-            <MenuBar prefHeight="25.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
-              <menus>
-                <Menu mnemonicParsing="false" text="File">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#newFile" text="New (Ctrl + N)" />
-                        <MenuItem mnemonicParsing="false" text="Open (Ctrl + O)" />
-                        <MenuItem mnemonicParsing="false" text="Save (Ctrl + S)" />
-                        <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
-                        <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
-                        <MenuItem mnemonicParsing="false" text="Undo" />
-                        <MenuItem mnemonicParsing="false" text="Redo" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="View">
-                  <items>
-                    <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
-                  </items>
-                </Menu>
-                  <Menu mnemonicParsing="false" text="Help">
-                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                     </items>
-                  </Menu>
-              </menus>
-            </MenuBar>
-         </top>
-         <center>
-            <HBox focusTraversable="true" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <children>
-                  <Pane prefHeight="743.0" prefWidth="322.0">
+      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <BorderPane minWidth="100.0" style="-fx-background-color: f4a658;" HBox.hgrow="ALWAYS">
+               <top>
+                  <MenuBar prefHeight="25.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#newFile" text="New (Ctrl + N)" />
+                              <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open (Ctrl + O)" />
+                              <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save (Ctrl + S)" />
+                              <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
+                              <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="View">
+                        <items>
+                          <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
+                        </items>
+                      </Menu>
+                        <Menu mnemonicParsing="false" text="Help">
+                           <items>
+                              <MenuItem mnemonicParsing="false" text="About" />
+                           </items>
+                        </Menu>
+                    </menus>
+                  </MenuBar>
+               </top>
+               <bottom>
+                  <AnchorPane minWidth="32.0" prefHeight="108.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                      <children>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-                     </children>
-                  </Pane>
-                  <Pane fx:id="flipbookPane" opacity="0.0" prefHeight="743.0" prefWidth="279.0" style="-fx-background-color: WHITE;">
-                     <children>
-                        <Canvas fx:id="canvas" height="657.0" width="277.0" />
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="743.0" prefWidth="281.0" />
-               </children>
-            </HBox>
-         </center>
-         <bottom>
-            <AnchorPane prefHeight="155.0" prefWidth="1024.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
-               <children>
-                  <Button layoutX="14.0" layoutY="31.0" mnemonicParsing="false" onAction="#firstFrame" text="First" />
-                  <Button layoutX="87.0" layoutY="31.0" mnemonicParsing="false" onAction="#prevFrame" text="Prev" />
-                  <Button layoutX="161.0" layoutY="31.0" mnemonicParsing="false" onAction="#play" text="Play" />
-                  <Button layoutX="236.0" layoutY="31.0" mnemonicParsing="false" onAction="#nextFrame" text="Next" />
-                  <Button layoutX="312.0" layoutY="31.0" mnemonicParsing="false" onAction="#lastFrame" text="Last" />
-                  <VBox fx:id="vbTimeline" layoutX="364.0" layoutY="8.0">
-                     <children>
-                        <ScrollPane fx:id="spTimeline" hbarPolicy="ALWAYS" prefHeight="142.0" prefWidth="654.0" vbarPolicy="NEVER">
+                        <Button fx:id="btnFirstFrame" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#firstFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="24.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/baseline_first_page_black_24dp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="72.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#prevFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="24.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/baseline_fast_forward_black_24dp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="144.0" mnemonicParsing="false" onAction="#play" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="24.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                 <viewport>
+                                    <Rectangle2D />
+                                 </viewport>
+                                 <image>
+                                    <Image url="@icons/baseline_play_arrow_black_24dp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                        </Button>
+                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="216.0" mnemonicParsing="false" onAction="#nextFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="216.0" AnchorPane.topAnchor="24.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/baseline_fast_forward_black_24dp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="288.0" mnemonicParsing="false" onAction="#lastFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="24.0">
+                           <graphic>
+                              <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@icons/baseline_first_page_black_24dp.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <ScrollPane fx:id="spTimeline" focusTraversable="false" hbarPolicy="NEVER" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
                            <content>
-                              <ImageView fx:id="timelineThumb" fitHeight="140.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+                              <HBox fx:id="timelineBox" minHeight="32.0" minWidth="32.0" />
                            </content>
                         </ScrollPane>
                      </children>
-                  </VBox>
-               </children></AnchorPane>
-         </bottom>
-         <left>
-            <AnchorPane prefHeight="657.0" prefWidth="158.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
-               <children>
-                  <ColorPicker fx:id="colorPicker" layoutX="17.0" layoutY="172.0" promptText="colorPicker">
-                     <value>
-                        <Color />
-                     </value></ColorPicker>
-                  <Button layoutX="17.0" layoutY="27.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="90.0" layoutY="27.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="17.0" layoutY="61.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="90.0" layoutY="61.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="17.0" layoutY="95.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="90.0" layoutY="95.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="17.0" layoutY="129.0" mnemonicParsing="false" text="Button" />
-                  <Button layoutX="90.0" layoutY="129.0" mnemonicParsing="false" text="Button" />
-                  <ChoiceBox id="layerPicker" fx:id="layerPicker" layoutX="17.0" layoutY="215.0" prefWidth="131.0" />
-               </children>
-            </AnchorPane>
-         </left></BorderPane>
+                  </AnchorPane>
+               </bottom>
+               <left>
+                  <AnchorPane minWidth="0.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                     <children>
+                        <ToolBar minWidth="32.0" orientation="VERTICAL" prefWidth="80.0">
+                          <items>
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="130.0" mnemonicParsing="false" onAction="#setImage" translateX="8.0">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/image-regular.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Separator prefHeight="16.0" prefWidth="200.0" />
+                              <ChoiceBox id="layerPicker" fx:id="layerPicker" prefWidth="80.0">
+                                 <opaqueInsets>
+                                    <Insets right="8.0" />
+                                 </opaqueInsets></ChoiceBox>
+                              <Separator prefHeight="16.0" prefWidth="200.0" />
+                              <ColorPicker fx:id="colorPicker" prefHeight="32.0" prefWidth="48.0" promptText="colorPicker" translateX="8.0">
+                                 <value>
+                                    <Color />
+                                 </value>
+                              </ColorPicker>
+                            <Button contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#setPencil" translateX="8.0">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/pen-solid.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="114.0" mnemonicParsing="false" onAction="#setEraser" translateX="8.0">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/eraser-solid.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="68.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0" visible="false">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/fill-drip-solid.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Button>
+                              <Separator prefHeight="16.0" prefWidth="200.0" />
+                              <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
+                              <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Slider>
+                          </items>
+                        </ToolBar>
+                     </children>
+                  </AnchorPane>
+               </left>
+               <center>
+                  <AnchorPane AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <BorderPane fx:id="pane" minWidth="0.0" style="-fx-background-color: f4a658;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <left>
+                              <ImageView fx:id="prevFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets left="16.0" />
+                                 </BorderPane.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </left>
+                           <right>
+                              <ImageView fx:id="nextFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                                 <BorderPane.margin>
+                                    <Insets right="16.0" />
+                                 </BorderPane.margin>
+                                 <cursor>
+                                    <Cursor fx:constant="OPEN_HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </right>
+                           <bottom>
+                              <Label fx:id="currentFrame" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                 <font>
+                                    <Font size="34.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets bottom="50.0" />
+                                 </padding>
+                              </Label>
+                           </bottom>
+                           <top>
+                              <HBox fx:id="viewPort" fillHeight="false" minWidth="0.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                       <graphic>
+                                          <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons/trash-alt-solid.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                    <Pane HBox.hgrow="ALWAYS">
+                                       <HBox.margin>
+                                          <Insets left="32.0" />
+                                       </HBox.margin></Pane>
+                                    <Button alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                       <graphic>
+                                          <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@icons/clone-solid.png" />
+                                             </image>
+                                          </ImageView>
+                                       </graphic>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Button>
+                                 </children>
+                                 <BorderPane.margin>
+                                    <Insets />
+                                 </BorderPane.margin>
+                              </HBox>
+                           </top>
+                           <center>
+                              <AnchorPane fx:id="flipbookPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Canvas fx:id="canvas" />
+                                 </children>
+                                 <cursor>
+                                    <Cursor fx:constant="DEFAULT" />
+                                 </cursor>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </AnchorPane>
+                           </center>
+                        </BorderPane>
+                     </children>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </AnchorPane>
+               </center>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </BorderPane>
+         </children>
+      </HBox>
    </children>
 </AnchorPane>
