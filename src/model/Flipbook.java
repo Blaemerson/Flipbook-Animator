@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Base64;
 
 public class Flipbook {
-
-    //TODO: layers
     //small class to contain the base64 img and frame visibility
     //also includes the frame generation function
 
