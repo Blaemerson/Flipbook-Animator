@@ -11,6 +11,7 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -47,9 +48,11 @@ public class WindowController {
         @FXML
         private ImageView nextFrame;
         @FXML
-        private ScrollPane spTimeline = new ScrollPane();
-
+        private ScrollPane spTimeline;
         @FXML
+        private HBox timelineBox;
+
+    @FXML
         private Slider thickness;
         @FXML
         private Spinner animationSpeedSetter;
@@ -130,6 +133,17 @@ public class WindowController {
 
         }
 
+        public void populateTimeline() {
+            timelineBox.setSpacing(2);
+            timelineBox.getChildren().clear();
+            for (Image i : thumbnails.getThumbnails()) {
+                ImageView thumb = new ImageView(i);
+                thumb.setPreserveRatio(true);
+                thumb.setFitHeight(84);
+                timelineBox.getChildren().add(thumb);
+            }
+        }
+
         //makes the first frame and allows other keyboard events to occur
         //TODO: Add new file menu, allow user to change canvas size at that time
         @FXML
@@ -165,6 +179,7 @@ public class WindowController {
         //uses frameRate in flipbook to call the forward function at timed intervals
         public void animate() {
 
+            populateTimeline();
             this.flipbook.setOnionSkinning(false);
             isAnimating = true;
 
@@ -232,6 +247,9 @@ public class WindowController {
             else {
                 nextFrame.setImage(null);
             }
+            if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
+                timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
+            }
         }
 
     @FXML
@@ -289,6 +307,7 @@ public class WindowController {
                 this.flipbook.setFrame(curFrame-1);
             }
         this.thumbnails.remove(curFrame);
+        populateTimeline();
         updateThumbnails();
         setFrameCount();
     }
@@ -297,6 +316,7 @@ public class WindowController {
         //this.flipbook.setOnionSkinning(false);
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
         this.flipbook.addFrame();
         updateThumbnails();
@@ -321,6 +341,7 @@ public class WindowController {
     protected void firstFrame() {
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
         this.flipbook.setFrame(0);
         this.flipbook.update();
@@ -332,6 +353,7 @@ public class WindowController {
     protected void lastFrame() {
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
         this.flipbook.setFrame(this.flipbook.getNumFrames()-1);
         updateThumbnails();
@@ -342,6 +364,7 @@ public class WindowController {
     protected void prevFrame() {
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
 
         this.flipbook.backward();
@@ -353,6 +376,7 @@ public class WindowController {
     protected void nextFrame() {
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
         if (this.flipbook.getCurFrameNum()==this.flipbook.getNumFrames()-1) {
             this.flipbook.addFrame();

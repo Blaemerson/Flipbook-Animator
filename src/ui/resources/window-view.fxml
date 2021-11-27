@@ -29,8 +29,6 @@
                         <items>
                           <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
                               <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
-                              <MenuItem mnemonicParsing="false" text="Undo" />
-                              <MenuItem mnemonicParsing="false" text="Redo" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="View">
@@ -47,7 +45,7 @@
                   </MenuBar>
                </top>
                <bottom>
-                  <AnchorPane minWidth="32.0" prefHeight="104.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                  <AnchorPane minWidth="32.0" prefHeight="108.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                      <children>
                         <Button fx:id="btnFirstFrame" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#firstFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -100,9 +98,9 @@
                               </ImageView>
                            </graphic>
                         </Button>
-                        <ScrollPane fx:id="spTimeline" focusTraversable="false" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
+                        <ScrollPane fx:id="spTimeline" focusTraversable="false" hbarPolicy="NEVER" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
                            <content>
-                              <HBox fx:id="spHBox" minHeight="32.0" minWidth="32.0" />
+                              <HBox fx:id="timelineBox" minHeight="32.0" minWidth="32.0" />
                            </content>
                         </ScrollPane>
                      </children>
@@ -151,7 +149,7 @@
                                     </ImageView>
                                  </graphic>
                               </Button>
-                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="68.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0">
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="68.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0" visible="false">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>

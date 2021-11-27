@@ -142,10 +142,6 @@ public class Flipbook {
         }
     }
 
-    public FrameData getCurrentFrame() {
-        return this.frames.get(curFrame);
-    }
-
     //allows user to pick a frame and display it on the screen
     public void setFrame(int frameNumber) {
 
@@ -390,6 +386,7 @@ public class Flipbook {
 
         for(LayerData l: frames.get(curFrame).layers) {
             l.imgString = generateImgURL(l.layer);
+            System.out.println(l.imgString);
         }
 
         long tFinish = System.nanoTime();
