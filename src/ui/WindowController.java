@@ -144,8 +144,8 @@ public class WindowController {
                 Tooltip.install(timelineBox.getChildren().get(index), new Tooltip("Frame " + (index + 1)));
                 int finalIndex = index;
                 timelineBox.getChildren().get(index).setOnMousePressed((MouseEvent e) -> {
-                    System.out.println("Frame: " + (finalIndex + 1) + " pressed");
-                    this.flipbook.setFrame(finalIndex);
+                    addThumbnails(this.flipbook.getCurFrameNum());
+                    seekTo(finalIndex);
                 });
                 index++;
             }
@@ -349,29 +349,17 @@ public class WindowController {
     }
     @FXML
     protected void firstFrame() {
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
-        this.flipbook.setFrame(0);
-        this.flipbook.update();
-        updateThumbnails();
-
-        setFrameCount();
+        addThumbnails(this.flipbook.getCurFrameNum());
+        seekTo(0);
     }
     @FXML
     protected void lastFrame() {
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
-        this.flipbook.setFrame(this.flipbook.getNumFrames()-1);
-        updateThumbnails();
-
-        setFrameCount();
+        addThumbnails(this.flipbook.getCurFrameNum());
+        seekTo(this.flipbook.getNumFrames() - 1);
     }
     @FXML
     protected void prevFrame() {
+        /*
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
         populateTimeline();
@@ -381,9 +369,16 @@ public class WindowController {
         updateThumbnails();
 
         setFrameCount();
+        */
+        int curFrame = this.flipbook.getCurFrameNum();
+        if (curFrame > 0) {
+            addThumbnails(curFrame);
+            seekTo(curFrame - 1);
+        }
     }
     @FXML
     protected void nextFrame() {
+        /*
         this.flipbook.setOnionSkinning(false);
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
         populateTimeline();
@@ -397,5 +392,38 @@ public class WindowController {
         System.out.println(this.flipbook.getCurFrameNum());
 
         setFrameCount();
+         */
+
+        int curFrame = this.flipbook.getCurFrameNum();
+        addThumbnails(curFrame);
+        if (curFrame == this.flipbook.getNumFrames() - 1) {
+            this.flipbook.addFrame();
+        }
+        // Does the frame need to be saved?
+        // this.flipbook.saveFrame();
+        seekTo(curFrame + 1);
+    }
+
+    // TODO: if animating halt animation or make button unresponsive
+    // not sure if saveframe() is needed, it was only in nextframe() and prevFrame()
+    // via flipbook.forward() and flipbook.backward()
+    protected void seekTo(int frameIndex) {
+        /*
+        this.flipbook.setOnionSkinning(false);
+        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
+        populateTimeline();
+        this.flipbook.setOnionSkinning(onionSkinningOn);
+         */
+        this.flipbook.setFrame(frameIndex);
+        updateThumbnails();
+        setFrameCount();
+    }
+
+    // separated this from seekTo() to fix order of operations for nextFrame()
+    protected void addThumbnails(int curFrame){
+        this.flipbook.setOnionSkinning(false);
+        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), curFrame);
+        populateTimeline();
+        this.flipbook.setOnionSkinning(onionSkinningOn);
     }
 }
