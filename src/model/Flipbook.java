@@ -317,7 +317,7 @@ public class Flipbook {
             String layerStrings = "";
 
             for (LayerData l : f.layers)
-                layerStrings += l.imgString + ",";
+                layerStrings += l.imgString + ", ";
 
             convertedImages.add(layerStrings);
         }
@@ -365,8 +365,17 @@ public class Flipbook {
             reader.readLine();
 
             while(reader.ready()) {
-                String imageStr = reader.readLine();
-                FrameData frame = new FrameData(imageStr, false, 1);
+                String frameLine = reader.readLine();
+                String layerStrings[] = frameLine.split(",\\s");
+
+                FrameData frame = new FrameData(null, false, 1);
+                //List<LayerData> layers = frame.layers;
+                for (int i = 0, layersSize = frame.layers.size(); i < layersSize; i++) {
+                    frame.layers.set(i, new LayerData(layerStrings[i], true));
+                    //layers.get(i) = new LayerData(layerStrings[i], true);
+                    //LayerData l = layers.get(i);
+
+                }
 
                 frames.add(frame);
             }
