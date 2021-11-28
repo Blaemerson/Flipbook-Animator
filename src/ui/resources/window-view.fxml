@@ -264,6 +264,9 @@
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
+                                       <tooltip>
+                                          <Tooltip text="Delete Frame" />
+                                       </tooltip>
                                     </Button>
                                     <Pane HBox.hgrow="ALWAYS">
                                        <HBox.margin>
@@ -284,6 +287,9 @@
                                        <HBox.margin>
                                           <Insets />
                                        </HBox.margin>
+                                       <tooltip>
+                                          <Tooltip text="Insert Frame" />
+                                       </tooltip>
                                     </Button>
                                  </children>
                                  <BorderPane.margin>
