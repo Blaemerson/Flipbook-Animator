@@ -288,7 +288,7 @@ public class WindowController {
         File file = openImg.showOpenDialog(myStage);
 
         this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight()-2);
-        updateThumbnails();
+        addThumbnails(this.flipbook.getCurFrameNum());
     }
     // File
     @FXML
