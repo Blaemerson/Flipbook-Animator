@@ -10,6 +10,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.io.*;
 import java.util.Base64;
 import java.util.List;
@@ -299,10 +300,26 @@ public class Flipbook {
     //it could be the end game for the save file
     public String createFileForSave() {
 
+        // save last frame
+        saveFrame(frames.size() - 1);
+
         List<String> convertedImages = new LinkedList<>();
 
+        /*
         for(FrameData f: frames) {
             convertedImages.add(f.imgString);
+        }
+         */
+
+        //TODO: might have to make sure last frame is saved
+        //currently saveFrame() happens when new frames are added or deleted
+        for(FrameData f: frames) {
+            String layerStrings = "";
+
+            for (LayerData l : f.layers)
+                layerStrings += l.imgString + ",";
+
+            convertedImages.add(layerStrings);
         }
 
         //creates string with each element on its own line
@@ -329,7 +346,7 @@ public class Flipbook {
     public void openFile(File file) {
         //we need to clear the screen before we load a file, we also need to clear the frames arraylist
         clearScreen();
-        frames = new LinkedList<FrameData>();
+        frames = new LinkedList<>();
         curFrame = 0;
 
         //parsing values into their respective variables
@@ -403,6 +420,15 @@ public class Flipbook {
 
         System.out.println("Time saveFrame(): " + ((tFinish-tInit) / 1000000));
 
+    }
+
+    // save a specific frame
+    // used for making sure last frame is saved
+    public void saveFrame(int frameIndex) {
+        for(LayerData l: frames.get(frameIndex).layers) {
+            l.imgString = generateImgURL(l.layer);
+            System.out.println(l.imgString);
+        }
     }
 
     public List<FrameData> getFrames() {
