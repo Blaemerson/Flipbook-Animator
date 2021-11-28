@@ -8,6 +8,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
+import ui.WindowController;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -383,6 +384,7 @@ public class Flipbook {
             //always close file streams
             reader.close();
         }
+
 
         catch(IOException e) {
             e.printStackTrace();

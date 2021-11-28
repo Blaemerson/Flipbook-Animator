@@ -29,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -124,6 +125,10 @@ public class WindowController {
             newFile();
 
             flipbook.openFile(file);
+            for(int i = 0; i < flipbook.getFrames().size(); i++) {
+                flipbook.setFrame(i);
+                addThumbnails(i);
+            }
 
             firstFrame();
             flipbook.setFrame(0);
