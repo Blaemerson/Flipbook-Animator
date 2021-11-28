@@ -220,20 +220,31 @@ public class Flipbook {
         System.out.println(frameData.imgString);
 
         //if we have no frames, add a frame, set the frame on the canvas, and
+        if(frames.size() < 1 ) {
+            frames.add(frameData);
+            //setFrame(curFrame);
+        }
+        else {
+            frames.add(curFrame + 1, frameData);
+            //setFrame(curFrame);
+            forward(false);
+        }
+        /*
         if(frames.size() < 1) {
             frames.add(frameData);
             setFrame(curFrame);
         }
-
         else {
             for(LayerData l: frames.get(curFrame).layers) {
                 l.imgString = generateImgURL(l.layer);
             }
 
             frames.add(curFrame+1, frameData);
-            setFrame(curFrame);
-            forward(false);
+            //setFrame(curFrame);
+            //forward(false);
         }
+
+         */
 
 
 

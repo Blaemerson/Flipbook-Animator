@@ -45,6 +45,11 @@ public class Thumbnail {
         thumbnails.add(index, thumb);
     }
 
+    // shift thumbnails to the right when adding a new frame
+    public void shiftThumbnails(int index) {
+        thumbnails.add(index, null);
+    }
+
     public List<Image> getThumbnails() {
         return this.thumbnails;
     }

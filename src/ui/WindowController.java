@@ -151,9 +151,6 @@ public class WindowController {
             }
         }
 
-        //TODO: seek to frames using mouseclick on thumbnails in timeline
-        //public void seekTo
-
         //makes the first frame and allows other keyboard events to occur
         //TODO: Add new file menu, allow user to change canvas size at that time
         @FXML
@@ -326,12 +323,9 @@ public class WindowController {
     }
     @FXML
     protected void onInsertFrame() {
-        //this.flipbook.setOnionSkinning(false);
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
         this.flipbook.addFrame();
+        thumbnails.shiftThumbnails(this.flipbook.getCurFrameNum());
+        addThumbnails(this.flipbook.getCurFrameNum());
         updateThumbnails();
         setFrameCount();
     }
