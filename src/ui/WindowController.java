@@ -242,6 +242,8 @@ public class WindowController {
             else if (this.activeTool == "PaintBucket") {
                 gc.setFill(this.colorPicker.getValue());
             }
+            addThumbnails(this.flipbook.getCurFrameNum());
+            updateThumbnails();
         }
 
         public void updateThumbnails() {
@@ -286,6 +288,7 @@ public class WindowController {
         File file = openImg.showOpenDialog(myStage);
 
         this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight()-2);
+        updateThumbnails();
     }
     // File
     @FXML
@@ -398,6 +401,7 @@ public class WindowController {
         addThumbnails(curFrame);
         if (curFrame == this.flipbook.getNumFrames() - 1) {
             this.flipbook.addFrame();
+            addThumbnails(curFrame + 1);
         }
         // Does the frame need to be saved?
         // this.flipbook.saveFrame();
