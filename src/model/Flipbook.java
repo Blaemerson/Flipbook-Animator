@@ -11,8 +11,9 @@ import javafx.scene.paint.Color;
 
 import javax.imageio.ImageIO;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
+import java.util.LinkedList;
 
 public class Flipbook {
     //small class to contain the base64 img and frame visibility
@@ -41,20 +42,20 @@ public class Flipbook {
         boolean isVisible;
         double opacity;
 
-        ArrayList<LayerData> layers;
+        List<LayerData> layers;
 
         FrameData(String img, boolean visible, double opacity){
 
             this.isVisible = visible;
             this.opacity = opacity;
-            this.layers = new ArrayList<LayerData>();
+            this.layers = new LinkedList<>();
             layers.add(new LayerData(img, visible));
             layers.add(new LayerData(img, visible));
             layers.add(new LayerData(img, visible));
             this.activeLayer = layers.get(0);
         }
 
-        public ArrayList<LayerData> getLayers() {
+        public List<LayerData> getLayers() {
             return this.layers;
         }
 
@@ -83,7 +84,7 @@ public class Flipbook {
 
 
     // a place to store the frames
-    private ArrayList<FrameData> frames;
+    private List<FrameData> frames;
 
 
 
@@ -110,7 +111,7 @@ public class Flipbook {
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
 
-        this.frames = new ArrayList<FrameData>();
+        this.frames = new LinkedList<FrameData>();
 
         this.bookName = bookName;
 
@@ -287,7 +288,7 @@ public class Flipbook {
     //it could be the end game for the save file
     public String createFileForSave() {
 
-        ArrayList<String> convertedImages = new ArrayList<String>();
+        List<String> convertedImages = new LinkedList<>();
 
         for(FrameData f: frames) {
             convertedImages.add(f.imgString);
@@ -317,7 +318,7 @@ public class Flipbook {
     public void openFile(File file) {
         //we need to clear the screen before we load a file, we also need to clear the frames arraylist
         clearScreen();
-        frames = new ArrayList<FrameData>();
+        frames = new LinkedList<FrameData>();
         curFrame = 0;
 
         //parsing values into their respective variables
@@ -393,7 +394,7 @@ public class Flipbook {
 
     }
 
-    public ArrayList<FrameData> getFrames() {
+    public List<FrameData> getFrames() {
         return this.frames;
     }
 

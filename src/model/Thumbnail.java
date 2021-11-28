@@ -4,11 +4,13 @@ import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.LinkedList;
+
 
 public class Thumbnail {
     // Indices should correspond directly with frame indices in the flipbook.
-    private ArrayList<Image> thumbnails = new ArrayList<>();
+    private List<Image> thumbnails = new LinkedList<>();
 
     public Thumbnail(Node frameToConvert) {
         SnapshotParameters params = new SnapshotParameters();
@@ -17,9 +19,9 @@ public class Thumbnail {
     }
 
     // Alternative constructor for converting an entire flipbook to thumbnails
-    public Thumbnail(ArrayList<Node> framesToConvert) {
+    public Thumbnail(List<Node> framesToConvert) {
         SnapshotParameters params = new SnapshotParameters();
-        thumbnails = new ArrayList<>();
+        thumbnails = new LinkedList<>();
         for (Node f : framesToConvert) {
             thumbnails.add(f.snapshot(params, null));
         }
@@ -43,7 +45,7 @@ public class Thumbnail {
         thumbnails.add(index, thumb);
     }
 
-    public ArrayList<Image> getThumbnails() {
+    public List<Image> getThumbnails() {
         return this.thumbnails;
     }
 
