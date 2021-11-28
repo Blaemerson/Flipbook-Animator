@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
    <children>
-      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox minHeight="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <BorderPane minWidth="100.0" style="-fx-background-color: f4a658;" HBox.hgrow="ALWAYS">
                <top>
@@ -61,7 +45,7 @@
                   </MenuBar>
                </top>
                <bottom>
-                  <AnchorPane minWidth="32.0" prefHeight="108.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                  <AnchorPane minHeight="108.0" minWidth="32.0" prefHeight="108.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                      <children>
                         <Button fx:id="btnFirstFrame" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#firstFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -129,7 +113,7 @@
                               <Tooltip text="Jump To Last Frame" />
                            </tooltip>
                         </Button>
-                        <ScrollPane fx:id="spTimeline" focusTraversable="false" hbarPolicy="NEVER" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
+                        <ScrollPane fx:id="spTimeline" focusTraversable="false" hbarPolicy="NEVER" minHeight="98.0" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
                            <content>
                               <HBox fx:id="timelineBox" minHeight="32.0" minWidth="32.0" />
                            </content>
@@ -138,9 +122,9 @@
                   </AnchorPane>
                </bottom>
                <left>
-                  <AnchorPane minWidth="0.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                  <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
                      <children>
-                        <ToolBar minWidth="32.0" orientation="VERTICAL" prefWidth="80.0">
+                        <ToolBar minHeight="0.0" minWidth="32.0" orientation="VERTICAL" prefHeight="80.0" prefWidth="80.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <items>
                               <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="130.0" mnemonicParsing="false" onAction="#setImage" translateX="8.0">
                                  <graphic>
@@ -192,18 +176,9 @@
                                     <Tooltip text="Eraser" />
                                  </tooltip>
                               </Button>
-                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="68.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0" visible="false">
-                                 <graphic>
-                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
-                                       <image>
-                                          <Image url="@icons/fill-drip-solid.png" />
-                                       </image>
-                                    </ImageView>
-                                 </graphic>
-                              </Button>
                               <Separator prefHeight="16.0" prefWidth="200.0" />
                               <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
-                              <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
+                              <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
@@ -220,7 +195,7 @@
                            <left>
                               <ImageView fx:id="prevFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
-                                    <Insets left="16.0" />
+                                    <Insets left="32.0" />
                                  </BorderPane.margin>
                                  <cursor>
                                     <Cursor fx:constant="OPEN_HAND" />
@@ -230,7 +205,7 @@
                            <right>
                               <ImageView fx:id="nextFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
-                                    <Insets right="16.0" />
+                                    <Insets right="32.0" />
                                  </BorderPane.margin>
                                  <cursor>
                                     <Cursor fx:constant="OPEN_HAND" />
@@ -242,13 +217,10 @@
                                  <font>
                                     <Font size="34.0" />
                                  </font>
-                                 <padding>
-                                    <Insets bottom="50.0" />
-                                 </padding>
                               </Label>
                            </bottom>
                            <top>
-                              <HBox fx:id="viewPort" fillHeight="false" minWidth="0.0" BorderPane.alignment="CENTER">
+                              <HBox fx:id="viewPort" fillHeight="false" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
                                  <children>
                                     <Button alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                        <graphic>

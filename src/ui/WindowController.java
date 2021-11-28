@@ -167,6 +167,8 @@ public class WindowController {
 
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
 
+            canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
+
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
@@ -225,6 +227,11 @@ public class WindowController {
             gc.lineTo(e.getX(), e.getY());
         }
 
+        public void handleMouseReleased(MouseEvent e) {
+            addThumbnails(this.flipbook.getCurFrameNum());
+            updateThumbnails();
+        }
+
         public void handleMouseDragged(MouseEvent e) {
             GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
             gc.setLineWidth(this.thickness.getValue());
@@ -240,8 +247,6 @@ public class WindowController {
             else if (this.activeTool == "PaintBucket") {
                 gc.setFill(this.colorPicker.getValue());
             }
-            addThumbnails(this.flipbook.getCurFrameNum());
-            updateThumbnails();
         }
 
         public void updateThumbnails() {
