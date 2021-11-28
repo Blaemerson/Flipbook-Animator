@@ -176,6 +176,18 @@
                                     <Tooltip text="Eraser" />
                                  </tooltip>
                               </Button>
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="207.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/baseline_colorize_black_24dp.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip text="Eraser" />
+                                 </tooltip>
+                              </Button>
                               <Separator prefHeight="16.0" prefWidth="200.0" />
                               <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
                               <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
