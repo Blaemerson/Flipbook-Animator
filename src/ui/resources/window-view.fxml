@@ -151,7 +151,7 @@
                                     </ImageView>
                                  </graphic>
                                  <tooltip>
-                                    <Tooltip text="File Open" />
+                                    <Tooltip text="Insert Image" />
                                  </tooltip>
                               </Button>
                               <Separator prefHeight="16.0" prefWidth="200.0" />
