@@ -71,6 +71,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Jump To Last Frame" />
+                           </tooltip>
                         </Button>
                         <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="72.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#prevFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -80,6 +83,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Previous Frame" />
+                           </tooltip>
                         </Button>
                         <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="144.0" mnemonicParsing="false" onAction="#play" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -95,6 +101,9 @@
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
+                           <tooltip>
+                              <Tooltip text="Animate From This Frame" />
+                           </tooltip>
                         </Button>
                         <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="216.0" mnemonicParsing="false" onAction="#nextFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="216.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -104,6 +113,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Next Frame" />
+                           </tooltip>
                         </Button>
                         <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="288.0" mnemonicParsing="false" onAction="#lastFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="24.0">
                            <graphic>
@@ -113,6 +125,9 @@
                                  </image>
                               </ImageView>
                            </graphic>
+                           <tooltip>
+                              <Tooltip text="Jump To Last Frame" />
+                           </tooltip>
                         </Button>
                         <ScrollPane fx:id="spTimeline" focusTraversable="false" hbarPolicy="NEVER" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
                            <content>
