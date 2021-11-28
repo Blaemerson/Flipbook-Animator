@@ -142,6 +142,11 @@ public class WindowController {
                 thumb.setFitHeight(84);
                 timelineBox.getChildren().add(thumb);
                 Tooltip.install(timelineBox.getChildren().get(index), new Tooltip("Frame " + (index + 1)));
+                int finalIndex = index;
+                timelineBox.getChildren().get(index).setOnMousePressed((MouseEvent e) -> {
+                    System.out.println("Frame: " + (finalIndex + 1) + " pressed");
+                    this.flipbook.setFrame(finalIndex);
+                });
                 index++;
             }
         }
