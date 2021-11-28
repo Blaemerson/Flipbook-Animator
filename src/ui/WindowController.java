@@ -186,7 +186,7 @@ public class WindowController {
         //uses frameRate in flipbook to call the forward function at timed intervals
         public void animate() {
 
-            populateTimeline();
+            //populateTimeline();
             this.flipbook.setOnionSkinning(false);
             isAnimating = true;
 
@@ -195,6 +195,7 @@ public class WindowController {
                     Duration.millis(flipbook.getFrameTime()),
                     event -> {
                         flipbook.forward(true);
+                        populateTimeline();
                         updateThumbnails();
                         setFrameCount();
                         System.out.println("Frame #: " + flipbook.getCurFrameNum());
