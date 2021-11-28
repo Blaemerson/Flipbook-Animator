@@ -135,13 +135,19 @@ public class WindowController {
         public void populateTimeline() {
             timelineBox.setSpacing(2);
             timelineBox.getChildren().clear();
+            int index = 0;
             for (Image i : thumbnails.getThumbnails()) {
                 ImageView thumb = new ImageView(i);
                 thumb.setPreserveRatio(true);
                 thumb.setFitHeight(84);
                 timelineBox.getChildren().add(thumb);
+                Tooltip.install(timelineBox.getChildren().get(index), new Tooltip("Frame " + (index + 1)));
+                index++;
             }
         }
+
+        //TODO: seek to frames using mouseclick on thumbnails in timeline
+        //public void seekTo
 
         //makes the first frame and allows other keyboard events to occur
         //TODO: Add new file menu, allow user to change canvas size at that time
