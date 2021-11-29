@@ -252,6 +252,8 @@ public class WindowController {
 
         public void handleMouseReleased(MouseEvent e) {
             flipbook.saveFrame(this.flipbook.getCurFrameNum());
+            addThumbnails(this.flipbook.getCurFrameNum());
+            updateThumbnails();
         }
 
         public void handleMouseDragged(MouseEvent e) {
@@ -269,8 +271,6 @@ public class WindowController {
             else if (this.activeTool == "PaintBucket") {
                 gc.setFill(this.colorPicker.getValue());
             }
-            addThumbnails(this.flipbook.getCurFrameNum());
-            updateThumbnails();
         }
 
         public void updateThumbnails() {
