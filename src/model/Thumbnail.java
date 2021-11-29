@@ -3,6 +3,7 @@ package model;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -12,15 +13,18 @@ public class Thumbnail {
     // Indices should correspond directly with frame indices in the flipbook.
     private List<Image> thumbnails = new LinkedList<>();
 
+    SnapshotParameters params = new SnapshotParameters();
+    
+    
     public Thumbnail(Node frameToConvert) {
-        SnapshotParameters params = new SnapshotParameters();
+    	params.setFill(Color.TRANSPARENT);
         Image thumbnail = frameToConvert.snapshot(params, null);
         thumbnails.add(thumbnail);
     }
 
     // Alternative constructor for converting an entire flipbook to thumbnails
     public Thumbnail(List<Node> framesToConvert) {
-        SnapshotParameters params = new SnapshotParameters();
+    	params.setFill(Color.TRANSPARENT);
         thumbnails = new LinkedList<>();
         for (Node f : framesToConvert) {
             thumbnails.add(f.snapshot(params, null));
@@ -28,7 +32,7 @@ public class Thumbnail {
     }
 
     public Image convert(Node frame) {
-        SnapshotParameters params = new SnapshotParameters();
+    	params.setFill(Color.TRANSPARENT);
         return frame.snapshot(params, null);
     }
 

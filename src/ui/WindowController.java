@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -30,7 +29,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.List;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -126,16 +124,24 @@ public class WindowController {
             newFile();
 
             flipbook.openFile(file);
-            for(int i = 0; i < flipbook.getFrames().size(); i++) {
-                flipbook.setFrame(i);
-                addThumbnails(i);
-            }
-
+            
+            System.out.println(flipbook.generateFrameNodes().size());
+            
+            
+            thumbnails =  new Thumbnail(flipbook.generateFrameNodes());
+            
+            
+            
             firstFrame();
+           
             flipbook.setFrame(0);
             setFrameCount();
+            populateTimeline();
             openFlipbook = true;
 
+           
+            
+            
         }
 
         public void populateTimeline() {
@@ -173,8 +179,6 @@ public class WindowController {
 
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
 
-            canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
-
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
@@ -202,7 +206,7 @@ public class WindowController {
                     //Duration.millis(Math.round(1.0/frameRate)*1000),
                     Duration.millis(flipbook.getFrameTime()),
                     event -> {
-                        flipbook.forward(true);
+                        flipbook.forward(false);
                         populateTimeline();
                         updateThumbnails();
                         setFrameCount();
@@ -231,16 +235,6 @@ public class WindowController {
 
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
-
-            if (this.activeTool == "Eyedropper") {
-                //floodFill(e.getX(), e.getY(), this.colorPicker.getValue(), gc);
-                this.colorPicker.setValue(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()).getPixelReader().getColor((int)e.getX(), (int)e.getY()));
-            }
-        }
-
-        public void handleMouseReleased(MouseEvent e) {
-            addThumbnails(this.flipbook.getCurFrameNum());
-            updateThumbnails();
         }
 
         public void handleMouseDragged(MouseEvent e) {
@@ -255,11 +249,12 @@ public class WindowController {
                 gc.lineTo(e.getX(), e.getY());
                 gc.stroke();
             }
+            else if (this.activeTool == "PaintBucket") {
+                gc.setFill(this.colorPicker.getValue());
+            }
+            addThumbnails(this.flipbook.getCurFrameNum());
+            updateThumbnails();
         }
-
-        public void floodFill(double x, double y, Color fillColor, GraphicsContext gc) {
-        }
-
 
         public void updateThumbnails() {
             if (flipbook.getCurFrameNum() != 0) {
@@ -269,6 +264,7 @@ public class WindowController {
                 prevFrame.setImage(null);
             }
             if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
+            	System.out.println(flipbook.getCurFrameNum() + ":" + flipbook.getNumFrames());
                 this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1));
             }
             else {
@@ -286,12 +282,12 @@ public class WindowController {
     }
     @FXML
     protected void setPaintBucket() {
-        //flipbookPane.setCursor(Cursor.OPEN_HAND);
-        this.activeTool = "Eyedropper";
+        flipbookPane.setCursor(Cursor.OPEN_HAND);
+        this.activeTool = "PaintBucket";
     }
     @FXML
     protected void setEraser() {
-        //flipbookPane.setCursor(Cursor.CROSSHAIR);
+        flipbookPane.setCursor(Cursor.CROSSHAIR);
         this.activeTool = "Eraser";
     }
     @FXML
