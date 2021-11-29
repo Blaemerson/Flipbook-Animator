@@ -200,6 +200,7 @@ public class WindowController {
 
             openFlipbook = true;
             thumbnails = new Thumbnail(this.flipbookPane);
+            addThumbnails(0);
             seekTo(0);
         }
 
