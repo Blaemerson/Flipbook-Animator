@@ -462,9 +462,11 @@ public class WindowController {
     }
 
     protected void loadFileThumbnails() {
+        //this.flipbook.setOnionSkinning(false);
         for(int i = 0, frameSize = flipbook.getNumFrames(); i < frameSize; i++){
-            this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), i);
+            thumbnails.insert(thumbnails.convert(this.flipbookPane), i);
         }
-        populateTimeline();
+        //this.flipbook.setOnionSkinning(onionSkinningOn);
+        //populateTimeline();
     }
 }
