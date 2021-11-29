@@ -151,7 +151,7 @@ public class Flipbook {
 
 
     //sets frame visibility to false. When the update function gets called, this will 'clear the screen'
-    private void clearScreen() {
+    public void clearScreen() {
 
         for(FrameData f: frames) {
             f.isVisible = false;
@@ -232,11 +232,11 @@ public class Flipbook {
         //if we have no frames, add a frame, set the frame on the canvas, and
         if(frames.size() < 1 ) {
             frames.add(frameData);
-            //setFrame(curFrame);
+            setFrame(curFrame);
         }
         else {
             frames.add(curFrame + 1, frameData);
-            //setFrame(curFrame);
+            setFrame(curFrame);
             forward(false);
         }
         /*
@@ -392,6 +392,7 @@ public class Flipbook {
             System.out.println("Num Frames: " + frames.size());
             //always close file streams
             reader.close();
+            update();
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -449,7 +450,7 @@ public class Flipbook {
             l.imgString = generateImgURL(l.layer);
             System.out.println(l.imgString);
         }
-        frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
+        //frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
         
    
     }

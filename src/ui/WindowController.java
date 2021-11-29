@@ -167,6 +167,10 @@ public class WindowController {
         //TODO: Add new file menu, allow user to change canvas size at that time
         @FXML
         protected void newFile() {
+            if(pane.isVisible()) {
+                flipbook.addFrame();
+                flipbook.addFrame();
+            }
 
             flipbook = new Flipbook(800, 640, "test");
 
@@ -179,6 +183,8 @@ public class WindowController {
 
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
 
+            canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
+
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
@@ -187,11 +193,14 @@ public class WindowController {
 
             layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
             layerPicker.setValue("Layer 1");
+            flipbook.clearScreen();
+            flipbook.update();
             flipbook.addFrame();
             setFrameCount();
 
             openFlipbook = true;
             thumbnails = new Thumbnail(this.flipbookPane);
+            seekTo(0);
         }
 
 
@@ -235,6 +244,10 @@ public class WindowController {
 
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
+        }
+
+        public void handleMouseReleased(MouseEvent e) {
+            flipbook.saveFrame(this.flipbook.getCurFrameNum());
         }
 
         public void handleMouseDragged(MouseEvent e) {
