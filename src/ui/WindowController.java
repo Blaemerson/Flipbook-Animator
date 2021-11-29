@@ -29,6 +29,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -61,6 +62,8 @@ public class WindowController {
         private Flipbook flipbook;
         private boolean onionSkinningOn = true;
         private String activeTool = "Pencil";
+
+        private boolean loaded = false;
 
         // frame counter at bottom of application
         @FXML
@@ -126,17 +129,17 @@ public class WindowController {
             flipbook.openFile(file);
             
             System.out.println(flipbook.generateFrameNodes().size());
-            
-            
+
             thumbnails =  new Thumbnail(flipbook.generateFrameNodes());
-            
+            loaded = true;
+            populateTimeline();
+            updateThumbnails();
             
             
             firstFrame();
            
             flipbook.setFrame(0);
             setFrameCount();
-            populateTimeline();
             openFlipbook = true;
 
            
@@ -271,6 +274,11 @@ public class WindowController {
         }
 
         public void updateThumbnails() {
+            System.out.println("Number of Frames updateThumbnails(): " + flipbook.getFrames().size());
+            if(loaded){
+                loadFileThumbnails();
+                loaded = false;
+            }
             if (flipbook.getCurFrameNum() != 0) {
                 this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1));
             }
@@ -312,7 +320,7 @@ public class WindowController {
         openImg.getExtensionFilters().add(new ExtensionFilter("Image file", "*.png", "*.jpg"));
         File file = openImg.showOpenDialog(myStage);
 
-        this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight()-2);
+        this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight());
         addThumbnails(this.flipbook.getCurFrameNum());
     }
     // File
@@ -451,5 +459,12 @@ public class WindowController {
         this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), curFrame);
         populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
+    }
+
+    protected void loadFileThumbnails() {
+        for(int i = 0, frameSize = flipbook.getNumFrames(); i < frameSize; i++){
+            this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), i);
+        }
+        populateTimeline();
     }
 }

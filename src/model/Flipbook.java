@@ -58,6 +58,10 @@ public class Flipbook {
             this.activeLayer = layers.get(0);
         }
 
+        public String getframeImgString() {
+            return this.imgString;
+        }
+
         public List<LayerData> getLayers() {
             return this.layers;
         }
@@ -157,6 +161,10 @@ public class Flipbook {
             f.isVisible = false;
             f.opacity = 1;
         }
+    }
+
+    public void clearFrames() {
+        frames = new LinkedList<>();
     }
 
     //allows user to pick a frame and display it on the screen
@@ -352,7 +360,7 @@ public class Flipbook {
     public void openFile(File file) {
         //we need to clear the screen before we load a file, we also need to clear the frames arraylist
         clearScreen();
-        frames = new LinkedList<>();
+        clearFrames();
         curFrame = 0;
 
         //parsing values into their respective variables
@@ -381,7 +389,7 @@ public class Flipbook {
                 
             	
             	frame.imgString = frame.layers.get(0).imgString;
-                System.out.println(frame.imgString);
+                System.out.println("Frame:   " +frame.imgString);
                 System.out.println("Layer 1: " +frame.layers.get(0).imgString);
                 System.out.println("Layer 2: " +frame.layers.get(1).imgString);
                 System.out.println("Layer 3: " +frame.layers.get(2).imgString);
@@ -389,7 +397,7 @@ public class Flipbook {
                 frames.add(frame);
             }
             
-            System.out.println("Num Frames: " + frames.size());
+            System.out.println("Num Frames OpenFile(): " + frames.size());
             //always close file streams
             reader.close();
             update();
@@ -420,7 +428,7 @@ public class Flipbook {
         }
 
         //making into a URL, add it to the arraylist
-        String imageString = "file:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
+        String imageString = "data:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
         return imageString;
     }
 
@@ -463,6 +471,10 @@ public class Flipbook {
     //basic getters
     public int getNumFrames() {
         return frames.size();
+    }
+
+    public String getFrameImgString(int index) {
+        return frames.get(index).getframeImgString();
     }
 
     public long getFrameTime() {
