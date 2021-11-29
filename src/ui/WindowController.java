@@ -215,7 +215,7 @@ public class WindowController {
                     //Duration.millis(Math.round(1.0/frameRate)*1000),
                     Duration.millis(flipbook.getFrameTime()),
                     event -> {
-                        flipbook.forward(false);
+                        flipbook.forward(true);
                         populateTimeline();
                         updateThumbnails();
                         setFrameCount();
