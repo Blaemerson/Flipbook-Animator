@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -248,6 +249,11 @@ public class WindowController {
 
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
+
+            if (this.activeTool == "Eyedropper") {
+                //floodFill(e.getX(), e.getY(), this.colorPicker.getValue(), gc);
+                this.colorPicker.setValue(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()).getPixelReader().getColor((int)e.getX(), (int)e.getY()));
+            }
         }
 
         public void handleMouseReleased(MouseEvent e) {
@@ -268,9 +274,9 @@ public class WindowController {
                 gc.lineTo(e.getX(), e.getY());
                 gc.stroke();
             }
-            else if (this.activeTool == "PaintBucket") {
-                gc.setFill(this.colorPicker.getValue());
-            }
+        }
+
+        public void floodFill(double x, double y, Color fillColor, GraphicsContext gc) {
         }
 
         public void updateThumbnails() {
@@ -304,12 +310,12 @@ public class WindowController {
     }
     @FXML
     protected void setPaintBucket() {
-        flipbookPane.setCursor(Cursor.OPEN_HAND);
-        this.activeTool = "PaintBucket";
+        //flipbookPane.setCursor(Cursor.OPEN_HAND);
+        this.activeTool = "Eyedropper";
     }
     @FXML
     protected void setEraser() {
-        flipbookPane.setCursor(Cursor.CROSSHAIR);
+        //flipbookPane.setCursor(Cursor.CROSSHAIR);
         this.activeTool = "Eraser";
     }
     @FXML
