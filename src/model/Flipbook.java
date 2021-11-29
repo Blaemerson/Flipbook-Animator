@@ -212,6 +212,13 @@ public class Flipbook {
         }
     }
 
+    public void groupFrameLayers(int index) {
+        group.getChildren().clear();
+
+        group.getChildren().add(frames.get(index).generateGroup());
+
+    }
+
 
     //makes a blank frame and adds it where the function is called
     public void addFrame() {
@@ -384,8 +391,6 @@ public class Flipbook {
             //always close file streams
             reader.close();
         }
-
-
         catch(IOException e) {
             e.printStackTrace();
         }
@@ -445,6 +450,7 @@ public class Flipbook {
     public List<FrameData> getFrames() {
         return this.frames;
     }
+
 
 
     //basic getters
