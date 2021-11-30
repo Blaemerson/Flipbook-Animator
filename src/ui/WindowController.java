@@ -5,11 +5,9 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -94,6 +92,7 @@ public class WindowController {
         boolean isAnimating = false;
 
         // Displayed on new file menu chosen
+        // TODO: turn this into fxml file and load it
         private static class NewFileBox {
             String newBookName;
             int newCanvasWidth;

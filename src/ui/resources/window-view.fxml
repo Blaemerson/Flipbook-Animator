@@ -207,7 +207,7 @@
                   </AnchorPane>
                </left>
                <center>
-                  <BorderPane fx:id="pane" minWidth="0.0" style="-fx-background-color: f4a658;" visible="false">
+                  <BorderPane fx:id="pane" minHeight="64.0" minWidth="64.0" style="-fx-background-color: f4a658;" visible="false">
                      <left>
                         <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                            <cursor>
@@ -233,9 +233,9 @@
                         </Label>
                      </bottom>
                      <top>
-                        <HBox fx:id="viewPort" alignment="CENTER" fillHeight="false" minWidth="0.0" BorderPane.alignment="CENTER">
+                        <HBox fx:id="viewPort" alignment="CENTER" fillHeight="false" BorderPane.alignment="CENTER">
                            <children>
-                              <Button alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Button fx:id="trashButton" alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -253,12 +253,7 @@
                                     <Tooltip text="Delete Frame" />
                                  </tooltip>
                               </Button>
-                              <Pane HBox.hgrow="ALWAYS">
-                                 <HBox.margin>
-                                    <Insets left="32.0" />
-                                 </HBox.margin>
-                              </Pane>
-                              <Button alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Button fx:id="insertFrameButton" alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
