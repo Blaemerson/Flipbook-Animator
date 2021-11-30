@@ -2,9 +2,11 @@ package ui;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -62,6 +64,9 @@ public class WindowController {
         @FXML
         private Spinner<Integer> fpsSetter;
 
+        @FXML
+        private MenuBar menuBarStartScreen;
+
         private Thumbnail thumbnails;
 
         private Flipbook flipbook;
@@ -107,7 +112,7 @@ public class WindowController {
                 inputTitle.setMaxWidth(80);
                 Spinner<Integer> widths = new Spinner(100,800,800, 10);
                 Spinner<Integer> heights = new Spinner(100,800,600, 10);
-                //TODO: check if values in spinners are within upper and lower limits on confirmBtn
+
                 widths.setEditable(true);
                 heights.setEditable(true);
 
@@ -248,6 +253,24 @@ public class WindowController {
                     seekTo(finalIndex);
                 });
                 index++;
+            }
+        }
+
+        @FXML
+        protected void newFileStartScreen() {
+            // get a handle to the stage
+            Stage stage = (Stage) menuBarStartScreen.getScene().getWindow();
+            // do what you have to do
+            stage.close();
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 480, 360);
+                stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }
 
