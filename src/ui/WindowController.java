@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -415,16 +412,19 @@ public class WindowController {
     protected void setPencil() {
             //flipbookPane.setCursor(new ImageCursor(new Image("resources/img/pen-solid.png"), 16, 16));
         this.activeTool = "Pencil";
+        flipbookPane.setCursor(new ImageCursor(new Image("ui/resources/icons/pen-solid.png"), 0, 64));
     }
     @FXML
     protected void setPaintBucket() {
         //flipbookPane.setCursor(Cursor.OPEN_HAND);
         this.activeTool = "Eyedropper";
+        flipbookPane.setCursor(Cursor.CROSSHAIR);
     }
     @FXML
     protected void setEraser() {
         //flipbookPane.setCursor(Cursor.CROSSHAIR);
         this.activeTool = "Eraser";
+        flipbookPane.setCursor(Cursor.OPEN_HAND);
     }
     @FXML
     protected void setImage() {
@@ -491,7 +491,9 @@ public class WindowController {
     // Media Controls
     @FXML
     protected void play() {
-        animate();
+        if (!isAnimating) {
+            animate();
+        }
     }
     @FXML
     protected void firstFrame() {

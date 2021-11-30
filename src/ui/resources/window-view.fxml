@@ -195,6 +195,7 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Slider>
+                              <Label opacity="0.5" text="FPS" translateX="20.0" />
                               <Spinner id="fpsSetter" fx:id="fpsSetter">
                                  <valueFactory>
                                     <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="10" max="30" min="1" />
