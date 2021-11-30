@@ -256,6 +256,7 @@ public class WindowController {
             }
         }
 
+        //Switches scenes from startScreen when file > new is selected
         @FXML
         protected void newFileStartScreen() {
             // get a handle to the stage
