@@ -105,8 +105,11 @@ public class WindowController {
                 inputTitle.setPromptText("Enter a title");
                 //inputTitle.setMinWidth(80);
                 inputTitle.setMaxWidth(80);
-                Spinner<Integer> widths = new Spinner(100,800,500, 10);
-                Spinner<Integer> heights = new Spinner(100,800,400, 10);
+                Spinner<Integer> widths = new Spinner(100,800,800, 10);
+                Spinner<Integer> heights = new Spinner(100,800,600, 10);
+                //TODO: check if values in spinners are within upper and lower limits on confirmBtn
+                widths.setEditable(true);
+                heights.setEditable(true);
 
                 Button confirmBtn = new Button("Confirm");
                 confirmBtn.setDisable(true);
@@ -212,9 +215,14 @@ public class WindowController {
                 flipbook.setFrame(i);
                 addThumbnails(i);
             }
+
+            //loadFileThumbnails();
+
             seekTo(0);
 
-            loaded = true;
+            //this is supposed to create thumbnails for a loaded file
+            //the thumbnails show up as blank except the first one
+            //loaded = true;
 
             setFrameCount();
 
@@ -368,10 +376,14 @@ public class WindowController {
         public void updateThumbnails() {
             System.out.println("Number of Frames updateThumbnails(): " + flipbook.getFrames().size());
             int curFrameNum = this.flipbook.getCurFrameNum();
+            /*
+            //this is supposed to create thumbnails for a loaded file
+            //the thumbnails show up as blank except the first one
             if(loaded){
                 //loadFileThumbnails();
                 loaded = false;
             }
+             */
             if (flipbook.getCurFrameNum() != 0) {
                 //pane.setLeft(prevFrame);
                 System.out.println(thumbnails.getThumbnailAt(curFrameNum-1).toString());
@@ -538,6 +550,7 @@ public class WindowController {
     // TODO: Use this instead of the 'for' loop in open()
     protected void loadFileThumbnails() {
         int curFrame = 0;
+        List<Node> temp = flipbook.generateFrameNodes();
         for (Node f : flipbook.generateFrameNodes()) {
             curFrame++;
             thumbnails.insert(thumbnails.convert(f), curFrame);
