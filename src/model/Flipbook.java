@@ -7,6 +7,8 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javax.imageio.ImageIO;
@@ -93,15 +95,13 @@ public class Flipbook {
     // a place to store the frames
     private List<FrameData> frames;
 
-
-
     //basic variables
     private String bookName;
     private int canvasWidth;
     private int canvasHeight;
 
     //frame rate in fps
-    private int frameRate = 10;
+    private int frameRate = 1;
     private boolean onionSkinningEnabled = true;
     
     
@@ -120,7 +120,7 @@ public class Flipbook {
     private int layerCount = 3;
     
     //frame length in milliseconds
-    private final long frameTime = Math.round((1.0/frameRate) * 1000);
+    private long frameTime;
 
     //current frame index
     private int curFrame = 0;
@@ -129,6 +129,7 @@ public class Flipbook {
     private final Group group;
     public void setFrameRate(int fr) {
         this.frameRate = fr;
+        frameTime = Math.round((1.0/frameRate) * 1000);
     }
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
@@ -458,7 +459,7 @@ public class Flipbook {
             l.imgString = generateImgURL(l.layer);
             System.out.println(l.imgString);
         }
-        //frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
+        frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
         
    
     }
@@ -498,18 +499,25 @@ public class Flipbook {
     }
     
     public List<Node> generateFrameNodes(){
-    	List<Node> frameNodes = new LinkedList<>(); 
+    	List<Node> frameNodes = new LinkedList<>();
     	
     	for(FrameData f: frames) {
     		Canvas c = new Canvas();
-    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0);
+            System.out.println("IMagestrings:" + f.imgString);
+    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0, canvasWidth, canvasHeight);
     		frameNodes.add(c);
     	}
-    
+
     	return frameNodes;
-    	
     }
-    
+
+    public Node generateFrameNodeForFrame(int frameNum) {
+        Canvas c = new Canvas();
+        c.getGraphicsContext2D().drawImage(new Image(this.getFrames().get(frameNum).imgString), 0, 0, canvasWidth, canvasHeight);
+        //c.setOpacity(1);
+        return c;
+    }
+
 
     public GraphicsContext getGraphicsContext(int layerNum) {
         return frames.get(curFrame).layers.get(layerNum).layer.getGraphicsContext();

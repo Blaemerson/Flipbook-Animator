@@ -5,8 +5,10 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,13 +16,16 @@ import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Flipbook;
@@ -31,6 +36,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -49,14 +55,12 @@ public class WindowController {
         @FXML
         private ImageView nextFrame;
         @FXML
-        private ScrollPane spTimeline;
-        @FXML
         private HBox timelineBox;
-
-    @FXML
-        private Slider thickness;
         @FXML
-        private Spinner animationSpeedSetter;
+        private Slider thickness;
+
+        @FXML
+        private Spinner<Integer> fpsSetter;
 
         private Thumbnail thumbnails;
 
@@ -78,6 +82,74 @@ public class WindowController {
         //prevents actions from occuring when there are potential conflicts
         boolean openFlipbook = false;
         boolean isAnimating = false;
+
+        // Displayed on new file menu chosen
+        private static class NewFileBox {
+            String newBookName;
+            int newCanvasWidth;
+            int newCanvasHeight;
+
+            public NewFileBox(String title) {
+                display(title);
+            }
+
+            public void display(String title) {
+                Stage window = new Stage();
+
+                window.initModality(Modality.APPLICATION_MODAL);
+                window.setTitle(title);
+                window.setMinWidth(250);
+                Label label = new Label();
+                label.setText("New File");
+                TextField inputTitle = new TextField();
+                inputTitle.setPromptText("Enter a title");
+                //inputTitle.setMinWidth(80);
+                inputTitle.setMaxWidth(80);
+                Spinner<Integer> widths = new Spinner(100,800,500, 10);
+                Spinner<Integer> heights = new Spinner(100,800,400, 10);
+
+                Button confirmBtn = new Button("Confirm");
+                confirmBtn.setDisable(true);
+                inputTitle.setOnKeyTyped(keyEvent -> {
+                    if (!inputTitle.getText().equals("")) {
+                        confirmBtn.setDisable(false);
+                    }
+                    else {
+                        confirmBtn.setDisable(true);
+                    }
+                });
+                confirmBtn.setOnAction(event -> {
+                    newBookName = inputTitle.getText();
+                    newCanvasWidth = widths.getValue();
+                    newCanvasHeight = heights.getValue();
+                    window.close();
+                });
+                Button cancelBtn = new Button("Cancel");
+                cancelBtn.setOnAction(event -> {
+                    window.close();
+                });
+
+                VBox layout = new VBox(10);
+                layout.getChildren().addAll(label, inputTitle, widths, heights, confirmBtn);
+                layout.setAlignment(Pos.CENTER);
+                Scene scene = new Scene(layout);
+                window.setScene(scene);
+                window.showAndWait();
+            }
+
+            public String getNewBookName() {
+                return newBookName;
+            }
+
+            public int getNewCanvasWidth() {
+                return newCanvasWidth;
+            }
+
+            public int getNewCanvasHeight() {
+                return newCanvasHeight;
+            }
+        }
+
 
         //top level save function, grabs string from flipbook save function
         public void save() {
@@ -125,34 +197,38 @@ public class WindowController {
 
             File file = openfile.showOpenDialog(myStage);
 
-            newFile();
+            //newFile();
 
+            flipbook = new Flipbook(0, 0, "");
             flipbook.openFile(file);
-            
-            System.out.println(flipbook.generateFrameNodes().size());
 
-            thumbnails =  new Thumbnail(flipbook.generateFrameNodes());
-            loaded = true;
-            populateTimeline();
-            updateThumbnails();
-            
-            
-            firstFrame();
-           
+            initEditor();
+
             flipbook.setFrame(0);
-            setFrameCount();
-            openFlipbook = true;
 
-           
-            
-            
+            // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
+            thumbnails = new Thumbnail(flipbookPane);
+            for (int i=0; i<flipbook.getNumFrames(); i++) {
+                flipbook.setFrame(i);
+                addThumbnails(i);
+            }
+            seekTo(0);
+
+            loaded = true;
+
+            setFrameCount();
+
+            System.out.println("Num nodes in flipbook: " + flipbook.generateFrameNodes().size());
+
         }
+
 
         public void populateTimeline() {
             timelineBox.setSpacing(2);
             timelineBox.getChildren().clear();
             int index = 0;
             for (Image i : thumbnails.getThumbnails()) {
+                prevFrame.setImage(i);
                 ImageView thumb = new ImageView(i);
                 thumb.setPreserveRatio(true);
                 thumb.setFitHeight(84);
@@ -168,56 +244,68 @@ public class WindowController {
         }
 
         //makes the first frame and allows other keyboard events to occur
-        //TODO: Add new file menu, allow user to change canvas size at that time
         @FXML
         protected void newFile() {
-            if(pane.isVisible()) {
-                flipbook.addFrame();
-                flipbook.addFrame();
-            }
+            //if(pane.isVisible()) {
+            //    flipbook.addFrame();
+                //flipbook.addFrame();
+            //}
+            timelineBox.getChildren().clear();
 
-            flipbook = new Flipbook(800, 640, "test");
+            prevFrame.setImage(null);
+            nextFrame.setImage(null);
 
+            NewFileBox nfb = new NewFileBox("New File");
+            flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
+            flipbook.addFrame();
+            initEditor();
+
+            // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
+            thumbnails = new Thumbnail(flipbookPane);
+            //seekTo(0);
+        }
+
+        // Do stuff that should happen regardless of whether new file or open file chosen
+        public void initEditor() {
             flipbookPane.setVisible(true);
             flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
+
+            flipbookPane.getChildren().clear();
 
             canvas = new Canvas(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 
             canvas.setOnMousePressed(e->{handleMousePressed(e);});
-
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
-
             canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
-            //pane.setCenter(viewPort);
-
 
             layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
             layerPicker.setValue("Layer 1");
             flipbook.clearScreen();
             flipbook.update();
-            flipbook.addFrame();
-            setFrameCount();
 
             openFlipbook = true;
-            thumbnails = new Thumbnail(this.flipbookPane);
-            addThumbnails(0);
-            seekTo(0);
+
+            fpsSetter.setPromptText("FPS");
+            //    addThumbnails(0);
         }
+
 
 
         //uses frameRate in flipbook to call the forward function at timed intervals
         public void animate() {
 
             //populateTimeline();
+            this.fpsSetter.commitValue();
+            this.flipbook.setFrameRate(this.fpsSetter.getValue());
             this.flipbook.setOnionSkinning(false);
             isAnimating = true;
 
             KeyFrame keyFrame = new KeyFrame(
-                    //Duration.millis(Math.round(1.0/frameRate)*1000),
+                    //Duration.millis(Math.round(1.0/this.fpsSetter.getValue())*1000),
                     Duration.millis(flipbook.getFrameTime()),
                     event -> {
                         flipbook.forward(true);
@@ -257,9 +345,10 @@ public class WindowController {
         }
 
         public void handleMouseReleased(MouseEvent e) {
-            flipbook.saveFrame(this.flipbook.getCurFrameNum());
+            flipbook.saveFrame();
             addThumbnails(this.flipbook.getCurFrameNum());
             updateThumbnails();
+            System.out.println(flipbook.getCurFrameNum());
         }
 
         public void handleMouseDragged(MouseEvent e) {
@@ -276,31 +365,35 @@ public class WindowController {
             }
         }
 
-        public void floodFill(double x, double y, Color fillColor, GraphicsContext gc) {
-        }
-
         public void updateThumbnails() {
             System.out.println("Number of Frames updateThumbnails(): " + flipbook.getFrames().size());
+            int curFrameNum = this.flipbook.getCurFrameNum();
             if(loaded){
-                loadFileThumbnails();
+                //loadFileThumbnails();
                 loaded = false;
             }
             if (flipbook.getCurFrameNum() != 0) {
-                this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1));
+                //pane.setLeft(prevFrame);
+                System.out.println(thumbnails.getThumbnailAt(curFrameNum-1).toString());
+                this.prevFrame.setImage(thumbnails.getThumbnailAt(curFrameNum-1));
+                prevFrame.setVisible(true);
             }
             else {
-                prevFrame.setImage(null);
+                prevFrame.setVisible(false);
             }
             if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
             	System.out.println(flipbook.getCurFrameNum() + ":" + flipbook.getNumFrames());
-                this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1));
+                this.nextFrame.setImage(thumbnails.getThumbnailAt(curFrameNum+1));
+                nextFrame.setVisible(true);
             }
             else {
-                nextFrame.setImage(null);
+                nextFrame.setVisible(false);
             }
             if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
-                timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
+                timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
             }
+            prevFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
+            nextFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
         }
 
     @FXML
@@ -383,6 +476,7 @@ public class WindowController {
     // Media Controls
     @FXML
     protected void play() {
+        this.flipbook.setOnionSkinning(false);
         animate();
         this.flipbook.setOnionSkinning(onionSkinningOn);
     }
@@ -391,24 +485,16 @@ public class WindowController {
         addThumbnails(this.flipbook.getCurFrameNum());
         seekTo(0);
     }
+
+
     @FXML
     protected void lastFrame() {
         addThumbnails(this.flipbook.getCurFrameNum());
         seekTo(this.flipbook.getNumFrames() - 1);
     }
+
     @FXML
     protected void prevFrame() {
-        /*
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
-
-        this.flipbook.backward();
-        updateThumbnails();
-
-        setFrameCount();
-        */
         int curFrame = this.flipbook.getCurFrameNum();
         if (curFrame > 0) {
             addThumbnails(curFrame);
@@ -417,43 +503,24 @@ public class WindowController {
     }
     @FXML
     protected void nextFrame() {
-        /*
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
-        if (this.flipbook.getCurFrameNum()==this.flipbook.getNumFrames()-1) {
-            this.flipbook.addFrame();
-        }
-        this.flipbook.forward(false);
-        updateThumbnails();
-
-        System.out.println(this.flipbook.getCurFrameNum());
-
-        setFrameCount();
-         */
-
         int curFrame = this.flipbook.getCurFrameNum();
-        addThumbnails(curFrame);
         if (curFrame == this.flipbook.getNumFrames() - 1) {
             this.flipbook.addFrame();
-            addThumbnails(curFrame + 1);
+            addThumbnails(curFrame+1);
+            seekTo(curFrame+1);
         }
-        // Does the frame need to be saved?
-        // this.flipbook.saveFrame();
-        seekTo(curFrame + 1);
+        else{
+            timelineBox.getChildren().get(curFrame).setEffect(null);
+            seekTo(curFrame+1);
+        }
+        //seekTo(curFrame + 1);
     }
 
     // TODO: if animating halt animation or make button unresponsive
     // not sure if saveframe() is needed, it was only in nextframe() and prevFrame()
     // via flipbook.forward() and flipbook.backward()
     protected void seekTo(int frameIndex) {
-        /*
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), this.flipbook.getCurFrameNum());
-        populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
-         */
+        flipbook.saveFrame();
         this.flipbook.setFrame(frameIndex);
         updateThumbnails();
         setFrameCount();
@@ -462,17 +529,18 @@ public class WindowController {
     // separated this from seekTo() to fix order of operations for nextFrame()
     protected void addThumbnails(int curFrame){
         this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), curFrame);
+        // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
+        this.thumbnails.insert(thumbnails.convert(flipbookPane), curFrame);
         populateTimeline();
         this.flipbook.setOnionSkinning(onionSkinningOn);
     }
 
+    // TODO: Use this instead of the 'for' loop in open()
     protected void loadFileThumbnails() {
-        //this.flipbook.setOnionSkinning(false);
-        for(int i = 0, frameSize = flipbook.getNumFrames(); i < frameSize; i++){
-            thumbnails.insert(thumbnails.convert(this.flipbookPane), i);
+        int curFrame = 0;
+        for (Node f : flipbook.generateFrameNodes()) {
+            curFrame++;
+            thumbnails.insert(thumbnails.convert(f), curFrame);
         }
-        //this.flipbook.setOnionSkinning(onionSkinningOn);
-        //populateTimeline();
     }
 }

@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.geometry.Rectangle2D?>
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.ColorPicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.ToolBar?>
-<?import javafx.scene.control.Tooltip?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
    <children>
       <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -211,114 +195,109 @@
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
                               </Slider>
+                              <Spinner id="fpsSetter" fx:id="fpsSetter">
+                                 <valueFactory>
+                                    <SpinnerValueFactory.IntegerSpinnerValueFactory min="1" max="30" initialValue="10" amountToStepBy="1"/>
+                                 </valueFactory>
+                              </Spinner>
                           </items>
                         </ToolBar>
                      </children>
                   </AnchorPane>
                </left>
                <center>
-                  <AnchorPane AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" BorderPane.alignment="CENTER">
-                     <children>
-                        <BorderPane fx:id="pane" minWidth="0.0" style="-fx-background-color: f4a658;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <left>
-                              <ImageView fx:id="prevFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-                                 <BorderPane.margin>
-                                    <Insets left="16.0" />
-                                 </BorderPane.margin>
+                  <BorderPane fx:id="pane" minWidth="0.0" style="-fx-background-color: f4a658;" visible="false">
+                     <left>
+                        <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <cursor>
+                              <Cursor fx:constant="OPEN_HAND" />
+                           </cursor>
+                        </ImageView>
+                     </left>
+                     <right>
+                        <ImageView fx:id="nextFrame" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                           <cursor>
+                              <Cursor fx:constant="OPEN_HAND" />
+                           </cursor>
+                        </ImageView>
+                     </right>
+                     <bottom>
+                        <Label fx:id="currentFrame" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                           <font>
+                              <Font size="34.0" />
+                           </font>
+                           <padding>
+                              <Insets bottom="50.0" />
+                           </padding>
+                        </Label>
+                     </bottom>
+                     <top>
+                        <HBox fx:id="viewPort" alignment="CENTER" fillHeight="false" minWidth="0.0" BorderPane.alignment="CENTER">
+                           <children>
+                              <Button alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/trash-alt-solid.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
                                  <cursor>
-                                    <Cursor fx:constant="OPEN_HAND" />
+                                    <Cursor fx:constant="HAND" />
                                  </cursor>
-                              </ImageView>
-                           </left>
-                           <right>
-                              <ImageView fx:id="nextFrame" fitHeight="300.0" fitWidth="350.0" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-                                 <BorderPane.margin>
-                                    <Insets right="16.0" />
-                                 </BorderPane.margin>
-                                 <cursor>
-                                    <Cursor fx:constant="OPEN_HAND" />
-                                 </cursor>
-                              </ImageView>
-                           </right>
-                           <bottom>
-                              <Label fx:id="currentFrame" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
-                                 <font>
-                                    <Font size="34.0" />
-                                 </font>
-                                 <padding>
-                                    <Insets bottom="50.0" />
-                                 </padding>
-                              </Label>
-                           </bottom>
-                           <top>
-                              <HBox fx:id="viewPort" fillHeight="false" minWidth="0.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Button alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
-                                       <graphic>
-                                          <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@icons/trash-alt-solid.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                       <tooltip>
-                                          <Tooltip text="Delete Frame" />
-                                       </tooltip>
-                                    </Button>
-                                    <Pane HBox.hgrow="ALWAYS">
-                                       <HBox.margin>
-                                          <Insets left="32.0" />
-                                       </HBox.margin>
-                                    </Pane>
-                                    <Button alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
-                                       <graphic>
-                                          <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@icons/clone-solid.png" />
-                                             </image>
-                                          </ImageView>
-                                       </graphic>
-                                       <cursor>
-                                          <Cursor fx:constant="HAND" />
-                                       </cursor>
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                       <tooltip>
-                                          <Tooltip text="Insert Frame" />
-                                       </tooltip>
-                                    </Button>
-                                 </children>
-                                 <BorderPane.margin>
+                                 <HBox.margin>
                                     <Insets />
-                                 </BorderPane.margin>
-                              </HBox>
-                           </top>
-                           <center>
-                              <AnchorPane fx:id="flipbookPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Canvas fx:id="canvas" />
-                                 </children>
+                                 </HBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Delete Frame" />
+                                 </tooltip>
+                              </Button>
+                              <Pane HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets left="32.0" />
+                                 </HBox.margin>
+                              </Pane>
+                              <Button alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                 <graphic>
+                                    <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@icons/clone-solid.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
                                  <cursor>
-                                    <Cursor fx:constant="DEFAULT" />
+                                    <Cursor fx:constant="HAND" />
                                  </cursor>
-                                 <opaqueInsets>
+                                 <HBox.margin>
                                     <Insets />
-                                 </opaqueInsets>
-                              </AnchorPane>
-                           </center>
-                        </BorderPane>
-                     </children>
-                     <BorderPane.margin>
-                        <Insets />
-                     </BorderPane.margin>
-                  </AnchorPane>
+                                 </HBox.margin>
+                                 <tooltip>
+                                    <Tooltip text="Insert Frame" />
+                                 </tooltip>
+                              </Button>
+                           </children>
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
+                        </HBox>
+                     </top>
+                     <center>
+                        <AnchorPane fx:id="flipbookPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+                           <children>
+                              <Canvas fx:id="canvas" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                           <cursor>
+                              <Cursor fx:constant="DEFAULT" />
+                           </cursor>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
+                        </AnchorPane>
+                     </center>
+                  </BorderPane>
                </center>
                <HBox.margin>
                   <Insets />

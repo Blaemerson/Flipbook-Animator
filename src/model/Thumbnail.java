@@ -3,6 +3,7 @@ package model;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -14,6 +15,9 @@ public class Thumbnail {
     private List<Image> thumbNails = new LinkedList<>();
 
     SnapshotParameters params = new SnapshotParameters();
+
+    public Thumbnail() {
+    }
 
     public Thumbnail(Node frameToConvert) {
     	params.setFill(Color.TRANSPARENT);
@@ -47,6 +51,7 @@ public class Thumbnail {
         }
         thumbNails.add(index, thumb);
     }
+
 
     // shift thumbnails to the right when adding a new frame
     public void shiftThumbnails(int index) {
