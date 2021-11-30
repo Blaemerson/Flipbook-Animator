@@ -209,14 +209,14 @@
                <center>
                   <BorderPane fx:id="pane" minHeight="64.0" minWidth="64.0" style="-fx-background-color: f4a658;" visible="false">
                      <left>
-                        <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                        <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
                            <cursor>
                               <Cursor fx:constant="OPEN_HAND" />
                            </cursor>
                         </ImageView>
                      </left>
                      <right>
-                        <ImageView fx:id="nextFrame" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+                        <ImageView fx:id="nextFrame" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
                            <cursor>
                               <Cursor fx:constant="OPEN_HAND" />
                            </cursor>
@@ -233,9 +233,9 @@
                         </Label>
                      </bottom>
                      <top>
-                        <HBox fx:id="viewPort" alignment="CENTER" fillHeight="false" BorderPane.alignment="CENTER">
+                        <HBox fx:id="viewPort" alignment="BOTTOM_CENTER" fillHeight="false" BorderPane.alignment="BOTTOM_CENTER">
                            <children>
-                              <Button fx:id="trashButton" alignment="TOP_RIGHT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Button fx:id="trashButton" alignment="CENTER_RIGHT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -246,14 +246,12 @@
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
                                  <tooltip>
                                     <Tooltip text="Delete Frame" />
                                  </tooltip>
                               </Button>
-                              <Button fx:id="insertFrameButton" alignment="TOP_LEFT" centerShape="false" contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Pane fx:id="deleteAndInsertSpacer" centerShape="false" HBox.hgrow="NEVER" />
+                              <Button fx:id="insertFrameButton" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -264,9 +262,6 @@
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
                                  <tooltip>
                                     <Tooltip text="Insert Frame" />
                                  </tooltip>

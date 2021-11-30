@@ -70,7 +70,9 @@ public class WindowController {
 
         private Flipbook flipbook;
         private boolean onionSkinningOn = true;
-        private String activeTool = "Pencil";
+        private String activeTool;
+        @FXML
+        private Pane deleteAndInsertSpacer;
 
         private boolean loaded = false;
 
@@ -297,7 +299,7 @@ public class WindowController {
 
             // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
             thumbnails = new Thumbnail(flipbookPane);
-            //seekTo(0);
+            seekTo(0);
         }
 
         // Do stuff that should happen regardless of whether new file or open file chosen
@@ -320,13 +322,15 @@ public class WindowController {
             layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
             layerPicker.setValue("Layer 1");
             flipbook.clearScreen();
-            flipbook.update();
+            //flipbook.update();
 
             mediaPane.setDisable(false);
             toolsPane.setDisable(false);
             openFlipbook = true;
 
+            deleteAndInsertSpacer.setMinWidth(canvas.getWidth());
             fpsSetter.setPromptText("FPS");
+            setPencil();
             //    addThumbnails(0);
         }
 
@@ -384,13 +388,12 @@ public class WindowController {
             gc.lineTo(e.getX(), e.getY());
 
             if (this.activeTool == "Eyedropper") {
-                //floodFill(e.getX(), e.getY(), this.colorPicker.getValue(), gc);
                 this.colorPicker.setValue(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()).getPixelReader().getColor((int)e.getX(), (int)e.getY()));
             }
         }
 
         public void handleMouseReleased(MouseEvent e) {
-            flipbook.saveFrame();
+            //flipbook.saveFrame();
             addThumbnails(this.flipbook.getCurFrameNum());
             updateThumbnails();
             System.out.println(flipbook.getCurFrameNum());
@@ -562,7 +565,7 @@ public class WindowController {
             seekTo(curFrame+1);
         }
         else{
-            //timelineBox.getChildren().get(curFrame).setEffect(null);
+            timelineBox.getChildren().get(curFrame).setEffect(null);
             seekTo(curFrame+1);
         }
         //seekTo(curFrame + 1);
@@ -572,7 +575,7 @@ public class WindowController {
     // not sure if saveframe() is needed, it was only in nextframe() and prevFrame()
     // via flipbook.forward() and flipbook.backward()
     protected void seekTo(int frameIndex) {
-        flipbook.saveFrame();
+        //flipbook.saveFrame();
         this.flipbook.setFrame(frameIndex);
         updateThumbnails();
         setFrameCount();
