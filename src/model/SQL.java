@@ -4,6 +4,9 @@ import java.sql.*;
 
 public class SQL {
 
+    final static String databasePath = "";                  // path of SQLite database
+    final static String databaseName = "recent_files.db";   // name of SQLite database
+
     public static class Connect {
         /**
          * Connect to a sample database
@@ -12,7 +15,7 @@ public class SQL {
             Connection conn = null;
             try {
                 // db parameters
-                String url = "jdbc:sqlite:C:/sqlite/JTP.db";
+                String url = "jdbc:sqlite:" + databasePath + databaseName;
                 // create a connection to the database
                 conn = DriverManager.getConnection(url);
 
@@ -34,9 +37,9 @@ public class SQL {
 
     public static class Create {
 
-        public static void createNewDatabase(String fileName) {
+        public static void createNewDatabase() {
 
-            String url = "jdbc:sqlite:C:/sqlite/" + fileName;
+            String url = "jdbc:sqlite:" + databasePath + databaseName;
 
             try {
                 Connection conn = DriverManager.getConnection(url);
@@ -56,13 +59,13 @@ public class SQL {
 
         public static void createNewTable() {
             // SQLite connection string
-            String url = "jdbc:sqlite:C://sqlite/SSSIT.db";
+            String url = "jdbc:sqlite:" + databasePath + databaseName;
 
             // SQL statement for creating a new table
-            String sql = "CREATE TABLE IF NOT EXISTS employees (\n"
+            String sql = "CREATE TABLE IF NOT EXISTS recentfiles (\n"
                     + " id integer PRIMARY KEY,\n"
-                    + " name text NOT NULL,\n"
-                    + " capacity real\n"
+                    + " fileImg text NOT NULL,\n"
+                    + " filePath text NOT NULL\n"
                     + ");";
 
             try {
@@ -79,7 +82,7 @@ public class SQL {
 
         private Connection connect() {
             // SQLite connection string
-            String url = "jdbc:sqlite:C://sqlite/SSSIT.db";
+            String url = "jdbc:sqlite:" + databasePath + databaseName;
             Connection conn = null;
             try {
                 conn = DriverManager.getConnection(url);
@@ -90,14 +93,14 @@ public class SQL {
         } // end connect()
 
 
-        public void insert(String name, double capacity) {
+        public void insert(String fileImg, String filePath) {
             String sql = "INSERT INTO employees(name, capacity) VALUES(?,?)";
 
             try {
                 Connection conn = this.connect();
                 PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, name);
-                pstmt.setDouble(2, capacity);
+                pstmt.setString(1, fileImg);
+                pstmt.setString(2, filePath);
                 pstmt.executeUpdate();
             } catch (SQLException e) {
                 System.out.println(e.getMessage());
@@ -109,7 +112,7 @@ public class SQL {
 
         private Connection connect() {
             // SQLite connection string
-            String url = "jdbc:sqlite:C://sqlite/SSSIT.db";
+            String url = "jdbc:sqlite:" + databasePath + databaseName;
             Connection conn = null;
             try {
                 conn = DriverManager.getConnection(url);
@@ -121,7 +124,7 @@ public class SQL {
 
 
         public void selectAll() {
-            String sql = "SELECT * FROM employees";
+            String sql = "SELECT * FROM recentfiles";
 
             try {
                 Connection conn = this.connect();
@@ -131,8 +134,8 @@ public class SQL {
                 // loop through the result set
                 while (rs.next()) {
                     System.out.println(rs.getInt("id") + "\t" +
-                            rs.getString("name") + "\t" +
-                            rs.getDouble("capacity"));
+                            rs.getString("fileImg") + "\t" +
+                            rs.getString("filePath"));
                 }
             } catch (SQLException e) {
                 System.out.println(e.getMessage());

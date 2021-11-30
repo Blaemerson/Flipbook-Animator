@@ -12,11 +12,11 @@ public class Recents {
     }
 
     private class FileData {
-        String imgString;   // base64 encode of frame for thumbnail
+        String fileImg;   // base64 encode of frame for thumbnail
         String filePath;    // URI of recent file
 
         public String getImgString() {
-            return this.imgString;
+            return this.fileImg;
         }
 
         public String getFilePath() {
