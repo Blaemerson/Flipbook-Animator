@@ -6,7 +6,10 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.*;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -60,6 +63,9 @@ public class WindowController {
         private Spinner<Integer> fpsSetter;
 
         @FXML
+        private MenuBar menuBarStartScreen;
+
+        @FXML
         private ImageView playBtnIcon;
 
         private Thumbnail thumbnails;
@@ -109,8 +115,11 @@ public class WindowController {
                 inputTitle.setPromptText("Enter a title");
                 //inputTitle.setMinWidth(80);
                 inputTitle.setMaxWidth(80);
-                Spinner<Integer> widths = new Spinner(100,800,500, 10);
-                Spinner<Integer> heights = new Spinner(100,800,400, 10);
+                Spinner<Integer> widths = new Spinner(100,800,800, 10);
+                Spinner<Integer> heights = new Spinner(100,800,600, 10);
+
+                widths.setEditable(true);
+                heights.setEditable(true);
 
                 Button confirmBtn = new Button("Confirm");
                 confirmBtn.setDisable(true);
@@ -216,9 +225,14 @@ public class WindowController {
                 flipbook.setFrame(i);
                 addThumbnails(i);
             }
+
+            //loadFileThumbnails();
+
             seekTo(0);
 
-            loaded = true;
+            //this is supposed to create thumbnails for a loaded file
+            //the thumbnails show up as blank except the first one
+            //loaded = true;
 
             setFrameCount();
 
@@ -244,6 +258,24 @@ public class WindowController {
                     seekTo(finalIndex);
                 });
                 index++;
+            }
+        }
+
+        @FXML
+        protected void newFileStartScreen() {
+            // get a handle to the stage
+            Stage stage = (Stage) menuBarStartScreen.getScene().getWindow();
+            // do what you have to do
+            stage.close();
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 480, 360);
+                stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+            } catch(Exception e) {
+                e.printStackTrace();
             }
         }
 
@@ -281,6 +313,7 @@ public class WindowController {
             canvas.setOnMousePressed(e->{handleMousePressed(e);});
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
             canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
+
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
@@ -294,6 +327,7 @@ public class WindowController {
             toolsPane.setDisable(false);
             openFlipbook = true;
 
+            fpsSetter.setPromptText("FPS");
             //    addThumbnails(0);
         }
 
@@ -380,10 +414,14 @@ public class WindowController {
         public void updateThumbnails() {
             System.out.println("Number of Frames updateThumbnails(): " + flipbook.getFrames().size());
             int curFrameNum = this.flipbook.getCurFrameNum();
+            /*
+            //this is supposed to create thumbnails for a loaded file
+            //the thumbnails show up as blank except the first one
             if(loaded){
                 //loadFileThumbnails();
                 loaded = false;
             }
+             */
             if (flipbook.getCurFrameNum() != 0) {
                 //pane.setLeft(prevFrame);
                 System.out.println(thumbnails.getThumbnailAt(curFrameNum-1).toString());
@@ -401,9 +439,9 @@ public class WindowController {
             else {
                 nextFrame.setVisible(false);
             }
-            //if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
-                //timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
-            //}
+            if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
+                timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
+            }
             prevFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
             nextFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
         }
@@ -553,6 +591,7 @@ public class WindowController {
     // TODO: Use this instead of the 'for' loop in open()
     protected void loadFileThumbnails() {
         int curFrame = 0;
+        List<Node> temp = flipbook.generateFrameNodes();
         for (Node f : flipbook.generateFrameNodes()) {
             curFrame++;
             thumbnails.insert(thumbnails.convert(f), curFrame);
