@@ -2,7 +2,7 @@ package model;
 
 import java.sql.*;
 
-public class SQL {
+public class SQLite {
 
     final static String databasePath = "";                  // path of SQLite database
     final static String databaseName = "recent_files.db";   // name of SQLite database
