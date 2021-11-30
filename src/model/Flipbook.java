@@ -504,7 +504,7 @@ public class Flipbook {
     	for(FrameData f: frames) {
     		Canvas c = new Canvas();
             System.out.println("IMagestrings:" + f.imgString);
-    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0, canvasWidth, canvasHeight);
+    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0);
     		frameNodes.add(c);
     	}
 
@@ -513,7 +513,7 @@ public class Flipbook {
 
     public Node generateFrameNodeForFrame(int frameNum) {
         Canvas c = new Canvas();
-        c.getGraphicsContext2D().drawImage(new Image(this.getFrames().get(frameNum).imgString), 0, 0, canvasWidth, canvasHeight);
+        c.getGraphicsContext2D().drawImage(new Image(this.getFrames().get(frameNum).imgString), 0, 0);
         //c.setOpacity(1);
         return c;
     }

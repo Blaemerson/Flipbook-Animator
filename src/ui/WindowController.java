@@ -62,6 +62,9 @@ public class WindowController {
         @FXML
         private Spinner<Integer> fpsSetter;
 
+        @FXML
+        private ImageView playBtnIcon;
+
         private Thumbnail thumbnails;
 
         private Flipbook flipbook;
@@ -73,8 +76,12 @@ public class WindowController {
         // frame counter at bottom of application
         @FXML
         Label currentFrame;
+        @FXML
+        private Pane toolsPane;
+        @FXML
+        private Pane mediaPane;
 
-        Stage myStage;
+    Stage myStage;
 
     //program name
         final String appTitle = "Flipbook Proto 2a";
@@ -277,7 +284,6 @@ public class WindowController {
             canvas.setOnMousePressed(e->{handleMousePressed(e);});
             canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
             canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
-
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
@@ -287,9 +293,10 @@ public class WindowController {
             flipbook.clearScreen();
             flipbook.update();
 
+            mediaPane.setDisable(false);
+            toolsPane.setDisable(false);
             openFlipbook = true;
 
-            fpsSetter.setPromptText("FPS");
             //    addThumbnails(0);
         }
 
@@ -321,7 +328,15 @@ public class WindowController {
 
             timeline.play();
 
-            timeline.setOnFinished(e -> {isAnimating = false;});
+            playBtnIcon.setImage(new Image("ui/resources/icons/baseline_pause_black_24dp.png"));
+
+            flipbook.setOnionSkinning(false);
+            timeline.setOnFinished(e -> {
+                isAnimating = false;
+                flipbook.setOnionSkinning(onionSkinningOn);
+                playBtnIcon.setImage(new Image("ui/resources/icons/baseline_play_arrow_black_24dp.png"));
+            });
+
 
             setFrameCount();
         }
@@ -389,9 +404,9 @@ public class WindowController {
             else {
                 nextFrame.setVisible(false);
             }
-            if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
-                timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
-            }
+            //if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
+                //timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
+            //}
             prevFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
             nextFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
         }
@@ -476,9 +491,7 @@ public class WindowController {
     // Media Controls
     @FXML
     protected void play() {
-        this.flipbook.setOnionSkinning(false);
         animate();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
     }
     @FXML
     protected void firstFrame() {
@@ -510,7 +523,7 @@ public class WindowController {
             seekTo(curFrame+1);
         }
         else{
-            timelineBox.getChildren().get(curFrame).setEffect(null);
+            //timelineBox.getChildren().get(curFrame).setEffect(null);
             seekTo(curFrame+1);
         }
         //seekTo(curFrame + 1);
