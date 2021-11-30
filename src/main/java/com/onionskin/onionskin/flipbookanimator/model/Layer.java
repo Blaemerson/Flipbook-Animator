@@ -1,4 +1,4 @@
-package model;
+package com.onionskin.onionskin.flipbookanimator.model;
 
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -9,7 +9,7 @@ public class Layer extends Canvas {
     //it can do much more than just lines, but it's what actually draws the shapes
     private final GraphicsContext gc;
 
-    Layer(int width, int height){
+    Layer(int width, int height) {
         super(width, height);
 
         this.gc = this.getGraphicsContext2D();

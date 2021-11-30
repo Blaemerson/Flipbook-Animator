@@ -1,4 +1,4 @@
-package model;
+package com.onionskin.onionskin.flipbookanimator.model;
 
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -16,14 +16,14 @@ public class Thumbnail {
     SnapshotParameters params = new SnapshotParameters();
 
     public Thumbnail(Node frameToConvert) {
-    	params.setFill(Color.TRANSPARENT);
+        params.setFill(Color.TRANSPARENT);
         Image thumbnail = frameToConvert.snapshot(params, null);
         thumbNails.add(thumbnail);
     }
 
     // Alternative constructor for converting an entire flipbook to thumbnails
     public Thumbnail(List<Node> framesToConvert) {
-    	params.setFill(Color.TRANSPARENT);
+        params.setFill(Color.TRANSPARENT);
         thumbNails = new LinkedList<>();
         for (Node f : framesToConvert) {
             thumbNails.add(f.snapshot(params, null));
@@ -31,7 +31,7 @@ public class Thumbnail {
     }
 
     public Image convert(Node frame) {
-    	params.setFill(Color.TRANSPARENT);
+        params.setFill(Color.TRANSPARENT);
         return frame.snapshot(params, null);
     }
 
