@@ -26,6 +26,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import model.FileData;
 import model.Flipbook;
 import model.SQLite;
 import model.Thumbnail;
@@ -55,6 +56,8 @@ public class WindowController {
         private ImageView nextFrame;
         @FXML
         private HBox timelineBox;
+        @FXML
+        private HBox startscreenBox;
         @FXML
         private Slider thickness;
 
@@ -242,6 +245,38 @@ public class WindowController {
 
         }
 
+        //overloaded function to open files from startscreen by clicking thumbnails
+        public void open(String path) {
+            File file = new File(path);
+
+            flipbook = new Flipbook(0, 0, "");
+            flipbook.openFile(file);
+
+            initEditor();
+
+            flipbook.setFrame(0);
+
+            // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
+            thumbnails = new Thumbnail(flipbookPane);
+            for (int i=0; i<flipbook.getNumFrames(); i++) {
+                flipbook.setFrame(i);
+                addThumbnails(i);
+            }
+
+            //loadFileThumbnails();
+
+            seekTo(0);
+
+            //this is supposed to create thumbnails for a loaded file
+            //the thumbnails show up as blank except the first one
+            //loaded = true;
+
+            setFrameCount();
+
+            System.out.println("Num nodes in flipbook: " + flipbook.generateFrameNodes().size());
+
+    }
+
 
         public void populateTimeline() {
             timelineBox.setSpacing(2);
@@ -262,6 +297,33 @@ public class WindowController {
                 index++;
             }
         }
+
+        /*
+        reads from sqlite database and creates clickable thumbnails to load recent files
+         */
+        public void populateStartScreen() {
+            startscreenBox.setSpacing(2);
+            startscreenBox.getChildren().clear();
+            List<FileData> recentFiles = new LinkedList<>();
+
+            //TODO: populate recentFiles by reading sqldb
+
+            for (int i = 0, recentFilesSize = recentFiles.size(); i < recentFilesSize; i++) {
+                FileData curRecentFile = recentFiles.get(i);
+
+                ImageView thumb = new ImageView(curRecentFile.getImgString());
+                thumb.setPreserveRatio(true);
+                thumb.setFitHeight(84);
+                startscreenBox.getChildren().add(thumb);
+                Tooltip.install(startscreenBox.getChildren().get(i),
+                        new Tooltip(curRecentFile.getName()));
+
+                startscreenBox.getChildren().get(i).setOnMousePressed((MouseEvent e) -> {
+                    //addThumbnails(this.flipbook.getCurFrameNum());
+                    open(curRecentFile.getFilePath());
+                });
+            }
+    }
 
         //Switches scenes from startScreen when file > new is selected
         @FXML

@@ -62,9 +62,9 @@
                               <Insets />
                            </BorderPane.margin>
                            <children>
-                              <ScrollPane fx:id="spTimeline" focusTraversable="false" layoutX="102.0" layoutY="83.0" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="370.0" prefWidth="828.0" vbarPolicy="NEVER">
+                              <ScrollPane focusTraversable="false" layoutX="102.0" layoutY="83.0" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="370.0" prefWidth="828.0" vbarPolicy="NEVER">
                                  <content>
-                                    <HBox fx:id="timelineBox" minHeight="32.0" minWidth="32.0" prefHeight="160.0" prefWidth="829.0" />
+                                    <HBox fx:id="startscreenBox" minHeight="32.0" minWidth="32.0" prefHeight="160.0" prefWidth="829.0" />
                                  </content>
                               </ScrollPane>
                            </children>
