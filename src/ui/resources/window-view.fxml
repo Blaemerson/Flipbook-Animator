@@ -250,8 +250,8 @@
                                     <Tooltip text="Delete Frame" />
                                  </tooltip>
                               </Button>
-                              <Pane fx:id="deleteAndInsertSpacer" centerShape="false" HBox.hgrow="NEVER" />
-                              <Button fx:id="insertFrameButton" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Pane fx:id="deleteAndInsertSpacer" HBox.hgrow="NEVER" />
+                              <Button fx:id="insertFrameButton" alignment="BASELINE_LEFT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
