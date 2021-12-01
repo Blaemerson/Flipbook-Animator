@@ -11,17 +11,17 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane minHeight="300.0" minWidth="400.0" prefHeight="602.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.StartScreenController">
    <children>
       <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <BorderPane minWidth="100.0" style="-fx-background-color: f4a658;" HBox.hgrow="ALWAYS">
                <top>
-                  <MenuBar prefHeight="25.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+                  <MenuBar fx:id="menuBarStartScreen" prefHeight="27.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#newFileStartScreen" text="New (Ctrl + N)" />
+                          <MenuItem fx:id="newFileStartScreenID" mnemonicParsing="false" onAction="#newFileStartScreen" text="New (Ctrl + N)" />
                               <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open (Ctrl + O)" />
                               <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save (Ctrl + S)" />
                               <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
@@ -46,10 +46,13 @@
                     </menus>
                   </MenuBar>
                </top>
+               <left>
+                  <AnchorPane minWidth="0.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER" />
+               </left>
                <center>
-                  <BorderPane fx:id="pane" minHeight="64.0" minWidth="64.0" style="-fx-background-color: f4a658;" visible="false">
+                  <BorderPane fx:id="pane" minWidth="0.0" style="-fx-background-color: f4a658;" visible="false">
                      <center>
-                        <AnchorPane fx:id="flipbookPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+                        <AnchorPane fx:id="startScreenPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
                            <cursor>
                               <Cursor fx:constant="DEFAULT" />
                            </cursor>
@@ -60,9 +63,9 @@
                               <Insets />
                            </BorderPane.margin>
                            <children>
-                              <ScrollPane fx:id="startscreenScrollPane" prefHeight="238.0" prefWidth="1024.0">
+                              <ScrollPane fx:id="startscreenScrollPane" focusTraversable="false" layoutX="102.0" layoutY="83.0" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="370.0" prefWidth="828.0" vbarPolicy="NEVER">
                                  <content>
-                                    <HBox fx:id="startscreenBox" prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox fx:id="startscreenBox" minHeight="32.0" minWidth="32.0" prefHeight="160.0" prefWidth="829.0" />
                                  </content>
                               </ScrollPane>
                            </children>
@@ -76,12 +79,6 @@
                <bottom>
                   <Button mnemonicParsing="false" onAction="#populateStartScreen" text="Button" BorderPane.alignment="CENTER" />
                </bottom>
-               <left>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </left>
-               <right>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
-               </right>
             </BorderPane>
          </children>
       </HBox>

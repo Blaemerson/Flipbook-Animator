@@ -1,5 +1,6 @@
 package model;
 
+import java.io.File;
 import java.sql.*;
 import java.util.List;
 
@@ -8,32 +9,11 @@ public class SQLite {
     final static String databasePath = "";                  // path of SQLite database
     final static String databaseName = "recent_files.db";   // name of SQLite database
 
-    /*public static void connect() {
-        Connection conn = null;
-        try {
-            // db parameters
-            String url = "jdbc:sqlite:" + databasePath + databaseName;
-            // create a connection to the database
-            conn = DriverManager.getConnection(url);
+    public static boolean databaseExists() {
+        File file = new File (databaseName);
 
-            System.out.println("Connection to SQLite has been established.");
-
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            createNewDatabase();
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    } // end connect()
-
-     */
-
+        return file.exists();
+    }
     public static Connection connect() {
         // SQLite connection string
         String url = "jdbc:sqlite:" + databasePath + databaseName;
@@ -44,7 +24,7 @@ public class SQLite {
             System.out.println(e.getMessage());
         }
         return conn;
-    }
+    } // end connect()
 
     public static void createNewDatabase() {
 
@@ -104,22 +84,6 @@ public class SQLite {
         }
     } // end insert(String, double)
 
-
-    /*private Connection connect() {
-        // SQLite connection string
-        String url = "jdbc:sqlite:" + databasePath + databaseName;
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(url);
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-        return conn;
-    } // end connect()
-
-     */
-
-
     public static void fileList(List<FileData> fileList) {
         String sql = "SELECT * FROM recentfiles";
         try {
@@ -138,24 +102,5 @@ public class SQLite {
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-    }
-    public static void selectAll() {
-        String sql = "SELECT * FROM recentfiles";
-
-        try {
-            Connection conn = connect();
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
-
-            // loop through the result set
-            while (rs.next()) {
-                System.out.println(rs.getInt("id") + "\t" +
-                        rs.getString("name") + "\t" +
-                        rs.getString("fileImg") + "\t" +
-                        rs.getString("filePath"));
-            }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        }
-    } // end selectAll()
-} // end Class SelectRecords
+    } // end fileList
+} // end Class SQLite

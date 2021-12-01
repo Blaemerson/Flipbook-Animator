@@ -17,10 +17,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -32,6 +29,7 @@ import model.Flipbook;
 import model.SQLite;
 import model.Thumbnail;
 
+import javax.swing.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -62,6 +60,10 @@ public class WindowController {
         @FXML
         private HBox startscreenBox;
         @FXML
+        private ScrollPane startscreenScrollPane;
+        @FXML
+        private AnchorPane startscreenAnchorPane;
+        @FXML
         private Slider thickness;
 
         @FXML
@@ -91,6 +93,10 @@ public class WindowController {
         @FXML
         private Pane mediaPane;
 
+        //for startscreen
+        final ScrollPane sp = new ScrollPane();
+        final HBox hb = new HBox();
+
     Stage myStage;
 
     //program name
@@ -108,8 +114,6 @@ public class WindowController {
     }
 
  */
-
-
 
     // Displayed on new file menu chosen
         // TODO: turn this into fxml file and load it
@@ -207,9 +211,14 @@ public class WindowController {
 
                     //always close file streams
                     writer.close();
-                    //SQLite.connect();
-                    //SQLite.createNewTable();
+
+                    // if database doesn't exist create one with a table
+                    if(!SQLite.databaseExists()) {
+                        SQLite.createNewDatabase();
+                        SQLite.createNewTable();
+                    }
                     SQLite.insert(flipbook.getBookName(), flipbook.getFrameImgString(0), file.getPath());
+
                 } catch (IOException ex) {
 
                     System.out.println("Error opening file, or writing data.");
@@ -312,53 +321,116 @@ public class WindowController {
             }
         }
 
-        /*
-        reads from sqlite database and creates clickable thumbnails to load recent files
-         */
+
         @FXML
-        public void populateStartScreen() {
-            startscreenBox.setSpacing(2);
-            startscreenBox.getChildren().clear();
+        void populateStartScreen() {
+            HBox box = new HBox();
+            Scene scene = new Scene(box, 800, 800);
+            //Scene scene = new Scene (startscreenBox, 180, 180);
+
+            Stage stage = (Stage) startscreenScrollPane.getScene().getWindow();
+            stage.setScene(scene);
+            stage.setTitle("Recent Files");
+
+            box.getChildren().addAll(sp);
+
+
             List<FileData> recentFiles = new LinkedList<>();
             SQLite.fileList(recentFiles);
+
+            //Group thumbs = new Group();
+
+            for (int i = 0, recentFilesSize = recentFiles.size(); i < recentFilesSize; i++) {
+                FileData curRecentFile = recentFiles.get(i);
+                Image image = new Image(curRecentFile.getImgString());
+
+                ImageView thumb = new ImageView();
+                thumb.setImage(image);
+                thumb.setPreserveRatio(true);
+                thumb.setFitHeight(200);
+
+                Tooltip.install(thumb, new Tooltip(curRecentFile.getName()));
+
+                thumb.setOnMousePressed((MouseEvent e) -> {
+                    open(curRecentFile.getFilePath());
+                });
+
+                hb.getChildren().add(thumb);
+
+                //.getChildren().add(thumb);
+                Tooltip.install(hb.getChildren().get(i),
+                        new Tooltip(curRecentFile.getName()));
+
+                hb.getChildren().get(i).setOnMousePressed((MouseEvent e) -> {
+                    //addThumbnails(this.flipbook.getCurFrameNum());
+                    open(curRecentFile.getFilePath());
+                });
+            } // end for
+
+            //startscreenScrollPane.setContent(startscreenBox);
+            //startscreenScrollPane.layout();
+            sp.setContent(hb);
+            stage.show();
+
+        }
+        /*@FXML
+        void populateStartScreen() {
+            Scene windowScene = startscreenScrollPane.getScene();
+            Stage window = (Stage) startscreenScrollPane.getScene().getWindow();
+            startscreenBox.setSpacing(2);
+            //startscreenBox.getChildren().clear();
+            List<FileData> recentFiles = new LinkedList<>();
+            SQLite.fileList(recentFiles);
+
+            Group root = new Group();
+            Scene scene = new Scene(root);
+            scene.setFill(Color.BLACK);
+            HBox box = new HBox();
+
 
             //TODO: populate recentFiles by reading sqldb
 
             for (int i = 0, recentFilesSize = recentFiles.size(); i < recentFilesSize; i++) {
                 FileData curRecentFile = recentFiles.get(i);
+                Image image = new Image(curRecentFile.getImgString());
 
-                ImageView thumb = new ImageView(curRecentFile.getImgString());
+                ImageView thumb = new ImageView();
+                thumb.setImage(image);
                 thumb.setPreserveRatio(true);
-                thumb.setFitHeight(84);
-                startscreenBox.getChildren().add(thumb);
-                Tooltip.install(startscreenBox.getChildren().get(i),
+                thumb.setFitHeight(100);
+
+                Tooltip.install(thumb, new Tooltip(curRecentFile.getName()));
+
+                thumb.setOnMousePressed((MouseEvent e) -> {
+                    open(curRecentFile.getFilePath());
+                });
+
+                box.getChildren().add(thumb);
+
+                //.getChildren().add(thumb);
+                Tooltip.install(box.getChildren().get(i),
                         new Tooltip(curRecentFile.getName()));
 
-                startscreenBox.getChildren().get(i).setOnMousePressed((MouseEvent e) -> {
+                box.getChildren().get(i).setOnMousePressed((MouseEvent e) -> {
                     //addThumbnails(this.flipbook.getCurFrameNum());
                     open(curRecentFile.getFilePath());
                 });
-            }
-    }
 
-        //Switches scenes from startScreen when file > new is selected
-        @FXML
-        protected void newFileStartScreen() {
-            // get a handle to the stage
-            Stage stage = (Stage) menuBarStartScreen.getScene().getWindow();
-            // do what you have to do
-            stage.close();
-
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 480, 360);
-                stage = new Stage();
-                stage.setScene(scene);
-                stage.show();
-            } catch(Exception e) {
-                e.printStackTrace();
             }
-        }
+            root.getChildren().add(box);
+            startscreenScrollPane.setContent(root);
+            //startscreenScrollPane.layout();
+            ((Pane) windowScene.getRoot()).getChildren().add(root);
+            //window.setScene(scene2);
+            window.setScene(windowScene);
+            window.sizeToScene();
+            window.show();
+
+        }*/
+
+        /*
+        reads from sqlite database and creates clickable thumbnails to load recent files
+         */
 
         //makes the first frame and allows other keyboard events to occur
         @FXML
@@ -380,6 +452,25 @@ public class WindowController {
             // TODO: Don't use flipbookPane to set thumbnails. Preferably use flipbook.genFrameNodes()
             thumbnails = new Thumbnail(flipbookPane);
             seekTo(0);
+        }
+
+        @FXML
+        void newFileStartScreen() {
+            // get a handle to the stage
+            Stage stage = (Stage) startscreenScrollPane.getScene().getWindow();
+            // do what you have to do
+            stage.close();
+
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
+                Scene scene = new Scene(fxmlLoader.load(), 480, 360);
+                stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         // Do stuff that should happen regardless of whether new file or open file chosen
