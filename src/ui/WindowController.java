@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
@@ -35,8 +36,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -97,7 +100,18 @@ public class WindowController {
         boolean openFlipbook = false;
         boolean isAnimating = false;
 
-        // Displayed on new file menu chosen
+
+/* TODO: need another controller class for startScreen to implement initializable
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        populateStartScreen();
+    }
+
+ */
+
+
+
+    // Displayed on new file menu chosen
         // TODO: turn this into fxml file and load it
         private static class NewFileBox {
             String newBookName;
@@ -301,10 +315,12 @@ public class WindowController {
         /*
         reads from sqlite database and creates clickable thumbnails to load recent files
          */
+        @FXML
         public void populateStartScreen() {
             startscreenBox.setSpacing(2);
             startscreenBox.getChildren().clear();
             List<FileData> recentFiles = new LinkedList<>();
+            SQLite.fileList(recentFiles);
 
             //TODO: populate recentFiles by reading sqldb
 

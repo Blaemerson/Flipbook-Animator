@@ -1,6 +1,7 @@
 package model;
 
 import java.sql.*;
+import java.util.List;
 
 public class SQLite {
 
@@ -104,39 +105,57 @@ public class SQLite {
     } // end insert(String, double)
 
 
-    public static class SelectRecords {
+    /*private Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:" + databasePath + databaseName;
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    } // end connect()
 
-        private Connection connect() {
-            // SQLite connection string
-            String url = "jdbc:sqlite:" + databasePath + databaseName;
-            Connection conn = null;
-            try {
-                conn = DriverManager.getConnection(url);
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+     */
+
+
+    public static void fileList(List<FileData> fileList) {
+        String sql = "SELECT * FROM recentfiles";
+        try {
+            Connection conn = connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+
+            // loop through the result set
+            while (rs.next()) {
+                FileData curfile = new FileData();
+                curfile.name = rs.getString("name");
+                curfile.fileImg = rs.getString("fileImg");
+                curfile.filePath = rs.getString("filePath");
+                fileList.add(curfile);
             }
-            return conn;
-        } // end connect()
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    public static void selectAll() {
+        String sql = "SELECT * FROM recentfiles";
 
+        try {
+            Connection conn = connect();
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
 
-        public void selectAll() {
-            String sql = "SELECT * FROM recentfiles";
-
-            try {
-                Connection conn = this.connect();
-                Statement stmt = conn.createStatement();
-                ResultSet rs = stmt.executeQuery(sql);
-
-                // loop through the result set
-                while (rs.next()) {
-                    System.out.println(rs.getInt("id") + "\t" +
-                            rs.getString("name") + "\t" +
-                            rs.getString("fileImg") + "\t" +
-                            rs.getString("filePath"));
-                }
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            // loop through the result set
+            while (rs.next()) {
+                System.out.println(rs.getInt("id") + "\t" +
+                        rs.getString("name") + "\t" +
+                        rs.getString("fileImg") + "\t" +
+                        rs.getString("filePath"));
             }
-        } // end selectAll()
-    } // end Class SelectRecords
-} // end Class SQL
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    } // end selectAll()
+} // end Class SelectRecords
