@@ -5,9 +5,9 @@ import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.SnapshotParameters;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
+import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -331,14 +331,14 @@ public class WindowController {
         protected void newFile(boolean fromOpen) {
 
         	flipbookPane.getChildren().clear();
-        	
-       
-        	
-            flipbook = new Flipbook(800, 640, "test");
-            NewFileBox nfb = new NewFileBox("New File");
-            flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
-            flipbook.addFrame();
-            initEditor();
+
+            if (!fromOpen) {
+                NewFileBox nfb = new NewFileBox("New File");
+                flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
+            }
+
+            toolsPane.setDisable(false);
+            mediaPane.setDisable(false);
 
             flipbookPane.setVisible(true);
             flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
@@ -354,6 +354,10 @@ public class WindowController {
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
+
+            deleteAndInsertSpacer.setMinWidth(canvas.getWidth());
+            prevFrame.setFitWidth(canvas.getWidth()*.7);
+            nextFrame.setFitWidth(canvas.getWidth()*.7);
 
 
             //set up layer picker
@@ -374,7 +378,8 @@ public class WindowController {
             populateTimeline();
       
             }
-            
+
+            setPencil();
             openFlipbook = true;
             
             
@@ -441,9 +446,6 @@ public class WindowController {
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
 
-            if (this.activeTool == "Eyedropper") {
-                this.colorPicker.setValue(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()).getPixelReader().getColor((int)e.getX(), (int)e.getY()));
-            }
         }
 
         public void handleMouseReleased(MouseEvent e) {
@@ -488,16 +490,18 @@ public class WindowController {
         	//if you're not on index 0, there is a prev frame
             if (flipbook.getCurFrameNum() != 0) {
                 this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1).getThumbnailImage());
+                prevFrame.setVisible(true);
             }
             else {
-                prevFrame.setImage(null);
+                prevFrame.setVisible(false);
             }
             
             //if you're not the last frame, there is a next frame
             if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
             	
                 this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1).getThumbnailImage());
-               
+                nextFrame.setVisible(true);
+
             }
            
             else {

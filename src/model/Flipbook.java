@@ -7,8 +7,6 @@ import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.canvas.Canvas;
 import javax.imageio.ImageIO;
@@ -21,6 +19,14 @@ import java.util.LinkedList;
 public class Flipbook {
     //small class to contain the base64 img and frame visibility
     //also includes the frame generation function
+
+    public String getBookName() {
+        return this.bookName;
+    }
+
+    public String getFrameImgString(int i) {
+        return this.frames.get(i).imgString;
+    }
 
     private class LayerData{
         String imgString;
@@ -44,7 +50,7 @@ public class Flipbook {
         LayerData activeLayer;
         boolean isVisible;
         double opacity;
-
+        Group g;
         List<LayerData> layers;
 
         FrameData(String img, boolean visible, double opacity){
@@ -52,16 +58,15 @@ public class Flipbook {
             this.isVisible = visible;
             this.opacity = opacity;
             this.layers = new LinkedList<>();
-            
+
             //adding appropriate amount of layers
             for(int i = 0; i < layerCount; i++)
-            	layers.add(new LayerData(img, visible));
-            
-            this.activeLayer = layers.get(0);
-        }
+                layers.add(new LayerData(img, true));
 
-        public String getframeImgString() {
-            return this.imgString;
+            this.activeLayer = layers.get(0);
+
+            if(img != null)
+                generateFrameImgURL();
         }
 
         public List<LayerData> getLayers() {
@@ -71,23 +76,41 @@ public class Flipbook {
         public void setActiveLayer(int curLayer) {this.activeLayer = this.layers.get(curLayer); }
 
         public Group generateGroup() {
-            Group g = new Group();
+            if(g == null) {
+                g = new Group();
 
-            for(LayerData l: layers) {
+                for(LayerData l: layers) {
 
-                if(l.isVisible) {
+                    if(l.isVisible) {
 
-                    l.layer.getGraphicsContext().drawImage(new Image(l.imgString), 0, 0);
-                    g.getChildren().add(l.layer);
+                        l.layer.getGraphicsContext().drawImage(new Image(l.imgString), 0, 0);
+
+                        g.getChildren().add(l.layer);
+
+                    }
 
                 }
+
+
+
+
 
             }
 
             g.setOpacity(this.opacity);
 
             return g;
+
+
         }
+
+        public String generateFrameImgURL() {
+
+            this.imgString = generateImgURL(this.generateGroup());
+            return imgString;
+        }
+
+
     }
 
 
@@ -95,32 +118,34 @@ public class Flipbook {
     // a place to store the frames
     private List<FrameData> frames;
 
+
+
     //basic variables
     private String bookName;
     private int canvasWidth;
     private int canvasHeight;
 
     //frame rate in fps
-    private int frameRate = 1;
+    private int frameRate = 10;
     private boolean onionSkinningEnabled = true;
-    
-    
-  //how much we need to split the opacity range by for each frame
+
+
+    //how much we need to split the opacity range by for each frame
     //The minimum amount of frames should be 1. NEVER SET THIS TO 0.
     //Setting it to 0 will cause a divide by 0 when calculating the opacity delta
     //in the setFrame function
     int numPrevFramesToShow = 1;
-    
+
     //what the spread from first onion frame opacity to last frame opacity is
     //opacity variables; they determine what the initial onion frame's opacity fill be
     //and help calculate the loss of opacity as you see further frames
     double maxOnionOpacity = 0.4;
     double minOnionOpacity = 0.1;
-    
+
     private int layerCount = 3;
-    
+
     //frame length in milliseconds
-    private long frameTime;
+    private final long frameTime = Math.round((1.0/frameRate) * 1000);
 
     //current frame index
     private int curFrame = 0;
@@ -129,10 +154,10 @@ public class Flipbook {
     private final Group group;
     public void setFrameRate(int fr) {
         this.frameRate = fr;
-        frameTime = Math.round((1.0/frameRate) * 1000);
     }
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
+
 
         this.frames = new LinkedList<FrameData>();
 
@@ -156,16 +181,12 @@ public class Flipbook {
 
 
     //sets frame visibility to false. When the update function gets called, this will 'clear the screen'
-    public void clearScreen() {
+    private void clearScreen() {
 
         for(FrameData f: frames) {
             f.isVisible = false;
             f.opacity = 1;
         }
-    }
-
-    public void clearFrames() {
-        frames = new LinkedList<>();
     }
 
     //allows user to pick a frame and display it on the screen
@@ -176,10 +197,10 @@ public class Flipbook {
 
             //onionSkinningEnabled = true;
             if(onionSkinningEnabled) {
-                
+
                 double opacityDelta = 1.0/(numPrevFramesToShow);
 
-             
+
                 double opacityRange = maxOnionOpacity - minOnionOpacity;
 
 
@@ -206,8 +227,11 @@ public class Flipbook {
 
             //if onion skinning is off, we just show the selected frame only
             else {
+
                 frames.get(frameNumber).isVisible = true;
+
             }
+
             this.curFrame = frameNumber;
 
             update();
@@ -225,8 +249,11 @@ public class Flipbook {
         for(FrameData f: frames) {
             if(f.isVisible) {
                 group.getChildren().add(f.generateGroup());
+
             }
         }
+
+
     }
 
 
@@ -236,16 +263,17 @@ public class Flipbook {
         Layer layer = new Layer(canvasWidth, canvasHeight);
         FrameData frameData = new FrameData(generateImgURL(layer), false, 0);
 
-        System.out.println(frameData.imgString);
+
 
         //if we have no frames, add a frame, set the frame on the canvas, and
         if(frames.size() < 1 ) {
             frames.add(frameData);
-            setFrame(curFrame);
+            setFrame(0);
         }
+
         else {
             frames.add(curFrame + 1, frameData);
-            setFrame(curFrame);
+            //setFrame(curFrame);
             forward(false);
         }
         /*
@@ -347,7 +375,7 @@ public class Flipbook {
         toSave += canvasWidth + "\n";
         toSave += canvasHeight + "\n";
         toSave += layerCount + "\n";
-        
+
         //add base64 encoded strings onto result
         for(String s: convertedImages) {
             toSave += s;
@@ -361,7 +389,7 @@ public class Flipbook {
     public void openFile(File file) {
         //we need to clear the screen before we load a file, we also need to clear the frames arraylist
         clearScreen();
-        clearFrames();
+        frames = new LinkedList<>();
         curFrame = 0;
 
         //parsing values into their respective variables
@@ -375,33 +403,29 @@ public class Flipbook {
             layerCount = Integer.parseInt(reader.readLine());
 
 
-
+            int idx = 0;
             //if the reader is ready we know we haven't reached the end of the file
             //implies that we have another x amount of layers to read
             while(reader.ready()) {
-            	
-            	FrameData frame = new FrameData(null, false, 1);
-            	
-            	
-            	//every frame has the same amount of layers
-            	for(int i = 0; i < layerCount; i++) {
-            		frame.layers.get(i).imgString = reader.readLine();
-            	}
-                
-            	
-            	frame.imgString = frame.layers.get(0).imgString;
-                System.out.println("Frame:   " +frame.imgString);
-                System.out.println("Layer 1: " +frame.layers.get(0).imgString);
-                System.out.println("Layer 2: " +frame.layers.get(1).imgString);
-                System.out.println("Layer 3: " +frame.layers.get(2).imgString);
-                
+
+                FrameData frame = new FrameData(null, false, 1);
+
+
+                //every frame has the same amount of layers
+                for(int i = 0; i < layerCount; i++) {
+                    frame.layers.get(i).imgString = reader.readLine();
+
+                }
+
+                System.out.println("Reading frame#: " + idx++);
+                frame.generateFrameImgURL();
+
                 frames.add(frame);
             }
-            
-            System.out.println("Num Frames OpenFile(): " + frames.size());
+
+
             //always close file streams
             reader.close();
-            update();
         }
         catch(IOException e) {
             e.printStackTrace();
@@ -441,9 +465,9 @@ public class Flipbook {
 
         for(LayerData l: frames.get(curFrame).layers) {
             l.imgString = generateImgURL(l.layer);
-            System.out.println(l.imgString);
+
         }
-        
+
         frames.get(curFrame).imgString =  generateImgURL(frames.get(curFrame).generateGroup());
 
         long tFinish = System.nanoTime();
@@ -457,11 +481,11 @@ public class Flipbook {
     public void saveFrame(int frameIndex) {
         for(LayerData l: frames.get(frameIndex).layers) {
             l.imgString = generateImgURL(l.layer);
-            System.out.println(l.imgString);
+
         }
         frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
-        
-   
+
+
     }
 
     public List<FrameData> getFrames() {
@@ -472,12 +496,6 @@ public class Flipbook {
     //basic getters
     public int getNumFrames() {
         return frames.size();
-    }
-
-    public String getBookName() {return this.bookName;}
-
-    public String getFrameImgString(int index) {
-        return frames.get(index).getframeImgString();
     }
 
     public long getFrameTime() {
@@ -499,29 +517,28 @@ public class Flipbook {
     public Group getGroup() {
         return group;
     }
-    
+
     public List<Node> generateFrameNodes(){
-    	List<Node> frameNodes = new LinkedList<>();
-    	
-    	for(FrameData f: frames) {
-    		Canvas c = new Canvas();
-            System.out.println("IMagestrings:" + f.imgString);
-    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0);
-    		frameNodes.add(c);
-    	}
+        List<Node> frameNodes = new LinkedList<>();
 
-    	return frameNodes;
+        for(FrameData f: frames) {
+
+            frameNodes.add(f.generateGroup());
+        }
+
+        return frameNodes;
+
     }
 
-    public Node generateFrameNodeForFrame(int frameNum) {
-        Canvas c = new Canvas();
-        c.getGraphicsContext2D().drawImage(new Image(this.getFrames().get(frameNum).imgString), 0, 0);
-        //c.setOpacity(1);
-        return c;
+    public Node generateFrameNode(int index) {
+        return frames.get(index).generateGroup();
     }
+
+
 
 
     public GraphicsContext getGraphicsContext(int layerNum) {
         return frames.get(curFrame).layers.get(layerNum).layer.getGraphicsContext();
     }
+
 }
