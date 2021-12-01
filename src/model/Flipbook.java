@@ -42,7 +42,7 @@ public class Flipbook {
         LayerData activeLayer;
         boolean isVisible;
         double opacity;
-
+        Group g;
         List<LayerData> layers;
 
         FrameData(String img, boolean visible, double opacity){
@@ -53,9 +53,12 @@ public class Flipbook {
             
             //adding appropriate amount of layers
             for(int i = 0; i < layerCount; i++)
-            	layers.add(new LayerData(img, visible));
+            	layers.add(new LayerData(img, true));
             
             this.activeLayer = layers.get(0);
+            
+            if(img != null)
+            	generateFrameImgURL();
         }
 
         public List<LayerData> getLayers() {
@@ -65,23 +68,41 @@ public class Flipbook {
         public void setActiveLayer(int curLayer) {this.activeLayer = this.layers.get(curLayer); }
 
         public Group generateGroup() {
-            Group g = new Group();
+        	if(g == null) {
+        		g = new Group();
 
             for(LayerData l: layers) {
 
                 if(l.isVisible) {
 
                     l.layer.getGraphicsContext().drawImage(new Image(l.imgString), 0, 0);
+                   
                     g.getChildren().add(l.layer);
 
                 }
 
             }
 
-            g.setOpacity(this.opacity);
-
+            
+            
+          
+            
+        	}
+            
+        	g.setOpacity(this.opacity);
+            
             return g;
+            
+            
         }
+        
+        public String generateFrameImgURL() {
+        	
+        	this.imgString = generateImgURL(this.generateGroup());
+        	return imgString;
+        }
+        
+        
     }
 
 
@@ -129,6 +150,7 @@ public class Flipbook {
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
 
+    
         this.frames = new LinkedList<FrameData>();
 
         this.bookName = bookName;
@@ -197,8 +219,11 @@ public class Flipbook {
 
             //if onion skinning is off, we just show the selected frame only
             else {
+            	
                 frames.get(frameNumber).isVisible = true;
+                
             }
+            
             this.curFrame = frameNumber;
 
             update();
@@ -216,8 +241,11 @@ public class Flipbook {
         for(FrameData f: frames) {
             if(f.isVisible) {
                 group.getChildren().add(f.generateGroup());
+                
             }
         }
+        
+        
     }
 
 
@@ -227,13 +255,14 @@ public class Flipbook {
         Layer layer = new Layer(canvasWidth, canvasHeight);
         FrameData frameData = new FrameData(generateImgURL(layer), false, 0);
 
-        System.out.println(frameData.imgString);
+      
 
         //if we have no frames, add a frame, set the frame on the canvas, and
         if(frames.size() < 1 ) {
             frames.add(frameData);
-            //setFrame(curFrame);
+            setFrame(0);
         }
+        
         else {
             frames.add(curFrame + 1, frameData);
             //setFrame(curFrame);
@@ -366,7 +395,7 @@ public class Flipbook {
             layerCount = Integer.parseInt(reader.readLine());
 
 
-
+            int idx = 0;
             //if the reader is ready we know we haven't reached the end of the file
             //implies that we have another x amount of layers to read
             while(reader.ready()) {
@@ -377,19 +406,16 @@ public class Flipbook {
             	//every frame has the same amount of layers
             	for(int i = 0; i < layerCount; i++) {
             		frame.layers.get(i).imgString = reader.readLine();
+            		
             	}
                 
-            	
-            	frame.imgString = frame.layers.get(0).imgString;
-                System.out.println(frame.imgString);
-                System.out.println("Layer 1: " +frame.layers.get(0).imgString);
-                System.out.println("Layer 2: " +frame.layers.get(1).imgString);
-                System.out.println("Layer 3: " +frame.layers.get(2).imgString);
+            	System.out.println("Reading frame#: " + idx++);
+            	frame.generateFrameImgURL();
                 
                 frames.add(frame);
             }
             
-            System.out.println("Num Frames: " + frames.size());
+          
             //always close file streams
             reader.close();
         }
@@ -419,7 +445,7 @@ public class Flipbook {
         }
 
         //making into a URL, add it to the arraylist
-        String imageString = "file:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
+        String imageString = "data:image/png;base64," + Base64.getEncoder().encodeToString(baos.toByteArray());
         return imageString;
     }
 
@@ -431,7 +457,7 @@ public class Flipbook {
 
         for(LayerData l: frames.get(curFrame).layers) {
             l.imgString = generateImgURL(l.layer);
-            System.out.println(l.imgString);
+           
         }
         
         frames.get(curFrame).imgString =  generateImgURL(frames.get(curFrame).generateGroup());
@@ -447,7 +473,7 @@ public class Flipbook {
     public void saveFrame(int frameIndex) {
         for(LayerData l: frames.get(frameIndex).layers) {
             l.imgString = generateImgURL(l.layer);
-            System.out.println(l.imgString);
+           
         }
         frames.get(frameIndex).imgString =  generateImgURL(frames.get(frameIndex).generateGroup());
         
@@ -488,17 +514,23 @@ public class Flipbook {
     	List<Node> frameNodes = new LinkedList<>(); 
     	
     	for(FrameData f: frames) {
-    		Canvas c = new Canvas();
-    		c.getGraphicsContext2D().drawImage(new Image(f.imgString), 0, 0);
-    		frameNodes.add(c);
+    	
+    		frameNodes.add(f.generateGroup());
     	}
     
     	return frameNodes;
     	
     }
     
+    public Node generateFrameNode(int index) {
+    	return frames.get(index).generateGroup();
+    }
+    
+    
+    
 
     public GraphicsContext getGraphicsContext(int layerNum) {
         return frames.get(curFrame).layers.get(layerNum).layer.getGraphicsContext();
     }
+    
 }

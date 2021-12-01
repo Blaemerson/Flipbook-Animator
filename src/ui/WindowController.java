@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.canvas.Canvas;
@@ -18,12 +19,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Flipbook;
 import model.Thumbnail;
+import model.Thumbnails;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -56,7 +59,7 @@ public class WindowController {
         @FXML
         private Spinner animationSpeedSetter;
 
-        private Thumbnail thumbnails;
+        private Thumbnails thumbnails;
 
         private Flipbook flipbook;
         private boolean onionSkinningOn = true;
@@ -121,53 +124,104 @@ public class WindowController {
 
             File file = openfile.showOpenDialog(myStage);
 
-            newFile();
+            //passing a true so that the newFile function knows
+            //that it should not add a frame to the canvas, only open the flipbook
+            newFile(true);
 
             flipbook.openFile(file);
             
-            System.out.println(flipbook.generateFrameNodes().size());
+            
+            //after opening the file, the frames should already be made, and the thumbnails can be made
+            thumbnails = new Thumbnails(flipbook.generateFrameNodes());
             
             
-            thumbnails =  new Thumbnail(flipbook.generateFrameNodes());
+            //populate the timeline with the newly made thumbnails
+            populateTimeline();
             
-            
-            
+            //not sure why this is called. The first frame is 'seeked' to and then addThumbnail is called
             firstFrame();
-           
-            flipbook.setFrame(0);
-            setFrameCount();
+                              
             populateTimeline();
             openFlipbook = true;
-
-           
-            
             
         }
 
         public void populateTimeline() {
+        	  	
+        	int width = (int)((84.0/640)*800);
+        	
+        	//set spacing between thumnails and clear the timeline
             timelineBox.setSpacing(2);
             timelineBox.getChildren().clear();
+            
+            //why use an enhanced for loop if you need to use an index?
             int index = 0;
-            for (Image i : thumbnails.getThumbnails()) {
-                ImageView thumb = new ImageView(i);
+            for (Thumbnail t : thumbnails.getThumbnails()) {
+                ImageView thumb = new ImageView(t.getThumbnailImage());
+                
+                //setting height of thumbnail probably
                 thumb.setPreserveRatio(true);
                 thumb.setFitHeight(84);
+                
+                Transform transform = thumb.getLocalToParentTransform();
+                transform.setOnTransformChanged(e-> {
+                	
+                	System.out.println("event called");
+                	
+                	if(transform.getTx() > 200) {
+                		thumb.setVisible(false);
+                	}
+                	
+                	
+                });
+                
+                
+                //add thumbnail to the box
                 timelineBox.getChildren().add(thumb);
+                
+                
+                
+                //adding frame to hover over tooltip
                 Tooltip.install(timelineBox.getChildren().get(index), new Tooltip("Frame " + (index + 1)));
+                
+                //what is final index for?
                 int finalIndex = index;
                 timelineBox.getChildren().get(index).setOnMousePressed((MouseEvent e) -> {
+                	//why is add thumbnails being called when the thumbnail is pressed?
+                	//why not only seek to it?
                     addThumbnails(this.flipbook.getCurFrameNum());
+                    //why not just use index if final index is equal to index?
                     seekTo(finalIndex);
+                    
                 });
+                
                 index++;
+                
+                if(index > 20)
+                	break;
             }
         }
 
         //makes the first frame and allows other keyboard events to occur
         //TODO: Add new file menu, allow user to change canvas size at that time
+        
         @FXML
-        protected void newFile() {
+        
+        protected void _newFile() {
+        	newFile(false);
+        }
+        
+        
+        
+       
+        
+        @FXML
+        protected void newFile(boolean fromOpen) {
 
+        	flipbookPane.getChildren().clear();
+        	
+       
+        	
             flipbook = new Flipbook(800, 640, "test");
 
             flipbookPane.setVisible(true);
@@ -175,53 +229,74 @@ public class WindowController {
 
             canvas = new Canvas(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 
+            //setting behavior for draw canvas
+            //this canvas 
             canvas.setOnMousePressed(e->{handleMousePressed(e);});
-
-            canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
+            canvas.setOnMouseDragged(e->{handleMouseDragged(e);});
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
             pane.setVisible(true);
-            //pane.setCenter(viewPort);
+          
 
-
+            //set up layer picker
             layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
             layerPicker.setValue("Layer 1");
+            
+            //add the single frame to the new file
+            //if we're opening a file we don't want a random frame already there
+            if(!fromOpen) {
+            	
             flipbook.addFrame();
             setFrameCount();
-
+            
+            //in new file, there is only one frame to add to the thumbnails list.
+            //just call Thumbnails(flipbook.generateFrameNodes())
+            //additionally, when you make a new file you need to repopulate the timeline
+            thumbnails = new Thumbnails(flipbook.generateFrameNodes());
+            populateTimeline();
+      
+            }
+            
             openFlipbook = true;
-            thumbnails = new Thumbnail(this.flipbookPane);
+            
+            
         }
 
 
         //uses frameRate in flipbook to call the forward function at timed intervals
         public void animate() {
 
-            //populateTimeline();
-            this.flipbook.setOnionSkinning(false);
-            isAnimating = true;
+        	if(!isAnimating) {
+        		
+        		//populateTimeline();
+        		this.flipbook.setOnionSkinning(false);
+        		isAnimating = true;
 
-            KeyFrame keyFrame = new KeyFrame(
+        		KeyFrame keyFrame = new KeyFrame(
                     //Duration.millis(Math.round(1.0/frameRate)*1000),
                     Duration.millis(flipbook.getFrameTime()),
                     event -> {
-                        flipbook.forward(false);
+                        flipbook.forward(true);
                         populateTimeline();
                         updateThumbnails();
                         setFrameCount();
-                        System.out.println("Frame #: " + flipbook.getCurFrameNum());
+                       
                     });
 
-            Timeline timeline = new Timeline(keyFrame);
+        		Timeline timeline = new Timeline(keyFrame);
 
-            timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());
+        		timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());
 
-            timeline.play();
+           
+            	timeline.play();
+           
 
-            timeline.setOnFinished(e -> {isAnimating = false;});
+            	timeline.setOnFinished(e -> {isAnimating = false;});
 
-            setFrameCount();
+            	setFrameCount();
+            
+        	}
         }
 
 
@@ -232,7 +307,7 @@ public class WindowController {
 
         public void handleMousePressed(MouseEvent e) {
             GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
-
+           
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
         }
@@ -252,27 +327,46 @@ public class WindowController {
             else if (this.activeTool == "PaintBucket") {
                 gc.setFill(this.colorPicker.getValue());
             }
+       
             addThumbnails(this.flipbook.getCurFrameNum());
+            
             updateThumbnails();
+           
+            
+            
+            
+           
         }
 
         public void updateThumbnails() {
+        	
+        	if(flipbook.getCurFrameNum() >= 20) {
+        		return;
+        	}
+        	
+        	//if you're not on index 0, there is a prev frame
             if (flipbook.getCurFrameNum() != 0) {
-                this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1));
+                this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1).getThumbnailImage());
             }
             else {
                 prevFrame.setImage(null);
             }
+            
+            //if you're not the last frame, there is a next frame
             if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
-            	System.out.println(flipbook.getCurFrameNum() + ":" + flipbook.getNumFrames());
-                this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1));
+            	
+                this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1).getThumbnailImage());
+               
             }
+           
             else {
                 nextFrame.setImage(null);
             }
-            if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
-                timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
-            }
+            
+           
+           timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
+            
+            
         }
 
     @FXML
@@ -413,6 +507,7 @@ public class WindowController {
         }
         // Does the frame need to be saved?
         // this.flipbook.saveFrame();
+        flipbook.forward(false);
         seekTo(curFrame + 1);
     }
 
@@ -433,9 +528,15 @@ public class WindowController {
 
     // separated this from seekTo() to fix order of operations for nextFrame()
     protected void addThumbnails(int curFrame){
-        this.flipbook.setOnionSkinning(false);
-        this.thumbnails.insert(this.thumbnails.convert(this.flipbookPane), curFrame);
+    	if(curFrame <= 20) {
+    	
+        this.thumbnails.insert(new Thumbnail(flipbook.generateFrameNode(curFrame)), curFrame);
+        
+    	}
         populateTimeline();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
+    	
+
     }
+       
+    
 }

@@ -35,7 +35,7 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#newFile" text="New (Ctrl + N)" />
+                          <MenuItem mnemonicParsing="false" onAction="#_newFile" text="New (Ctrl + N)" />
                               <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open (Ctrl + O)" />
                               <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save (Ctrl + S)" />
                               <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
