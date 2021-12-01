@@ -20,7 +20,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Transform;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -35,8 +34,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 public class WindowController {
         // FXML objects; name corresponds to its FX ID
@@ -194,9 +191,14 @@ public class WindowController {
 
                     //always close file streams
                     writer.close();
-                    //SQLite.connect();
-                    //SQLite.createNewTable();
+
+                    // if database doesn't exist create one with a table
+                    if(!SQLite.databaseExists()) {
+                        SQLite.createNewDatabase();
+                        SQLite.createNewTable();
+                    }
                     SQLite.insert(flipbook.getBookName(), flipbook.getFrameImgString(0), file.getPath());
+
                 } catch (IOException ex) {
 
                     System.out.println("Error opening file, or writing data.");
@@ -304,7 +306,7 @@ public class WindowController {
             stage.close();
 
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("../../resources/ui/window-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 480, 360);
                 stage = new Stage();
                 stage.setScene(scene);

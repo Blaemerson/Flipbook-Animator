@@ -84,7 +84,7 @@ public class SQLite {
         }
     } // end insert(String, double)
 
-    public static void fileList(List<FileData> fileList) {
+    /*public static void fileList(List<FileData> fileList) {
         String sql = "SELECT * FROM recentfiles";
         try {
             Connection conn = connect();
@@ -103,4 +103,5 @@ public class SQLite {
             System.out.println(e.getMessage());
         }
     } // end fileList
+     */
 } // end Class SQLite
