@@ -317,18 +317,21 @@ public class WindowController {
             canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
+            //flipbookPane.setCenterShape(true);
 
             pane.setVisible(true);
 
             layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
             layerPicker.setValue("Layer 1");
             flipbook.clearScreen();
-            //flipbook.update();
+            flipbook.update();
 
             mediaPane.setDisable(false);
             toolsPane.setDisable(false);
             openFlipbook = true;
 
+            prevFrame.setFitWidth(flipbook.getCanvasWidth()*.7);
+            nextFrame.setFitWidth(flipbook.getCanvasWidth()*.7);
             deleteAndInsertSpacer.setMinWidth(canvas.getWidth());
             fpsSetter.setPromptText("FPS");
             setPencil();
@@ -445,8 +448,6 @@ public class WindowController {
             if (flipbook.getCurFrameNum() <= timelineBox.getChildren().size()-1) {
                 timelineBox.getChildren().get(curFrameNum).setEffect(new DropShadow());
             }
-            prevFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
-            nextFrame.setFitWidth(flipbook.getCanvasWidth()*.75);
         }
 
     @FXML
@@ -477,6 +478,7 @@ public class WindowController {
 
         this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight());
         addThumbnails(this.flipbook.getCurFrameNum());
+        seekTo(flipbook.getCurFrameNum());
     }
     // File
     @FXML
