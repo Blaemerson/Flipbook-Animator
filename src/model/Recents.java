@@ -12,7 +12,8 @@ public class Recents {
     }
 
     private class FileData {
-        String fileImg;   // base64 encode of frame for thumbnail
+        String name;        // flipbook name
+        String fileImg;     // base64 encode of frame for thumbnail
         String filePath;    // URI of recent file
 
         public String getImgString() {
@@ -21,6 +22,10 @@ public class Recents {
 
         public String getFilePath() {
             return this.filePath;
+        }
+
+        public String getName() {
+            return this.name;
         }
     }
 }

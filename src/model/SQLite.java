@@ -7,55 +7,61 @@ public class SQLite {
     final static String databasePath = "";                  // path of SQLite database
     final static String databaseName = "recent_files.db";   // name of SQLite database
 
-    public static class Connect {
-        /**
-         * Connect to a sample database
-         */
-        public static void connect() {
-            Connection conn = null;
-            try {
-                // db parameters
-                String url = "jdbc:sqlite:" + databasePath + databaseName;
-                // create a connection to the database
-                conn = DriverManager.getConnection(url);
-
-                System.out.println("Connection to SQLite has been established.");
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            } finally {
-                try {
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    System.out.println(ex.getMessage());
-                }
-            }
-        } // end connect()
-    } // end Class Connect
-
-    public static class Create {
-
-        public static void createNewDatabase() {
-
+    /*public static void connect() {
+        Connection conn = null;
+        try {
+            // db parameters
             String url = "jdbc:sqlite:" + databasePath + databaseName;
+            // create a connection to the database
+            conn = DriverManager.getConnection(url);
 
+            System.out.println("Connection to SQLite has been established.");
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            createNewDatabase();
+        } finally {
             try {
-                Connection conn = DriverManager.getConnection(url);
                 if (conn != null) {
-                    DatabaseMetaData meta = conn.getMetaData();
-                    System.out.println("The driver name is " + meta.getDriverName());
-                    System.out.println("A new database has been created.");
+                    conn.close();
                 }
-
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            } catch (SQLException ex) {
+                System.out.println(ex.getMessage());
             }
-        } // end createNewDatabase(String)
-    } // end Class Create
+        }
+    } // end connect()
 
-    public static class CreateTable {
+     */
+
+    public static Connection connect() {
+        // SQLite connection string
+        String url = "jdbc:sqlite:" + databasePath + databaseName;
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
+
+    public static void createNewDatabase() {
+
+        String url = "jdbc:sqlite:" + databasePath + databaseName;
+
+        try {
+            Connection conn = DriverManager.getConnection(url);
+            if (conn != null) {
+                DatabaseMetaData meta = conn.getMetaData();
+                System.out.println("The driver name is " + meta.getDriverName());
+                System.out.println("A new database has been created.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    } // end createNewDatabase(String)
+
 
         public static void createNewTable() {
             // SQLite connection string
@@ -64,8 +70,10 @@ public class SQLite {
             // SQL statement for creating a new table
             String sql = "CREATE TABLE IF NOT EXISTS recentfiles (\n"
                     + " id integer PRIMARY KEY,\n"
+                    + " name text NOT NULL,\n"
                     + " fileImg text NOT NULL,\n"
-                    + " filePath text NOT NULL\n"
+                    + " filePath text NOT NULL UNIQUE\n"
+
                     + ");";
 
             try {
@@ -76,37 +84,25 @@ public class SQLite {
                 System.out.println(e.getMessage());
             }
         } // end createNewTable()
-    } // end Class CreateTable
-
-    public static class InsertRecords {
-
-        private Connection connect() {
-            // SQLite connection string
-            String url = "jdbc:sqlite:" + databasePath + databaseName;
-            Connection conn = null;
-            try {
-                conn = DriverManager.getConnection(url);
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-            return conn;
-        } // end connect()
 
 
-        public void insert(String fileImg, String filePath) {
-            String sql = "INSERT INTO employees(name, capacity) VALUES(?,?)";
+    public static void insert(String name, String fileImg, String filePath) {
+        String sql = "INSERT INTO recentfiles(name, fileImg, filePath) VALUES(?,?,?)" +
+                " ON CONFLICT(filePath) DO UPDATE SET name=excluded.name, fileImg=excluded.fileImg";
 
-            try {
-                Connection conn = this.connect();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, fileImg);
-                pstmt.setString(2, filePath);
-                pstmt.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
-            }
-        } // end insert(String, double)
-    } // end Class InsertRecords
+        try {
+            Connection conn = connect();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, name);
+            pstmt.setString(2, fileImg);
+            pstmt.setString(3, filePath);
+            //pstmt +=
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    } // end insert(String, double)
+
 
     public static class SelectRecords {
 
@@ -134,6 +130,7 @@ public class SQLite {
                 // loop through the result set
                 while (rs.next()) {
                     System.out.println(rs.getInt("id") + "\t" +
+                            rs.getString("name") + "\t" +
                             rs.getString("fileImg") + "\t" +
                             rs.getString("filePath"));
                 }

@@ -27,6 +27,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Flipbook;
+import model.SQLite;
 import model.Thumbnail;
 
 import java.io.BufferedWriter;
@@ -184,21 +185,21 @@ public class WindowController {
             if (file != null) {
 
                 try {
-
                     BufferedWriter writer = new BufferedWriter(new FileWriter(file));
                     writer.write(fileForSave);
 
                     //always close file streams
                     writer.close();
-                }
-
-                catch (IOException ex) {
+                    //SQLite.connect();
+                    //SQLite.createNewTable();
+                    SQLite.insert(flipbook.getBookName(), flipbook.getFrameImgString(0), file.getPath());
+                } catch (IOException ex) {
 
                     System.out.println("Error opening file, or writing data.");
                 }
             }
 
-        }
+        } // end save()
 
 
         //takes previously stored data in .flip file and parses it back into a string

@@ -474,6 +474,8 @@ public class Flipbook {
         return frames.size();
     }
 
+    public String getBookName() {return this.bookName;}
+
     public String getFrameImgString(int index) {
         return frames.get(index).getframeImgString();
     }
