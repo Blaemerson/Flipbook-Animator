@@ -126,7 +126,7 @@
                      <children>
                         <ToolBar minWidth="32.0" orientation="VERTICAL" prefWidth="80.0">
                           <items>
-                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="130.0" mnemonicParsing="false" onAction="#setImage" translateX="8.0">
+                              <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="130.0" mnemonicParsing="false" onAction="#loadImg" translateX="8.0">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
