@@ -145,7 +145,7 @@ public class Flipbook {
     private int layerCount = 3;
 
     //frame length in milliseconds
-    private final long frameTime = Math.round((1.0/frameRate) * 1000);
+    private long frameTime;
 
     //current frame index
     private int curFrame = 0;
@@ -154,6 +154,7 @@ public class Flipbook {
     private final Group group;
     public void setFrameRate(int fr) {
         this.frameRate = fr;
+        this.frameTime = Math.round((1.0/frameRate) * 1000);
     }
 
     public Flipbook(int canvasWidth, int canvasHeight, String bookName){
