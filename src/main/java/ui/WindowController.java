@@ -225,10 +225,11 @@ public class WindowController {
             //newFile();
             //passing a true so that the newFile function knows
             //that it should not add a frame to the canvas, only open the flipbook
+            flipbook = new Flipbook(0,0,"");
+            flipbook.openFile(file);
             newFile(true);
 
-            flipbook.openFile(file);
-            
+
             
             //after opening the file, the frames should already be made, and the thumbnails can be made
             thumbnails = new Thumbnails(flipbook.generateFrameNodes());
