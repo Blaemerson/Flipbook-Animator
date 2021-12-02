@@ -72,10 +72,10 @@ public class WindowController {
         private Flipbook flipbook;
         private boolean onionSkinningOn = true;
 
-        // Probably a better way to implement tool switching
+        // There is probably a better way to implement tool switching
         private String activeTool;
 
-        // TODO: keep this only in the fxml
+        // TODO: keep as many fxml objects in the fxml file as possible
         @FXML
         private Pane deleteAndInsertSpacer;
 
@@ -362,15 +362,15 @@ public class WindowController {
             //add the single frame to the new file
             //if we're opening a file we don't want a random frame already there
             if(!fromOpen) {
-            	
-            flipbook.addFrame();
-            setFrameCount();
-            
-            //in new file, there is only one frame to add to the thumbnails list.
-            //just call Thumbnails(flipbook.generateFrameNodes())
-            //additionally, when you make a new file you need to repopulate the timeline
-            thumbnails = new Thumbnails(flipbook.generateFrameNodes());
-            populateTimeline();
+
+                flipbook.addFrame();
+                setFrameCount();
+
+                //in new file, there is only one frame to add to the thumbnails list.
+                //just call Thumbnails(flipbook.generateFrameNodes())
+                //additionally, when you make a new file you need to repopulate the timeline
+                thumbnails = new Thumbnails(flipbook.generateFrameNodes());
+                populateTimeline();
       
             }
 
@@ -511,8 +511,10 @@ public class WindowController {
         this.activeTool = "Eraser";
         flipbookPane.setCursor(Cursor.OPEN_HAND);
     }
+
+    // Loads an image to the current layer of the current frame.
     @FXML
-    protected void setImage() {
+    protected void loadImg() {
         //opens a window to allow you to pick an image file
         FileChooser openImg = new FileChooser();
         openImg.setTitle("Open");
@@ -522,7 +524,10 @@ public class WindowController {
         this.flipbook.getGraphicsContext(0).drawImage(new Image(file.toURI().toString()), 0, 0, this.flipbook.getCanvasWidth(), this.flipbook.getCanvasHeight());
         addThumbnails(this.flipbook.getCurFrameNum());
     }
-    // File
+
+    /*
+        Begin File Menu Options
+     */
     @FXML
     protected void onOpenFileChosen() {
         System.out.println("Open");
@@ -533,8 +538,13 @@ public class WindowController {
         System.out.println("Save");
         save();
     }
+    /*
+        End File Menu Options
+     */
 
-    // Edit
+    /*
+        Begin Edit Menu Options
+     */
     @FXML
     protected void onDeleteChosen() {
             int curFrame = this.flipbook.getCurFrameNum();
@@ -565,19 +575,30 @@ public class WindowController {
         updateThumbnails();
         setFrameCount();
     }
+    /*
+        End Edit Menu Options
+     */
 
 
-    // View
+    /*
+        Begin View Menu Options
+     */
     @FXML
     protected void toggleOnionSkinning() {
             this.onionSkinningOn = !this.onionSkinningOn;
             this.flipbook.setOnionSkinning(onionSkinningOn);
     }
+    /*
+        End View Menu Options
+     */
 
-    // Media Controls
+    /*
+        Begin Player Controls
+     */
     @FXML
     protected void play() {
         if (!isAnimating) {
+            //TODO: onion-skinning isn't being disabled like it should be. But then again, not sure if its better that way
             this.flipbook.setOnionSkinning(false);
             animate();
             this.flipbook.setOnionSkinning(onionSkinningOn);
@@ -588,14 +609,11 @@ public class WindowController {
         addThumbnails(this.flipbook.getCurFrameNum());
         seekTo(0);
     }
-
-
     @FXML
     protected void lastFrame() {
         addThumbnails(this.flipbook.getCurFrameNum());
         seekTo(this.flipbook.getNumFrames() - 1);
     }
-
     @FXML
     protected void prevFrame() {
         int curFrame = this.flipbook.getCurFrameNum();
@@ -617,12 +635,12 @@ public class WindowController {
         flipbook.forward(false);
         seekTo(curFrame + 1);
     }
+    /*
+        End Player Controls
+     */
 
     // TODO: if animating halt animation or make button unresponsive
-    // not sure if saveframe() is needed, it was only in nextframe() and prevFrame()
-    // via flipbook.forward() and flipbook.backward()
     protected void seekTo(int frameIndex) {
-        //flipbook.saveFrame();
         this.flipbook.setFrame(frameIndex);
         updateThumbnails();
         setFrameCount();
