@@ -176,7 +176,7 @@
                                     <Tooltip text="Eraser" />
                                  </tooltip>
                               </Button>
-                             <Button contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="10.0" layoutY="207.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0" visible="false">
+                             <Button contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="10.0" layoutY="207.0" mnemonicParsing="false" onAction="#setEyedropper" translateX="8.0" visible="false">
                                 <graphic>
                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                       <image>
