@@ -48,15 +48,15 @@ public class WindowController {
         @FXML
         private ColorPicker colorPicker;
         @FXML
-        private ImageView prevFrame;
+        private ImageView prevFrameImg;
         @FXML
-        private ImageView nextFrame;
+        private ImageView nextFrameImg;
         @FXML
         private ScrollPane spTimeline;
         @FXML
         private HBox timelineBox;
         @FXML
-        private Slider thickness;
+        private Slider pencilWidthSlider;
 
         @FXML
         private Spinner<Integer> fpsSetter;
@@ -71,7 +71,11 @@ public class WindowController {
 
         private Flipbook flipbook;
         private boolean onionSkinningOn = true;
+
+        // Probably a better way to implement tool switching
         private String activeTool;
+
+        // TODO: keep this only in the fxml
         @FXML
         private Pane deleteAndInsertSpacer;
 
@@ -79,7 +83,7 @@ public class WindowController {
 
         // frame counter at bottom of application
         @FXML
-        Label currentFrame;
+        Label frameNumLabel;
         @FXML
         private Pane toolsPane;
         @FXML
@@ -88,7 +92,7 @@ public class WindowController {
     Stage myStage;
 
     //program name
-        final String appTitle = "Flipbook Proto 2a";
+        final String appTitle = "Onionskin Studio";
 
         //prevents actions from occuring when there are potential conflicts
         boolean openFlipbook = false;
@@ -316,19 +320,13 @@ public class WindowController {
             }
         }
 
-        //makes the first frame and allows other keyboard events to occur
-        //TODO: Add new file menu, allow user to change canvas size at that time
-        
         @FXML
         
         protected void _newFile() {
         	newFile(false);
         }
         
-        
-        
-       
-        
+
         @FXML
         protected void newFile(boolean fromOpen) {
 
@@ -358,8 +356,8 @@ public class WindowController {
             pane.setVisible(true);
 
             deleteAndInsertSpacer.setMinWidth(canvas.getWidth());
-            prevFrame.setFitWidth(canvas.getWidth()*.7);
-            nextFrame.setFitWidth(canvas.getWidth()*.7);
+            prevFrameImg.setFitWidth(canvas.getWidth()*.7);
+            nextFrameImg.setFitWidth(canvas.getWidth()*.7);
 
 
             //set up layer picker
@@ -414,7 +412,6 @@ public class WindowController {
             timeline.play();
 
             playBtnIcon.setImage(new Image("ui/resources/icons/baseline_pause_black_24dp.png"));
-
             timeline.setOnFinished(e -> {
                 isAnimating = false;
                 flipbook.setOnionSkinning(onionSkinningOn);
@@ -428,7 +425,7 @@ public class WindowController {
 
         //sets frame count in the bottom container
         public void setFrameCount() {
-            currentFrame.setText((flipbook.getCurFrameNum()+1)+"");
+            frameNumLabel.setText((flipbook.getCurFrameNum()+1)+"");
         }
 
         public void handleMousePressed(MouseEvent e) {
@@ -448,7 +445,7 @@ public class WindowController {
 
         public void handleMouseDragged(MouseEvent e) {
             GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
-            gc.setLineWidth(this.thickness.getValue());
+            gc.setLineWidth(this.pencilWidthSlider.getValue());
             if (this.activeTool == "Eraser") {
                 gc.clearRect(e.getX()-5, e.getY()-5, 10, 10);
             }
@@ -479,23 +476,23 @@ public class WindowController {
         	
         	//if you're not on index 0, there is a prev frame
             if (flipbook.getCurFrameNum() != 0) {
-                this.prevFrame.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1).getThumbnailImage());
-                prevFrame.setVisible(true);
+                this.prevFrameImg.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1).getThumbnailImage());
+                prevFrameImg.setVisible(true);
             }
             else {
-                prevFrame.setVisible(false);
+                prevFrameImg.setVisible(false);
             }
             
             //if you're not the last frame, there is a next frame
             if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
             	
-                this.nextFrame.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1).getThumbnailImage());
-                nextFrame.setVisible(true);
+                this.nextFrameImg.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1).getThumbnailImage());
+                nextFrameImg.setVisible(true);
 
             }
            
             else {
-                nextFrame.setVisible(false);
+                nextFrameImg.setVisible(false);
             }
             
            

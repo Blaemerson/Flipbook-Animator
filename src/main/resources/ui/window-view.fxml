@@ -190,7 +190,7 @@
                              </Button>
                               <Separator prefHeight="16.0" prefWidth="200.0" />
                               <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
-                              <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
+                              <Slider fx:id="pencilWidthSlider" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
@@ -209,21 +209,21 @@
                <center>
                   <BorderPane fx:id="pane" minHeight="64.0" minWidth="64.0" style="-fx-background-color: f4a658;" visible="false">
                      <left>
-                        <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
+                        <ImageView fx:id="prevFrameImg" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
                            <cursor>
                               <Cursor fx:constant="OPEN_HAND" />
                            </cursor>
                         </ImageView>
                      </left>
                      <right>
-                        <ImageView fx:id="nextFrame" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
+                        <ImageView fx:id="nextFrameImg" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
                            <cursor>
                               <Cursor fx:constant="OPEN_HAND" />
                            </cursor>
                         </ImageView>
                      </right>
                      <bottom>
-                        <Label fx:id="currentFrame" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                        <Label fx:id="frameNumLabel" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
                            <font>
                               <Font size="34.0" />
                            </font>
