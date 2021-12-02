@@ -349,9 +349,9 @@ public class WindowController {
 
             //setting behavior for draw canvas
             //this canvas 
-            canvas.setOnMousePressed(e->{handleMousePressed(e);});
-            canvas.setOnMouseDragged(e->{handleMouseDragged(e); });
-            canvas.setOnMouseReleased(e->{handleMouseReleased(e);});
+            canvas.setOnMousePressed(this::handleMousePressed);
+            canvas.setOnMouseDragged(this::handleMouseDragged);
+            canvas.setOnMouseReleased(this::handleMouseReleased);
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
@@ -390,40 +390,31 @@ public class WindowController {
 
         //uses frameRate in flipbook to call the forward function at timed intervals
         public void animate() {
-
-        	if(!isAnimating) {
-        		
-        		//populateTimeline();
-        		this.flipbook.setOnionSkinning(false);
-        		isAnimating = true;
-            //populateTimeline();
-            this.fpsSetter.commitValue();
-            this.flipbook.setFrameRate(this.fpsSetter.getValue());
-            this.flipbook.setOnionSkinning(false);
             isAnimating = true;
 
-        		KeyFrame keyFrame = new KeyFrame(
-                    //Duration.millis(Math.round(1.0/frameRate)*1000),
-                    Duration.millis(flipbook.getFrameTime()),
-                    event -> {
-                        flipbook.forward(true);
-                        populateTimeline();
-                        updateThumbnails();
-                        setFrameCount();
-                       
-                    });
+            //populateTimeline();
+            this.flipbook.setOnionSkinning(false);
+            this.fpsSetter.commitValue();
+            this.flipbook.setFrameRate(this.fpsSetter.getValue());
 
-        		Timeline timeline = new Timeline(keyFrame);
+            KeyFrame keyFrame = new KeyFrame(
+                Duration.millis(flipbook.getFrameTime()),
+                event -> {
+                    flipbook.forward(true);
+                    populateTimeline();
+                    updateThumbnails();
+                    setFrameCount();
 
-        		timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());
+                });
 
-           
-            	timeline.play();
-           
+            Timeline timeline = new Timeline(keyFrame);
+
+            timeline.setCycleCount(flipbook.getNumFrames() - flipbook.getCurFrameNum());
+
+            timeline.play();
 
             playBtnIcon.setImage(new Image("ui/resources/icons/baseline_pause_black_24dp.png"));
 
-            flipbook.setOnionSkinning(false);
             timeline.setOnFinished(e -> {
                 isAnimating = false;
                 flipbook.setOnionSkinning(onionSkinningOn);
@@ -431,9 +422,7 @@ public class WindowController {
             });
 
 
-            	setFrameCount();
-            
-        	}
+            setFrameCount();
         }
 
 
@@ -469,14 +458,13 @@ public class WindowController {
                 gc.lineTo(e.getX(), e.getY());
                 gc.stroke();
             }
-            else if (this.activeTool == "PaintBucket") {
-                gc.setFill(this.colorPicker.getValue());
-            }
-       
+
+            /*
             addThumbnails(this.flipbook.getCurFrameNum());
-            
+
             updateThumbnails();
-           
+            */
+
             
             
             
@@ -518,25 +506,22 @@ public class WindowController {
 
     @FXML
     protected void setPencil() {
-            //flipbookPane.setCursor(new ImageCursor(new Image("resources/img/pen-solid.png"), 16, 16));
         this.activeTool = "Pencil";
         flipbookPane.setCursor(new ImageCursor(new Image("ui/resources/icons/pen-solid.png"), 0, 64));
     }
     @FXML
-    protected void setPaintBucket() {
-        //flipbookPane.setCursor(Cursor.OPEN_HAND);
+    protected void setEyedropper() {
         this.activeTool = "Eyedropper";
         flipbookPane.setCursor(Cursor.CROSSHAIR);
     }
     @FXML
     protected void setEraser() {
-        //flipbookPane.setCursor(Cursor.CROSSHAIR);
         this.activeTool = "Eraser";
         flipbookPane.setCursor(Cursor.OPEN_HAND);
     }
     @FXML
     protected void setImage() {
-        //opens a window to allow you to pick a .flip file
+        //opens a window to allow you to pick an image file
         FileChooser openImg = new FileChooser();
         openImg.setTitle("Open");
         openImg.getExtensionFilters().add(new ExtensionFilter("Image file", "*.png", "*.jpg"));
@@ -579,6 +564,7 @@ public class WindowController {
         updateThumbnails();
         setFrameCount();
     }
+
     @FXML
     protected void onInsertFrame() {
         this.flipbook.addFrame();
@@ -599,8 +585,11 @@ public class WindowController {
     // Media Controls
     @FXML
     protected void play() {
-        animate();
-        this.flipbook.setOnionSkinning(onionSkinningOn);
+        if (!isAnimating) {
+            this.flipbook.setOnionSkinning(false);
+            animate();
+            this.flipbook.setOnionSkinning(onionSkinningOn);
+        }
     }
     @FXML
     protected void firstFrame() {
