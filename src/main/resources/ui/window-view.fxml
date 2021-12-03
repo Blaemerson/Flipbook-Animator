@@ -191,7 +191,7 @@
                              </Button>
                               <Separator prefHeight="16.0" prefWidth="200.0" />
                               <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
-                              <Slider fx:id="pencilWidthSlider" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
+                              <Slider fx:id="pencilWidthSlider" blockIncrement="2.0" majorTickUnit="1.0" max="10.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
                                  <cursor>
                                     <Cursor fx:constant="HAND" />
                                  </cursor>
@@ -247,8 +247,11 @@
                      </bottom>
                      <top>
                         <HBox fx:id="viewPort" alignment="BOTTOM_CENTER" fillHeight="false" BorderPane.alignment="BOTTOM_CENTER">
+                           <BorderPane.margin>
+                              <Insets />
+                           </BorderPane.margin>
                            <children>
-                              <Button fx:id="trashButton" alignment="CENTER_RIGHT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Button fx:id="trashButton" alignment="BOTTOM_RIGHT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -263,8 +266,8 @@
                                     <Tooltip text="Delete Frame" />
                                  </tooltip>
                               </Button>
-                              <Pane fx:id="deleteAndInsertSpacer" HBox.hgrow="NEVER" />
-                              <Button fx:id="insertFrameButton" alignment="BASELINE_LEFT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                              <Pane fx:id="deleteAndInsertSpacer" />
+                              <Button fx:id="insertFrameButton" alignment="BOTTOM_LEFT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -278,11 +281,8 @@
                                  <tooltip>
                                     <Tooltip text="Insert Frame" />
                                  </tooltip>
-                              </Button>
+                                 </Button>
                            </children>
-                           <BorderPane.margin>
-                              <Insets />
-                           </BorderPane.margin>
                         </HBox>
                      </top>
                      <center>

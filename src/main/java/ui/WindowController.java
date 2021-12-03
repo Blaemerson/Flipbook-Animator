@@ -6,20 +6,19 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.transform.Transform;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
@@ -221,6 +220,9 @@ public class WindowController {
             openfile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
 
             File file = openfile.showOpenDialog(myStage);
+            if (file == null) {
+                return;
+            }
 
             flipbook = new Flipbook(0,0,"");
             flipbook.openFile(file);
@@ -242,7 +244,6 @@ public class WindowController {
             //not sure why this is called. The first frame is 'seeked' to and then addThumbnail is called
             firstFrame();
                               
-            populateTimeline();
             openFlipbook = true;
             
         }
@@ -325,6 +326,8 @@ public class WindowController {
         @FXML
         
         protected void _newFile() {
+            NewFileBox nfb = new NewFileBox("New File");
+            flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
         	newFile(false);
         }
         
@@ -332,18 +335,8 @@ public class WindowController {
         @FXML
         protected void newFile(boolean fromOpen) {
 
+            // Clear any previously loaded flipbook
         	flipbookPane.getChildren().clear();
-
-            if (!fromOpen) {
-                NewFileBox nfb = new NewFileBox("New File");
-                flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
-            }
-
-            toolsPane.setDisable(false);
-            mediaPane.setDisable(false);
-
-            flipbookPane.setVisible(true);
-            flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 
             canvas = new Canvas(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
 
@@ -355,20 +348,8 @@ public class WindowController {
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
-            pane.setVisible(true);
+            initUI();
 
-            // Aligning trash and insert icons above canvas
-            deleteAndInsertSpacer.setMinWidth(canvas.getWidth()-32);
-
-            // Scaling thumbnails so their smaller than the active frame
-            prevFrameImg.setFitWidth(canvas.getWidth()*.7);
-            nextFrameImg.setFitWidth(canvas.getWidth()*.7);
-
-
-            //set up layer picker
-            layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
-            layerPicker.setValue("Layer 1");
-            
             //add the single frame to the new file
             //if we're opening a file we don't want a random frame already there
             if(!fromOpen) {
@@ -381,13 +362,44 @@ public class WindowController {
                 //additionally, when you make a new file you need to repopulate the timeline
                 thumbnails = new Thumbnails(flipbook.generateFrameNodes());
                 populateTimeline();
-      
+                updateThumbnails();
+
             }
 
             setPencil();
             openFlipbook = true;
             
             
+        }
+
+        public void initUI() {
+            // Enable the sidebars
+            toolsPane.setDisable(false);
+            mediaPane.setDisable(false);
+
+            flipbookPane.setVisible(true);
+            flipbookPane.setMaxSize(flipbook.getCanvasWidth(), flipbook.getCanvasHeight());
+
+            // Make sure the pane is set to normal scaling, in case a smaller/larger flipbook was previously loaded
+            flipbookPane.setScaleX(1);
+            flipbookPane.setScaleY(1);
+
+            pane.setVisible(true);
+
+            // Scaling thumbnails so their smaller than the active frame. For aesthetics
+            prevFrameImg.setFitWidth(canvas.getWidth()*flipbookPane.getScaleX()*.7);
+            nextFrameImg.setFitWidth(canvas.getWidth()*flipbookPane.getScaleX()*.7);
+
+            // Compress everything closer to the active frame
+            pane.setMaxHeight(canvas.getHeight()*flipbookPane.getScaleY()+200); // 200 is extra space for buttons
+            pane.setMaxWidth(canvas.getWidth()*flipbookPane.getScaleX()+(prevFrameImg.getFitWidth()*2)+128); // 128 is extra space for between prev/currnt/next frames
+
+            // Aligning trash and insert icons above canvas
+            deleteAndInsertSpacer.setPrefWidth(canvas.getWidth());
+
+            //set up layer picker
+            layerPicker.setItems(FXCollections.observableArrayList("Layer 1", "Layer 2", "Layer 3"));
+            layerPicker.setValue("Layer 1");
         }
 
 
@@ -452,7 +464,7 @@ public class WindowController {
             GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
             gc.setLineWidth(this.pencilWidthSlider.getValue());
             if (this.activeTool == "Eraser") {
-                gc.clearRect(e.getX()-5, e.getY()-5, 10, 10);
+                gc.clearRect(e.getX()-5, e.getY()-5, this.pencilWidthSlider.getValue()*2, this.pencilWidthSlider.getValue()*2);
             }
             else if (this.activeTool == "Pencil") {
                 gc.setStroke(this.colorPicker.getValue());
