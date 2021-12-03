@@ -222,11 +222,12 @@ public class WindowController {
 
             File file = openfile.showOpenDialog(myStage);
 
+            flipbook = new Flipbook(0,0,"");
+            flipbook.openFile(file);
+
             //newFile();
             //passing a true so that the newFile function knows
             //that it should not add a frame to the canvas, only open the flipbook
-            flipbook = new Flipbook(0,0,"");
-            flipbook.openFile(file);
             newFile(true);
 
 
@@ -259,7 +260,7 @@ public class WindowController {
             for (Thumbnail t : thumbnails.getThumbnails()) {
                 ImageView thumb = new ImageView(t.getThumbnailImage());
                 
-                //setting height of thumbnail probably
+                //setting height of thumbnail to fit timeline box and prevent stretching
                 thumb.setPreserveRatio(true);
                 thumb.setFitHeight(84);
                 
@@ -356,7 +357,10 @@ public class WindowController {
 
             pane.setVisible(true);
 
-            deleteAndInsertSpacer.setMinWidth(canvas.getWidth());
+            // Aligning trash and insert icons above canvas
+            deleteAndInsertSpacer.setMinWidth(canvas.getWidth()-32);
+
+            // Scaling thumbnails so their smaller than the active frame
             prevFrameImg.setFitWidth(canvas.getWidth()*.7);
             nextFrameImg.setFitWidth(canvas.getWidth()*.7);
 
