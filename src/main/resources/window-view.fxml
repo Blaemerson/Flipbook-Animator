@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.ui.WindowController">
+<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
    <children>
       <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -20,10 +20,10 @@
                     <menus>
                       <Menu mnemonicParsing="false" text="File">
                         <items>
-                          <MenuItem mnemonicParsing="false" onAction="#_newFile" text="New (Ctrl + N)" />
-                              <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open (Ctrl + O)" />
-                              <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save (Ctrl + S)" />
-                              <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
+                          <MenuItem mnemonicParsing="false" onAction="#_newFile" text="New" />
+                              <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open" />
+                              <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save" />
+                              <MenuItem mnemonicParsing="false" text="Close" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">

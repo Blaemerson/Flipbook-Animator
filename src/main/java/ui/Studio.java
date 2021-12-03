@@ -1,4 +1,4 @@
-package main.java.ui;
+package ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,13 +11,13 @@ import java.io.IOException;
 public class Studio extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/window-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("/window-view.fxml"));
 
         Scene scene = new Scene(fxmlLoader.load(), 1024, 900);
 
         stage.setTitle("Onionskin Studio");
         stage.setScene(scene);
-        stage.getIcons().add(new Image(Studio.class.getResourceAsStream("resources/logo.png")));
+        stage.getIcons().add(new Image(Studio.class.getResourceAsStream("/logo.png")));
         stage.show();
         
     }

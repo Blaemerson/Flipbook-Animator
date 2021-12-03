@@ -1,4 +1,4 @@
-package main.java.ui;
+package ui;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,10 +27,10 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import main.java.model.Flipbook;
-import main.java.model.SQLite;
-import main.java.model.Thumbnail;
-import main.java.model.Thumbnails;
+import model.Flipbook;
+import model.SQLite;
+import model.Thumbnail;
+import model.Thumbnails;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,8 +53,6 @@ public class WindowController {
         private ImageView prevFrameImg;
         @FXML
         private ImageView nextFrameImg;
-        @FXML
-        private ScrollPane spTimeline;
         @FXML
         private HBox timelineBox;
         @FXML
@@ -431,11 +429,11 @@ public class WindowController {
 
             timeline.play();
 
-            playBtnIcon.setImage(new Image("main/java/ui/resources/icons/baseline_pause_black_24dp.png"));
+            playBtnIcon.setImage(new Image("icons/baseline_pause_black_24dp.png"));
             timeline.setOnFinished(e -> {
                 isAnimating = false;
                 flipbook.setOnionSkinning(onionSkinningOn);
-                playBtnIcon.setImage(new Image("main/java/ui/resources/icons/baseline_play_arrow_black_24dp.png"));
+                playBtnIcon.setImage(new Image("icons/baseline_play_arrow_black_24dp.png"));
             });
 
 
@@ -525,7 +523,7 @@ public class WindowController {
     @FXML
     protected void setPencil() {
         this.activeTool = "Pencil";
-        flipbookPane.setCursor(new ImageCursor(new Image("main/java/ui/resources/icons/pen-solid.png"), 0, 64));
+        flipbookPane.setCursor(new ImageCursor(new Image("icons/pen-solid.png"), 0, 64));
     }
     @FXML
     protected void setEyedropper() {

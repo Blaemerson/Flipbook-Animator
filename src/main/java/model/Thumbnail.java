@@ -1,4 +1,4 @@
-package main.java.model;
+package model;
 
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;

@@ -1,4 +1,4 @@
-package main.java.model;
+package model;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Group;
