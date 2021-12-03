@@ -10,7 +10,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.WindowController">
+<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.ui.WindowController">
    <children>
       <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -52,7 +52,7 @@
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@resources/icons/baseline_first_page_black_24dp.png" />
+                                    <Image url="@icons/baseline_first_page_black_24dp.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -64,7 +64,7 @@
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@resources/icons/baseline_fast_forward_black_24dp.png" />
+                                    <Image url="@icons/baseline_fast_forward_black_24dp.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -79,7 +79,7 @@
                                     <Rectangle2D />
                                  </viewport>
                                  <image>
-                                    <Image url="@resources/icons/baseline_play_arrow_black_24dp.png" />
+                                    <Image url="@icons/baseline_play_arrow_black_24dp.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -94,7 +94,7 @@
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@resources/icons/baseline_fast_forward_black_24dp.png" />
+                                    <Image url="@icons/baseline_fast_forward_black_24dp.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -106,7 +106,7 @@
                            <graphic>
                               <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@resources/icons/baseline_first_page_black_24dp.png" />
+                                    <Image url="@icons/baseline_first_page_black_24dp.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -131,7 +131,7 @@
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@resources/icons/image-regular.png" />
+                                          <Image url="@icons/image-regular.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -157,7 +157,7 @@
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@resources/icons/pen-solid.png" />
+                                          <Image url="@icons/pen-solid.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -169,7 +169,7 @@
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@resources/icons/eraser-solid.png" />
+                                          <Image url="@icons/eraser-solid.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -181,7 +181,7 @@
                                 <graphic>
                                    <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
                                       <image>
-                                         <Image url="@resources/icons/baseline_colorize_black_24dp.png" />
+                                         <Image url="@icons/baseline_colorize_black_24dp.png" />
                                       </image>
                                    </ImageView>
                                 </graphic>
@@ -255,7 +255,7 @@
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@resources/icons/trash-alt-solid.png" />
+                                          <Image url="@icons/trash-alt-solid.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
@@ -271,7 +271,7 @@
                                  <graphic>
                                     <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@resources/icons/clone-solid.png" />
+                                          <Image url="@icons/clone-solid.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>

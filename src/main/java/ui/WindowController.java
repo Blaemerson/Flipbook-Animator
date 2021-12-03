@@ -1,4 +1,4 @@
-package ui;
+package main.java.ui;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -6,28 +6,31 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.*;
+import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
-import javafx.scene.effect.Bloom;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import model.Flipbook;
-import model.SQLite;
-import model.Thumbnail;
-import model.Thumbnails;
+import main.java.model.Flipbook;
+import main.java.model.SQLite;
+import main.java.model.Thumbnail;
+import main.java.model.Thumbnails;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -313,7 +316,7 @@ public class WindowController {
             stage.close();
 
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("../../resources/ui/window-view.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/ui/window-view.fxml"));
                 Scene scene = new Scene(fxmlLoader.load(), 480, 360);
                 stage = new Stage();
                 stage.setScene(scene);
@@ -348,7 +351,7 @@ public class WindowController {
 
             flipbookPane.getChildren().addAll(flipbook.getGroup(), canvas);
 
-            initUI();
+            initEditorInterface();
 
             //add the single frame to the new file
             //if we're opening a file we don't want a random frame already there
@@ -372,7 +375,7 @@ public class WindowController {
             
         }
 
-        public void initUI() {
+        public void initEditorInterface() {
             // Enable the sidebars
             toolsPane.setDisable(false);
             mediaPane.setDisable(false);
@@ -428,11 +431,11 @@ public class WindowController {
 
             timeline.play();
 
-            playBtnIcon.setImage(new Image("ui/resources/icons/baseline_pause_black_24dp.png"));
+            playBtnIcon.setImage(new Image("main/java/ui/resources/icons/baseline_pause_black_24dp.png"));
             timeline.setOnFinished(e -> {
                 isAnimating = false;
                 flipbook.setOnionSkinning(onionSkinningOn);
-                playBtnIcon.setImage(new Image("ui/resources/icons/baseline_play_arrow_black_24dp.png"));
+                playBtnIcon.setImage(new Image("main/java/ui/resources/icons/baseline_play_arrow_black_24dp.png"));
             });
 
 
@@ -461,7 +464,8 @@ public class WindowController {
         }
 
         public void handleMouseDragged(MouseEvent e) {
-            GraphicsContext gc = flipbook.getGraphicsContext(Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1);
+            int activeLayer = Character.getNumericValue(layerPicker.getValue().charAt(layerPicker.getValue().length()-1))-1;
+            GraphicsContext gc = flipbook.getGraphicsContext(activeLayer);
             gc.setLineWidth(this.pencilWidthSlider.getValue());
             if (this.activeTool == "Eraser") {
                 gc.clearRect(e.getX()-5, e.getY()-5, this.pencilWidthSlider.getValue()*2, this.pencilWidthSlider.getValue()*2);
@@ -521,7 +525,7 @@ public class WindowController {
     @FXML
     protected void setPencil() {
         this.activeTool = "Pencil";
-        flipbookPane.setCursor(new ImageCursor(new Image("ui/resources/icons/pen-solid.png"), 0, 64));
+        flipbookPane.setCursor(new ImageCursor(new Image("main/java/ui/resources/icons/pen-solid.png"), 0, 64));
     }
     @FXML
     protected void setEyedropper() {

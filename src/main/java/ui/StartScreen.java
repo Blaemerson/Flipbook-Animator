@@ -1,4 +1,4 @@
-package ui;
+package main.java.ui;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
