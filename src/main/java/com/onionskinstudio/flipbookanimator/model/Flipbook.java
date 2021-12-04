@@ -316,7 +316,7 @@ public class Flipbook {
 
         long tFinish = System.nanoTime();
 
-        System.out.println("Time Forward(): " + ((tFinish-tInit) / 1000000));
+        //System.out.println("Time Forward(): " + ((tFinish-tInit) / 1000000));
 
     }
 
@@ -417,7 +417,7 @@ public class Flipbook {
 
                 }
 
-                System.out.println("Reading frame#: " + idx++);
+                //System.out.println("Reading frame#: " + idx++);
                 frame.generateFrameImgURL();
 
                 frames.add(frame);
@@ -472,7 +472,7 @@ public class Flipbook {
 
         long tFinish = System.nanoTime();
 
-        System.out.println("Time saveFrame(): " + ((tFinish-tInit) / 1000000));
+        //System.out.println("Time saveFrame(): " + ((tFinish-tInit) / 1000000));
 
     }
 

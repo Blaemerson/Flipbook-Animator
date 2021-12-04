@@ -7,19 +7,14 @@
     <groupId>com.onionskinstudio</groupId>
     <artifactId>Flipbook-Animator</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>jar</packaging>
     <name>Flipbook-Animator</name>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>5.7.1</junit.version>
-        <main.class>com.onionskinstudio.flipbookanimator/com.onionskinstudio.flipbookanimator.ui.Studio</main.class>
+        <junit.version>5.8.1</junit.version>
+        <main.class>com.onionskinstudio.flipbookanimator.Launcher</main.class>
     </properties>
-
-    <organization>
-        <!-- Used as the 'Vendor' for JNLP generation -->
-        <name>Onionskin Studio</name>
-    </organization>
 
     <dependencies>
         <dependency>
@@ -37,12 +32,6 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>18-ea+7</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.9</version>
         </dependency>
 
         <dependency>
@@ -77,45 +66,83 @@
                     <target>17</target>
                 </configuration>
             </plugin>
+
+            <!--Uses JLink to deploy, also for running javafx-->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
+                    <configuration>
+                        <mainClass>${main.class}</mainClass>
+                        <launcher>launch</launcher>
+                        <compress>2</compress>
+                        <jlinkZipName>flipbook</jlinkZipName>
+                        <jlinkImageName>flipbook</jlinkImageName>
+                        <noManPages>true</noManPages>
+                        <noHeaderFiles>true</noHeaderFiles>
+                    </configuration>
+            </plugin>
+
+            <!--mvn clean install-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
+                        <id>copy-dependencies</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
                         <configuration>
-                            <mainClass>${main.class}</mainClass>
+                            <outputDirectory>${project.build.directory}/lib/</outputDirectory>
+                            <overWriteReleases>false</overWriteReleases>
+                            <overWriteSnapshots>false</overWriteSnapshots>
+                            <overWriteIfNewer>true</overWriteIfNewer>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
-            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.2.0</version>
                 <configuration>
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
-                            <addDefaultImplementationEntries>
-                                true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>
-                                true</addDefaultSpecificationEntries>
+                            <mainClass>${main.class}</mainClass>
                         </manifest>
-                        <manifestEntries>
-                            <Premain-Class>com.javaagent.SimpleAgent</Premain-Class>
-                            <Can-Redefine-Classes>false</Can-Redefine-Classes>
-                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
-                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
 
+            <!--another method to make jars
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${main.class}</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+
+            <!--another method to make jars
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
@@ -140,58 +167,7 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.2.0</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <excludeScope>system</excludeScope>
-                            <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
-                <executions>
-                    <execution>
-                        <id>unpack-dependencies</id>
-
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/../bin/javafxpackager</executable>
-                            <arguments>
-                                <argument>-createjar</argument>
-                                <argument>-nocss2bin</argument>
-                                <argument>-appclass</argument>
-                                <argument>${main.class}</argument>
-                                <argument>-srcdir</argument>
-                                <argument>${project.build.directory}/classes</argument>
-                                <argument>-outdir</argument>
-                                <argument>${project.build.directory}</argument>
-                                <argument>-outfile</argument>
-                                <argument>${project.build.finalName}.jar</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             -->
-
         </plugins>
     </build>
 </project>

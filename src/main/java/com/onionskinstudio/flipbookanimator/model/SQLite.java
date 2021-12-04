@@ -21,7 +21,7 @@ public class SQLite {
         try {
             conn = DriverManager.getConnection(url);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
         return conn;
     } // end connect()
@@ -34,12 +34,12 @@ public class SQLite {
             Connection conn = DriverManager.getConnection(url);
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
-                System.out.println("The driver name is " + meta.getDriverName());
-                System.out.println("A new database has been created.");
+                //System.out.println("The driver name is " + meta.getDriverName());
+                //System.out.println("A new database has been created.");
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     } // end createNewDatabase(String)
 
@@ -62,7 +62,7 @@ public class SQLite {
             Statement stmt = conn.createStatement();
             stmt.execute(sql);
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     } // end createNewTable()
 
@@ -80,7 +80,7 @@ public class SQLite {
             //pstmt +=
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         }
     } // end insert(String, double)
 

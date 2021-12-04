@@ -201,7 +201,7 @@ public class WindowController {
 
             } catch (IOException ex) {
 
-                System.out.println("Error opening file, or writing data.");
+                //System.out.println("Error opening file, or writing data.");
             }
         }
 
@@ -261,7 +261,7 @@ public class WindowController {
             Transform transform = thumb.getLocalToParentTransform();
             transform.setOnTransformChanged(e-> {
 
-                System.out.println("event called");
+                //System.out.println("event called");
 
                 if(transform.getTx() > 200) {
                     thumb.setVisible(false);
@@ -454,7 +454,7 @@ public class WindowController {
         //flipbook.saveFrame();
         addThumbnails(this.flipbook.getCurFrameNum());
         updateThumbnails();
-        System.out.println(flipbook.getCurFrameNum());
+        //System.out.println(flipbook.getCurFrameNum());
     }
 
     public void handleMouseDragged(MouseEvent e) {
@@ -548,12 +548,12 @@ public class WindowController {
     // File
     @FXML
     protected void onOpenFileChosen() {
-        System.out.println("Open");
+        //System.out.println("Open");
         open();
     }
     @FXML
     protected void onSaveFileChosen(ActionEvent event) {
-        System.out.println("Save");
+        //System.out.println("Save");
         save();
     }
 
