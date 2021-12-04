@@ -8,13 +8,12 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
-import javafx.scene.canvas.Canvas;
+
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.*;
 import java.util.Base64;
-import java.util.List;
 import java.util.LinkedList;
+import java.util.List;
 
 public class Flipbook {
     //small class to contain the base64 img and frame visibility
