@@ -17,7 +17,8 @@ public class Studio extends Application {
 
         stage.setTitle("Onionskin Studio");
         stage.setScene(scene);
-        stage.getIcons().add(new Image(Studio.class.getResourceAsStream("/logo.png")));
+        stage.getIcons().add(new Image(Studio.class.getResourceAsStream("/icons/logo.png")));
+        stage.setMaximized(true);
         stage.show();
         
     }

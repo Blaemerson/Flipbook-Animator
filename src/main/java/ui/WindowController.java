@@ -28,7 +28,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Flipbook;
-import model.SQLite;
 import model.Thumbnail;
 import model.Thumbnails;
 
@@ -89,9 +88,9 @@ public class WindowController {
         @FXML
         private Pane mediaPane;
 
-    Stage myStage;
+        Stage myStage;
 
-    //program name
+        //program name
         final String appTitle = "Onionskin Studio";
 
         //prevents actions from occuring when there are potential conflicts
@@ -99,7 +98,6 @@ public class WindowController {
         boolean isAnimating = false;
 
         // Displayed on new file menu chosen
-        // TODO: turn this into fxml file and load it
         private static class NewFileBox {
             String newBookName;
             int newCanvasWidth;
@@ -130,12 +128,7 @@ public class WindowController {
                 Button confirmBtn = new Button("Confirm");
                 confirmBtn.setDisable(true);
                 inputTitle.setOnKeyTyped(keyEvent -> {
-                    if (!inputTitle.getText().equals("")) {
-                        confirmBtn.setDisable(false);
-                    }
-                    else {
-                        confirmBtn.setDisable(true);
-                    }
+                    confirmBtn.setDisable(inputTitle.getText().equals(""));
                 });
                 confirmBtn.setOnAction(event -> {
                     newBookName = inputTitle.getText();
@@ -196,13 +189,6 @@ public class WindowController {
                     //always close file streams
                     writer.close();
 
-                    // if database doesn't exist create one with a table
-                    if(!SQLite.databaseExists()) {
-                        SQLite.createNewDatabase();
-                        SQLite.createNewTable();
-                    }
-                    SQLite.insert(flipbook.getBookName(), flipbook.getFrameImgString(0), file.getPath());
-
                 } catch (IOException ex) {
 
                     System.out.println("Error opening file, or writing data.");
@@ -228,17 +214,13 @@ public class WindowController {
             flipbook = new Flipbook(0,0,"");
             flipbook.openFile(file);
 
-            //newFile();
             //passing a true so that the newFile function knows
             //that it should not add a frame to the canvas, only open the flipbook
             newFile(true);
 
-
-            
             //after opening the file, the frames should already be made, and the thumbnails can be made
             thumbnails = new Thumbnails(flipbook.generateFrameNodes());
-            
-            
+
             //populate the timeline with the newly made thumbnails
             populateTimeline();
             
@@ -246,7 +228,6 @@ public class WindowController {
             firstFrame();
                               
             openFlipbook = true;
-            
         }
 
         public void populateTimeline() {
@@ -277,17 +258,13 @@ public class WindowController {
                 	
                 	
                 });
-                
-                
+
                 //add thumbnail to the box
                 timelineBox.getChildren().add(thumb);
-                
-                
-                
+
                 //adding frame to hover over tooltip
                 Tooltip.install(timelineBox.getChildren().get(index), new Tooltip("Frame " + (index + 1)));
-                
-                //what is final index for?
+
                 int finalIndex = index;
                 timelineBox.getChildren().get(index).setOnMousePressed((MouseEvent e) -> {
                 	//why is add thumbnails being called when the thumbnail is pressed?
@@ -295,7 +272,7 @@ public class WindowController {
                     addThumbnails(this.flipbook.getCurFrameNum());
                     //why not just use index if final index is equal to index?
                     seekTo(finalIndex);
-                    
+
                 });
                 
                 index++;
@@ -305,27 +282,7 @@ public class WindowController {
             }
         }
 
-        //Switches scenes from startScreen when file > new is selected
         @FXML
-        protected void newFileStartScreen() {
-            // get a handle to the stage
-            Stage stage = (Stage) menuBarStartScreen.getScene().getWindow();
-            // do what you have to do
-            stage.close();
-
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(Studio.class.getResource("resources/ui/window-view.fxml"));
-                Scene scene = new Scene(fxmlLoader.load(), 480, 360);
-                stage = new Stage();
-                stage.setScene(scene);
-                stage.show();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-        @FXML
-        
         protected void _newFile() {
             NewFileBox nfb = new NewFileBox("New File");
             flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
@@ -429,11 +386,11 @@ public class WindowController {
 
             timeline.play();
 
-            playBtnIcon.setImage(new Image("icons/baseline_pause_black_24dp.png"));
+            playBtnIcon.setImage(new Image("/icons/baseline_pause_black_24dp.png"));
             timeline.setOnFinished(e -> {
                 isAnimating = false;
                 flipbook.setOnionSkinning(onionSkinningOn);
-                playBtnIcon.setImage(new Image("icons/baseline_play_arrow_black_24dp.png"));
+                playBtnIcon.setImage(new Image("/icons/baseline_play_arrow_black_24dp.png"));
             });
 
 
