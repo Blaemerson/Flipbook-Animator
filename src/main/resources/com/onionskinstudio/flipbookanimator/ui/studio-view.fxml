@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane minHeight="300.0" minWidth="400.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.onionskinstudio.flipbookanimator.ui.WindowController">
+    <children>
+        <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <BorderPane minWidth="100.0" style="-fx-background-color: f4a658;" HBox.hgrow="ALWAYS">
+                    <top>
+                        <MenuBar prefHeight="25.0" prefWidth="1024.0" BorderPane.alignment="CENTER">
+                            <menus>
+                                <Menu mnemonicParsing="false" text="File">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#_newFile" text="New (Ctrl + N)" />
+                                        <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open (Ctrl + O)" />
+                                        <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save (Ctrl + S)" />
+                                        <MenuItem mnemonicParsing="false" text="Close (Alt + F4)" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Edit">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#onInsertFrame" text="Insert Frame After" />
+                                        <MenuItem mnemonicParsing="false" onAction="#onDeleteChosen" text="Delete Current Frame" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="View">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" onAction="#toggleOnionSkinning" text="Toggle Onion Skinning" />
+                                    </items>
+                                </Menu>
+                                <Menu mnemonicParsing="false" text="Help">
+                                    <items>
+                                        <MenuItem mnemonicParsing="false" text="About" />
+                                    </items>
+                                </Menu>
+                            </menus>
+                        </MenuBar>
+                    </top>
+                    <bottom>
+                        <AnchorPane fx:id="mediaPane" disable="true" minWidth="32.0" prefHeight="108.0" prefWidth="32.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                            <children>
+                                <Button fx:id="btnFirstFrame" contentDisplay="CENTER" graphicTextGap="0.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#firstFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="24.0">
+                                    <graphic>
+                                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@icons/baseline_first_page_black_24dp.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Jump To Last Frame" />
+                                    </tooltip>
+                                </Button>
+                                <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="72.0" maxHeight="64.0" maxWidth="64.0" mnemonicParsing="false" onAction="#prevFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="72.0" AnchorPane.topAnchor="24.0">
+                                    <graphic>
+                                        <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@icons/baseline_fast_forward_black_24dp.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Previous Frame" />
+                                    </tooltip>
+                                </Button>
+                                <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="144.0" mnemonicParsing="false" onAction="#play" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.topAnchor="24.0">
+                                    <graphic>
+                                        <ImageView fx:id="playBtnIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                            <viewport>
+                                                <Rectangle2D />
+                                            </viewport>
+                                            <image>
+                                                <Image url="@icons/baseline_play_arrow_black_24dp.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <tooltip>
+                                        <Tooltip text="Animate From This Frame" />
+                                    </tooltip>
+                                </Button>
+                                <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="216.0" mnemonicParsing="false" onAction="#nextFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="216.0" AnchorPane.topAnchor="24.0">
+                                    <graphic>
+                                        <ImageView fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@icons/baseline_fast_forward_black_24dp.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Next Frame" />
+                                    </tooltip>
+                                </Button>
+                                <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="288.0" mnemonicParsing="false" onAction="#lastFrame" prefHeight="64.0" prefWidth="64.0" translateX="8.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="288.0" AnchorPane.topAnchor="24.0">
+                                    <graphic>
+                                        <ImageView fitHeight="48.0" fitWidth="48.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@icons/baseline_first_page_black_24dp.png" />
+                                            </image>
+                                        </ImageView>
+                                    </graphic>
+                                    <tooltip>
+                                        <Tooltip text="Jump To Last Frame" />
+                                    </tooltip>
+                                </Button>
+                                <ScrollPane fx:id="spTimeline" focusTraversable="false" minWidth="32.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="98.0" prefWidth="32.0" vbarPolicy="NEVER" AnchorPane.bottomAnchor="8.0" AnchorPane.leftAnchor="368.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="8.0">
+                                    <content>
+                                        <HBox fx:id="timelineBox" minHeight="32.0" minWidth="32.0" />
+                                    </content>
+                                </ScrollPane>
+                            </children>
+                        </AnchorPane>
+                    </bottom>
+                    <left>
+                        <AnchorPane fx:id="toolsPane" disable="true" minWidth="0.0" style="-fx-background-color: GHOSTWHITE;" BorderPane.alignment="CENTER">
+                            <children>
+                                <ToolBar minWidth="32.0" orientation="VERTICAL" prefWidth="80.0">
+                                    <items>
+                                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="130.0" mnemonicParsing="false" onAction="#setImage" translateX="8.0">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/image-regular.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Insert Image" />
+                                            </tooltip>
+                                        </Button>
+                                        <Separator prefHeight="16.0" prefWidth="200.0" />
+                                        <ChoiceBox id="layerPicker" fx:id="layerPicker" prefWidth="80.0">
+                                            <opaqueInsets>
+                                                <Insets right="8.0" />
+                                            </opaqueInsets></ChoiceBox>
+                                        <Separator prefHeight="16.0" prefWidth="200.0" />
+                                        <ColorPicker fx:id="colorPicker" prefHeight="32.0" prefWidth="48.0" promptText="colorPicker" translateX="8.0">
+                                            <value>
+                                                <Color />
+                                            </value>
+                                            <tooltip>
+                                                <Tooltip text="Color Palette" />
+                                            </tooltip>
+                                        </ColorPicker>
+                                        <Button contentDisplay="CENTER" graphicTextGap="0.0" mnemonicParsing="false" onAction="#setPencil" translateX="8.0">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/pen-solid.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Pen" />
+                                            </tooltip>
+                                        </Button>
+                                        <Button contentDisplay="CENTER" graphicTextGap="0.0" layoutX="10.0" layoutY="114.0" mnemonicParsing="false" onAction="#setEraser" translateX="8.0">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/eraser-solid.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Eraser" />
+                                            </tooltip>
+                                        </Button>
+                                        <Button contentDisplay="CENTER" disable="true" graphicTextGap="0.0" layoutX="10.0" layoutY="207.0" mnemonicParsing="false" onAction="#setPaintBucket" translateX="8.0" visible="false">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/baseline_colorize_black_24dp.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <tooltip>
+                                                <Tooltip text="Color Picker" />
+                                            </tooltip>
+                                        </Button>
+                                        <Separator prefHeight="16.0" prefWidth="200.0" />
+                                        <Label opacity="0.5" text="Pen Size" translateX="10.0" translateY="2.0" />
+                                        <Slider fx:id="thickness" blockIncrement="2.0" majorTickUnit="1.0" max="5.0" maxHeight="1.7976931348623157E308" min="1.0" minorTickCount="0" snapToTicks="true" value="3.0">
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </Slider>
+                                        <Label opacity="0.5" text="FPS" translateX="20.0" />
+                                        <Spinner id="fpsSetter" fx:id="fpsSetter">
+                                            <valueFactory>
+                                                <SpinnerValueFactory.IntegerSpinnerValueFactory amountToStepBy="1" initialValue="10" max="30" min="1" />
+                                            </valueFactory>
+                                        </Spinner>
+                                    </items>
+                                </ToolBar>
+                            </children>
+                        </AnchorPane>
+                    </left>
+                    <center>
+                        <BorderPane fx:id="pane" minHeight="64.0" minWidth="64.0" style="-fx-background-color: f4a658;" visible="false">
+                            <left>
+                                <ImageView fx:id="prevFrame" focusTraversable="true" onMouseClicked="#prevFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
+                                    <cursor>
+                                        <Cursor fx:constant="OPEN_HAND" />
+                                    </cursor>
+                                </ImageView>
+                            </left>
+                            <right>
+                                <ImageView fx:id="nextFrame" focusTraversable="true" onMouseClicked="#nextFrame" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
+                                    <cursor>
+                                        <Cursor fx:constant="OPEN_HAND" />
+                                    </cursor>
+                                </ImageView>
+                            </right>
+                            <bottom>
+                                <Label fx:id="currentFrame" alignment="TOP_CENTER" contentDisplay="TOP" graphicTextGap="8.0" opacity="0.75" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                                    <font>
+                                        <Font size="34.0" />
+                                    </font>
+                                    <padding>
+                                        <Insets bottom="50.0" />
+                                    </padding>
+                                </Label>
+                            </bottom>
+                            <top>
+                                <HBox fx:id="viewPort" alignment="BOTTOM_CENTER" fillHeight="false" BorderPane.alignment="BOTTOM_CENTER">
+                                    <children>
+                                        <Button fx:id="trashButton" alignment="CENTER_RIGHT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onDeleteChosen" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/trash-alt-solid.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                            <tooltip>
+                                                <Tooltip text="Delete Frame" />
+                                            </tooltip>
+                                        </Button>
+                                        <Pane fx:id="deleteAndInsertSpacer" HBox.hgrow="NEVER" />
+                                        <Button fx:id="insertFrameButton" alignment="BASELINE_LEFT" centerShape="false" contentDisplay="BOTTOM" graphicTextGap="0.0" mnemonicParsing="false" onAction="#onInsertFrame" opacity="0.5" style="-fx-background-color: TRANSPARENT;">
+                                            <graphic>
+                                                <ImageView fitHeight="32.0" fitWidth="32.0" focusTraversable="true" pickOnBounds="true" preserveRatio="true">
+                                                    <image>
+                                                        <Image url="@icons/clone-solid.png" />
+                                                    </image>
+                                                </ImageView>
+                                            </graphic>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                            <tooltip>
+                                                <Tooltip text="Insert Frame" />
+                                            </tooltip>
+                                        </Button>
+                                    </children>
+                                    <BorderPane.margin>
+                                        <Insets />
+                                    </BorderPane.margin>
+                                </HBox>
+                            </top>
+                            <center>
+                                <AnchorPane fx:id="flipbookPane" style="-fx-background-color: WHITE;" BorderPane.alignment="CENTER">
+                                    <children>
+                                        <Canvas fx:id="canvas" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    </children>
+                                    <cursor>
+                                        <Cursor fx:constant="DEFAULT" />
+                                    </cursor>
+                                    <opaqueInsets>
+                                        <Insets />
+                                    </opaqueInsets>
+                                    <BorderPane.margin>
+                                        <Insets />
+                                    </BorderPane.margin>
+                                </AnchorPane>
+                            </center>
+                        </BorderPane>
+                    </center>
+                    <HBox.margin>
+                        <Insets />
+                    </HBox.margin>
+                </BorderPane>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>
