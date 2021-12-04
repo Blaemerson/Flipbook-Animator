@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: com.onionskinstudio.flipbookanimator.ui.Studio
+Class-Path: javafx-controls-17.0.0.1-win.jar javafx-graphics-17.0.0.1-wi
+ n.jar javafx-base-17.0.0.1.jar javafx-controls-17.0.0.1.jar javafx-fxml
+ -17.0.0.1-win.jar sqlite-jdbc-3.36.0.3.jar javafx-graphics-17.0.0.1.jar
+  javafx-swing-18-ea+7-win.jar javafx-base-17.0.0.1-win.jar gson-2.8.9.j
+ ar javafx-fxml-17.0.0.1.jar javafx-swing-18-ea+7.jar
+
