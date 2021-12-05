@@ -213,8 +213,7 @@ public class WindowController {
             //populate the timeline with the newly made thumbnails
             populateTimeline();
             
-            //not sure why this is called. The first frame is 'seeked' to and then addThumbnail is called
-            firstFrame();
+            seekTo(0);
                               
             openFlipbook = true;
         }
@@ -400,11 +399,9 @@ public class WindowController {
            
             gc.beginPath();
             gc.lineTo(e.getX(), e.getY());
-
         }
 
         public void handleMouseReleased(MouseEvent e) {
-            //flipbook.saveFrame();
             addThumbnails(this.flipbook.getCurFrameNum());
             updateThumbnails();
             System.out.println(flipbook.getCurFrameNum());
@@ -423,17 +420,6 @@ public class WindowController {
                 gc.lineTo(e.getX(), e.getY());
                 gc.stroke();
             }
-
-            /*
-            addThumbnails(this.flipbook.getCurFrameNum());
-
-            updateThumbnails();
-            */
-
-            
-            
-            
-           
         }
 
         public void updateThumbnails() {
@@ -441,32 +427,28 @@ public class WindowController {
         	if(flipbook.getCurFrameNum() >= 20) {
         		return;
         	}
-        	
-        	//if you're not on index 0, there is a prev frame
-            if (flipbook.getCurFrameNum() != 0) {
-                this.prevFrameImg.setImage(thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()-1).getThumbnailImage());
-                prevFrameImg.setVisible(true);
-            }
-            else {
+
+            // We're on the first frame; there is no previous one
+            if (flipbook.getCurFrameNum() == 0) {
                 prevFrameImg.setVisible(false);
             }
-            
-            //if you're not the last frame, there is a next frame
-            if (flipbook.getCurFrameNum() != this.flipbook.getNumFrames()-1) {
-            	
-                this.nextFrameImg.setImage(this.thumbnails.getThumbnailAt(this.flipbook.getCurFrameNum()+1).getThumbnailImage());
-                nextFrameImg.setVisible(true);
-
-            }
-           
+            // There is a previous frame; make it visible
             else {
-                nextFrameImg.setVisible(false);
+                prevFrameImg.setImage(thumbnails.getThumbnailAt(flipbook.getCurFrameNum()-1).getThumbnailImage());
+                prevFrameImg.setVisible(true);
+
+                // We're on the last frame; there is no next frame
+                if (flipbook.getCurFrameNum() == flipbook.getNumFrames()-1) {
+                    nextFrameImg.setVisible(false);
+                }
+                // There is a next frame; make it visible
+                else {
+                    nextFrameImg.setImage(thumbnails.getThumbnailAt(flipbook.getCurFrameNum()-1).getThumbnailImage());
+                    nextFrameImg.setVisible(true);
+                }
             }
-            
-           
-           timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
-            
-            
+        	
+            timelineBox.getChildren().get(flipbook.getCurFrameNum()).setEffect(new DropShadow());
         }
 
     @FXML
