@@ -164,11 +164,11 @@ public class WindowController {
             FileChooser savefile = new FileChooser();
             savefile.setTitle("Save File");
             savefile.getExtensionFilters().add(new ExtensionFilter("Flip file", "*.flip"));
+            savefile.setInitialFileName(flipbook.getBookName() + ".flip");
 
             //create a file in the destination they picked
             File file = savefile.showSaveDialog(myStage);
 
-            //write data to .flip file
             //write data to .flip file
             if (file != null) {
 
