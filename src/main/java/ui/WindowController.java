@@ -26,6 +26,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Flipbook;
+import model.SQLite;
 import model.Thumbnail;
 import model.Thumbnails;
 
@@ -168,6 +169,7 @@ public class WindowController {
             File file = savefile.showSaveDialog(myStage);
 
             //write data to .flip file
+            //write data to .flip file
             if (file != null) {
 
                 try {
@@ -177,6 +179,13 @@ public class WindowController {
 
                     //always close file streams
                     writer.close();
+
+                    // if database doesn't exist create one with a table
+                    if(!SQLite.databaseExists()) {
+                        SQLite.createNewDatabase();
+                        SQLite.createNewTable();
+                    }
+                    SQLite.insert(flipbook.getBookName(), flipbook.getFrameImgString(0), file.getPath());
 
                 } catch (IOException ex) {
 
