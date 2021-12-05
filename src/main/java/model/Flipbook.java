@@ -19,14 +19,6 @@ public class Flipbook {
     //small class to contain the base64 img and frame visibility
     //also includes the frame generation function
 
-    public String getBookName() {
-        return this.bookName;
-    }
-
-    public String getFrameImgString(int i) {
-        return this.frames.get(i).imgString;
-    }
-
     private class LayerData{
         String imgString;
         boolean isVisible;
@@ -46,7 +38,6 @@ public class Flipbook {
     private class FrameData{
 
         String imgString;
-        LayerData activeLayer;
         boolean isVisible;
         double opacity;
         Group g;
@@ -62,8 +53,6 @@ public class Flipbook {
             for(int i = 0; i < layerCount; i++)
                 layers.add(new LayerData(img, true));
 
-            this.activeLayer = layers.get(0);
-
             if(img != null)
                 generateFrameImgURL();
         }
@@ -71,8 +60,6 @@ public class Flipbook {
         public List<LayerData> getLayers() {
             return this.layers;
         }
-
-        public void setActiveLayer(int curLayer) {this.activeLayer = this.layers.get(curLayer); }
 
         public Group generateGroup() {
             if(g == null) {
@@ -89,17 +76,11 @@ public class Flipbook {
                     }
 
                 }
-
-
-
-
-
             }
 
             g.setOpacity(this.opacity);
 
             return g;
-
 
         }
 
@@ -116,7 +97,6 @@ public class Flipbook {
 
     // a place to store the frames
     private List<FrameData> frames;
-
 
 
     //basic variables
@@ -513,6 +493,16 @@ public class Flipbook {
     public int getCanvasHeight() {
         return canvasHeight;
     }
+
+    public String getBookName() {
+        return this.bookName;
+    }
+
+    public String getFrameImgString(int i) {
+        return this.frames.get(i).imgString;
+    }
+
+
 
     public Group getGroup() {
         return group;

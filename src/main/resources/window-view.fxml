@@ -23,7 +23,6 @@
                           <MenuItem mnemonicParsing="false" onAction="#_newFile" text="New" />
                               <MenuItem mnemonicParsing="false" onAction="#onOpenFileChosen" text="Open" />
                               <MenuItem mnemonicParsing="false" onAction="#onSaveFileChosen" text="Save" />
-                              <MenuItem mnemonicParsing="false" text="Close" />
                         </items>
                       </Menu>
                       <Menu mnemonicParsing="false" text="Edit">

@@ -3,9 +3,7 @@ package ui;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.ImageCursor;
@@ -61,9 +59,6 @@ public class WindowController {
         private Spinner<Integer> fpsSetter;
 
         @FXML
-        private MenuBar menuBarStartScreen;
-
-        @FXML
         private ImageView playBtnIcon;
 
         private Thumbnails thumbnails;
@@ -78,8 +73,6 @@ public class WindowController {
         @FXML
         private Pane deleteAndInsertSpacer;
 
-        private boolean loaded = false;
-
         // frame counter at bottom of application
         @FXML
         Label frameNumLabel;
@@ -89,9 +82,6 @@ public class WindowController {
         private Pane mediaPane;
 
         Stage myStage;
-
-        //program name
-        final String appTitle = "Onionskin Studio";
 
         //prevents actions from occuring when there are potential conflicts
         boolean openFlipbook = false;
@@ -117,10 +107,9 @@ public class WindowController {
                 label.setText("New File");
                 TextField inputTitle = new TextField();
                 inputTitle.setPromptText("Enter a title");
-                //inputTitle.setMinWidth(80);
                 inputTitle.setMaxWidth(80);
-                Spinner<Integer> widths = new Spinner(100,800,800, 10);
-                Spinner<Integer> heights = new Spinner(100,800,600, 10);
+                Spinner<Integer> widths = new Spinner(100,800,600, 10);
+                Spinner<Integer> heights = new Spinner(100,800,400, 10);
 
                 widths.setEditable(true);
                 heights.setEditable(true);
@@ -285,6 +274,9 @@ public class WindowController {
         @FXML
         protected void _newFile() {
             NewFileBox nfb = new NewFileBox("New File");
+            if (nfb.getNewBookName() == null) {
+                return;
+            }
             flipbook = new Flipbook(nfb.getNewCanvasWidth(), nfb.getNewCanvasHeight(), nfb.getNewBookName());
         	newFile(false);
         }
@@ -515,7 +507,7 @@ public class WindowController {
         open();
     }
     @FXML
-    protected void onSaveFileChosen(ActionEvent event) {
+    protected void onSaveFileChosen() {
         System.out.println("Save");
         save();
     }

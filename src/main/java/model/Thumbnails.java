@@ -1,11 +1,9 @@
 package model;
 
+import javafx.scene.Node;
+
 import java.util.LinkedList;
 import java.util.List;
-
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class Thumbnails {
 
